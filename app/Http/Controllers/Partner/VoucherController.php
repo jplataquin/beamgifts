@@ -74,9 +74,14 @@ class VoucherController extends Controller
             return back()->with('error', 'This voucher has expired.');
         }
 
+        $request->validate([
+            'claimed_by' => 'required|string|max:255',
+        ]);
+
         $voucher->update([
             'status' => 'claimed',
             'claimed_at' => now(),
+            'claimed_by' => $request->claimed_by,
         ]);
 
         return redirect()->route('partner.vouchers.index')->with('success', 'Voucher claimed successfully!');

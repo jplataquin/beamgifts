@@ -47,10 +47,15 @@ class VoucherController extends Controller
             return back()->with('error', 'This voucher has expired.');
         }
 
+        $request->validate([
+            'claimed_by' => 'required|string|max:255',
+        ]);
+
         $voucher->update([
             'status' => 'claimed',
             'claimed_at' => now(),
             'claimed_branch_id' => $manager->branch_id,
+            'claimed_by' => $request->claimed_by,
         ]);
 
         return redirect()->route('manager.vouchers.transactions')->with('success', 'Voucher claimed successfully at ' . $manager->branch->name . '!');

@@ -57,14 +57,21 @@
                             <form action="{{ route('partner.vouchers.claim', $voucher) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">Mark as Claimed</button>
+                                
+                                <div class="mb-4 text-start">
+                                    <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
+                                    <input type="text" name="claimed_by" id="claimed_by" class="form-control form-control-lg rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm" onclick="return confirm('Are you sure?, this action is non-reversable')">Mark as Claimed</button>
                             </form>
                         @elseif($voucher->status === 'claimed')
                             <div class="mb-4">
                                 <i class="bi bi-info-circle-fill display-1 text-secondary"></i>
                             </div>
                             <h1 class="h3 fw-bold mb-1">Already Redeemed</h1>
-                            <p class="text-muted mb-5">This voucher was claimed on {{ $voucher->claimed_at->format('M d, Y H:i') }}</p>
+                            <p class="text-muted mb-2">This voucher was claimed on {{ $voucher->claimed_at->format('M d, Y H:i') }}</p>
+                            <p class="fw-bold mb-5">Claimed By: {{ $voucher->claimed_by ?? 'N/A' }}</p>
                             <a href="{{ route('partner.vouchers.scan') }}" class="btn btn-light rounded-pill px-5 py-3">Back to Scanner</a>
                         @else
                             <div class="mb-4">

@@ -21,6 +21,7 @@ class Voucher extends Model
         'expires_at',
         'claimed_at',
         'claimed_branch_id',
+        'claimed_by',
     ];
 
     protected $casts = [

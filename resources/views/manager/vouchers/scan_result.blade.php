@@ -43,18 +43,30 @@
                             <span class="text-muted">Bought:</span>
                             <span class="fw-bold">{{ $voucher->order->created_at->format('M d, Y') }}</span>
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Expires:</span>
                             <span class="fw-bold">{{ $voucher->expires_at ? $voucher->expires_at->format('M d, Y') : 'N/A' }}</span>
                         </div>
+                        @if($voucher->status === 'claimed')
+                            <div class="d-flex justify-content-between mt-2 pt-2 border-top">
+                                <span class="text-muted">Claimed By:</span>
+                                <span class="fw-bold text-success">{{ $voucher->claimed_by ?? 'N/A' }}</span>
+                            </div>
+                        @endif
                     </div>
 
                     @if(!isset($error) && $voucher->status === 'active')
                         <form action="{{ route('manager.vouchers.claim', $voucher) }}" method="POST">
                             @csrf
                             @method('PATCH')
+                            
+                            <div class="mb-4 text-start">
+                                <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
+                                <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
+                            </div>
+
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold shadow-sm" onclick="return confirm('Mark this voucher as claimed?')">
+                                <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold shadow-sm" onclick="return confirm('Are you sure?, this action is non-reversable')">
                                     Confirm Redemption
                                 </button>
                             </div>
