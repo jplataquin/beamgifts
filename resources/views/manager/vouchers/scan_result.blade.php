@@ -63,26 +63,47 @@
                     </div>
 
                     @if(!isset($error) && $voucher->status === 'active')
-                        <form action="{{ route('manager.vouchers.claim', $voucher) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            
-                            <div class="mb-3 text-start">
-                                <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
-                                <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
-                            </div>
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary rounded-pill py-3 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#claimModal">
+                                <i class="bi bi-gift me-2"></i> Confirm Redemption
+                            </button>
+                        </div>
 
-                            <div class="mb-4 text-start">
-                                <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
-                                <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="2" placeholder="Internal notes..."></textarea>
-                            </div>
+                        <!-- Claim Modal -->
+                        <div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 rounded-4 shadow">
+                                    <div class="modal-header border-0 pb-0 px-4 pt-4">
+                                        <h5 class="modal-title fw-bold text-primary" id="claimModalLabel">Redeem Voucher</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="{{ route('manager.vouchers.claim', $voucher) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <div class="modal-body text-start px-4 pt-3">
+                                            <div class="alert alert-warning small border-0 rounded-3 mb-4">
+                                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                                This action is non-reversable.
+                                            </div>
 
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold shadow-sm" onclick="return confirm('Are you sure?, this action is non-reversable')">
-                                    Confirm Redemption
-                                </button>
+                                            <div class="mb-3">
+                                                <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
+                                                <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
+                                                <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="2" placeholder="Internal notes..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Confirm & Claim</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </form>
+                        </div>
                     @endif
                 </div>
             </div>
