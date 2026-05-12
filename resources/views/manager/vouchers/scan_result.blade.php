@@ -35,6 +35,14 @@
                             <span class="text-muted">Gifter:</span>
                             <span class="fw-bold">{{ $voucher->order->gifter->name }}</span>
                         </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Price:</span>
+                            <span class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Bought:</span>
+                            <span class="fw-bold">{{ $voucher->order->created_at->format('M d, Y') }}</span>
+                        </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Expires:</span>
                             <span class="fw-bold">{{ $voucher->expires_at ? $voucher->expires_at->format('M d, Y') : 'N/A' }}</span>

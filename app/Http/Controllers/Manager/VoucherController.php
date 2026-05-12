@@ -17,7 +17,7 @@ class VoucherController extends Controller
     public function scanResult($token)
     {
         $manager = Auth::guard('manager')->user();
-        $voucher = Voucher::where('unique_token', $token)->with(['product.store'])->firstOrFail();
+        $voucher = Voucher::where('unique_token', $token)->with(['product.store', 'order.gifter'])->firstOrFail();
 
         // Security: Ensure voucher belongs to the manager's store
         if ($voucher->product->store_id !== $manager->store_id) {

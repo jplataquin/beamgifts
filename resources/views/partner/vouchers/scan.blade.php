@@ -13,6 +13,20 @@
                 <div id="reader" style="width: 100%; min-height: 400px; background: #000;"></div>
             </div>
 
+            <style>
+                #reader {
+                    border-radius: 1rem;
+                    overflow: hidden;
+                }
+                #reader video {
+                    object-fit: cover !important;
+                }
+                /* Hide the html5-qrcode standard UI elements as we want a clean look */
+                #reader__dashboard {
+                    display: none !important;
+                }
+            </style>
+
             <div class="alert alert-info rounded-pill px-4 small">
                 <i class="bi bi-info-circle me-2"></i> Ensure you have camera permissions enabled for this site.
             </div>
@@ -28,36 +42,34 @@
     document.addEventListener('DOMContentLoaded', function() {
         const onScanSuccess = (decodedText, decodedResult) => {
             // Stop scanning to prevent multiple triggers
-            if (window.html5QrcodeScanner) {
-                window.html5QrcodeScanner.clear();
-            }
-            
-            // Extract TOKEN from URL (e.g. https://domain.com/v/TOKEN)
-            try {
-                let token = '';
-                if (decodedText.includes('/v/')) {
-                    const parts = decodedText.split('/v/');
-                    token = parts[parts.length - 1];
-                } else {
-                    // Fallback if it's just the token
-                    token = decodedText;
-                }
-                
-                if (token) {
-                    window.location.href = "{{ url('partner/vouchers/scan') }}/" + token;
-                } else {
-                    alert("Invalid QR code format.");
-                    location.reload(); // Restart
-                }
-            } catch (e) {
-                alert("Could not process QR code.");
-                location.reload();
+            if (window.html5QrCode) {
+                window.html5QrCode.stop().then(() => {
+                    // Extract TOKEN
+                    let token = decodedText;
+                    if (decodedText.includes('/v/')) {
+                        const parts = decodedText.split('/v/');
+                        token = parts[parts.length - 1];
+                    }
+                    
+                    if (token) {
+                        window.location.href = "{{ url('partner/vouchers/scan') }}/" + token;
+                    }
+                }).catch(err => {
+                    console.error("Failed to stop scanner", err);
+                });
             }
         };
 
-        window.html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
-        window.html5QrcodeScanner.render(onScanSuccess);
+        const config = { fps: 10, qrbox: { width: 280, height: 280 } };
+        window.html5QrCode = new Html5Qrcode("reader");
+        
+        // Use the back camera (environment) by default
+        window.html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+            .catch(err => {
+                console.error("Error starting scanner:", err);
+                // Fallback to any available camera if environment fails
+                window.html5QrCode.start({ facingMode: "user" }, config, onScanSuccess);
+            });
     });
 </script>
 @endpush

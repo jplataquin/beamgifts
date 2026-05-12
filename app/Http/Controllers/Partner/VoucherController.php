@@ -40,7 +40,7 @@ class VoucherController extends Controller
         $partner = Auth::guard('partner')->user();
         $storeId = $partner->store->id;
 
-        $voucher = Voucher::where('unique_token', $token)->with(['product.store'])->firstOrFail();
+        $voucher = Voucher::where('unique_token', $token)->with(['product.store', 'order.gifter'])->firstOrFail();
 
         // Security check: Ensure voucher belongs to this partner
         if ($voucher->product->store_id !== $storeId) {

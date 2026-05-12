@@ -23,20 +23,34 @@
                             <h1 class="h3 fw-bold mb-1 text-success">Valid Voucher</h1>
                             <p class="text-muted mb-4 lead">Ready to be redeemed</p>
                             
+                            @if(!empty($voucher->product->images))
+                                <div class="mb-4">
+                                    <img src="{{ Storage::url($voucher->product->images[0]) }}" class="rounded-4 shadow-sm" style="height: 150px; width: 150px; object-fit: cover;">
+                                </div>
+                            @endif
+
                             <hr class="my-5">
                             
                             <div class="text-start mb-5">
-                                <div class="row mb-2">
-                                    <div class="col-4 text-muted small">Product</div>
-                                    <div class="col-8 fw-bold">{{ $voucher->product->name }}</div>
+                                <div class="row mb-2 border-bottom pb-2">
+                                    <div class="col-5 text-muted small">Product</div>
+                                    <div class="col-7 fw-bold">{{ $voucher->product->name }}</div>
+                                </div>
+                                <div class="row mb-2 border-bottom pb-2">
+                                    <div class="col-5 text-muted small">Gifter</div>
+                                    <div class="col-7 fw-bold">{{ $voucher->order->gifter->name }}</div>
+                                </div>
+                                <div class="row mb-2 border-bottom pb-2">
+                                    <div class="col-5 text-muted small">Voucher Price</div>
+                                    <div class="col-7 fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</div>
+                                </div>
+                                <div class="row mb-2 border-bottom pb-2">
+                                    <div class="col-5 text-muted small">Date Bought</div>
+                                    <div class="col-7 fw-bold">{{ $voucher->order->created_at->format('M d, Y') }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4 text-muted small">Store</div>
-                                    <div class="col-8 fw-bold">{{ $voucher->product->store->name }}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-4 text-muted small">Valid Until</div>
-                                    <div class="col-8 fw-bold">{{ $voucher->expires_at->format('M d, Y') }}</div>
+                                    <div class="col-5 text-muted small">Valid Until</div>
+                                    <div class="col-7 fw-bold">{{ $voucher->expires_at->format('M d, Y') }}</div>
                                 </div>
                             </div>
 

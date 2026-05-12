@@ -13,6 +13,19 @@
                 <div id="reader" style="width: 100%; min-height: 400px; background: #000;"></div>
             </div>
 
+            <style>
+                #reader {
+                    border-radius: 1rem;
+                    overflow: hidden;
+                }
+                #reader video {
+                    object-fit: cover !important;
+                }
+                #reader__dashboard {
+                    display: none !important;
+                }
+            </style>
+
             <div class="alert alert-info rounded-pill px-4 small">
                 <i class="bi bi-info-circle me-2"></i> Position the voucher QR code within the frame to scan.
             </div>
@@ -27,34 +40,31 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const onScanSuccess = (decodedText, decodedResult) => {
-            if (window.html5QrcodeScanner) {
-                window.html5QrcodeScanner.clear();
-            }
-            
-            try {
-                let token = '';
-                if (decodedText.includes('/v/')) {
-                    const parts = decodedText.split('/v/');
-                    token = parts[parts.length - 1];
-                } else {
-                    token = decodedText;
-                }
-                
-                if (token) {
-                    window.location.href = "{{ url('manager/scan') }}/" + token;
-                } else {
-                    alert("Invalid QR code.");
-                    location.reload();
-                }
-            } catch (e) {
-                alert("Could not process QR code.");
-                location.reload();
+            if (window.html5QrCode) {
+                window.html5QrCode.stop().then(() => {
+                    let token = decodedText;
+                    if (decodedText.includes('/v/')) {
+                        const parts = decodedText.split('/v/');
+                        token = parts[parts.length - 1];
+                    }
+                    
+                    if (token) {
+                        window.location.href = "{{ url('manager/scan') }}/" + token;
+                    }
+                }).catch(err => {
+                    console.error("Failed to stop scanner", err);
+                });
             }
         };
 
-        window.html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
-        window.html5QrcodeScanner.render(onScanSuccess);
+        const config = { fps: 10, qrbox: { width: 280, height: 280 } };
+        window.html5QrCode = new Html5Qrcode("reader");
+        
+        window.html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+            .catch(err => {
+                console.error("Error starting scanner:", err);
+                window.html5QrCode.start({ facingMode: "user" }, config, onScanSuccess);
+            });
     });
 </script>
 @endpush
