@@ -20,12 +20,7 @@ class CityController extends Controller
                 $q->where('city_id', $city->id);
             }, 'category_rel'])->firstOrFail();
 
-        // Get available stores for the city to display as brands
-        $availableStores = Store::whereHas('branches', function($q) use ($city) {
-            $q->where('city_id', $city->id);
-        })->get();
-
-        return view('product.show', compact('city', 'product', 'availableStores'));
+        return view('product.show', compact('city', 'product'));
     }
 
     public function index(Request $request, $city_slug)

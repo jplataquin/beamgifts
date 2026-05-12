@@ -101,38 +101,6 @@
             </div>
         </div>
     </div>
-
-    @if(isset($availableStores) && $availableStores->count() > 0)
-        <div class="mt-5 pt-5 border-top">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                    <h3 class="fw-bold mb-1">Available Brands in {{ $city->name }}</h3>
-                    <p class="text-muted mb-0">Discover more gifts from local stores</p>
-                </div>
-            </div>
-            
-            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4">
-                @foreach($availableStores as $store)
-                    <div class="col">
-                        <a href="{{ route('store.show', ['city_slug' => $city->slug, 'store_slug' => $store->slug]) }}" class="text-decoration-none">
-                            <div class="card h-100 border-0 shadow-sm rounded-4 text-center store-card transition-hover">
-                                <div class="card-body p-4">
-                                    <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; overflow: hidden; border: 1px solid #eee;">
-                                        @if($store->logo)
-                                            <img src="{{ Storage::url($store->logo) }}" alt="{{ $store->name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
-                                        @else
-                                            <i class="bi bi-shop text-muted fs-1"></i>
-                                        @endif
-                                    </div>
-                                    <h6 class="fw-bold text-dark mb-0">{{ $store->name }}</h6>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
 </div>
 
 <style>
