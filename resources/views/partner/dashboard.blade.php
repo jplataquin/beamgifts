@@ -15,7 +15,6 @@
                         <a href="{{ route('partner.branches.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Manage Branches</a>
                         <a href="{{ route('partner.products.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Products</a>
                         <a href="{{ route('partner.vouchers.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Vouchers</a>
-                        <a href="{{ route('partner.vouchers.scan') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Scan QR</a>
                     </div>
                 </div>
             </div>
