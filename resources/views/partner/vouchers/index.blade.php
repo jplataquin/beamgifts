@@ -34,7 +34,7 @@
                             </thead>
                             <tbody>
                                 @forelse($vouchers as $voucher)
-                                    <tr>
+                                    <tr class="clickable-row" data-href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" style="cursor: pointer;">
                                         <td class="ps-4">
                                             <div class="fw-bold">{{ $voucher->product->name }}</div>
                                         </td>
@@ -54,7 +54,7 @@
                                             @if($voucher->status === 'active')
                                                 <a href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" class="btn btn-sm btn-outline-primary rounded-pill">View/Claim</a>
                                             @else
-                                                <button disabled class="btn btn-sm btn-light rounded-pill">Claimed</button>
+                                                <a href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" class="btn btn-sm btn-light rounded-pill">View History</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -74,4 +74,20 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function(e) {
+                // Don't trigger if a button or link inside the row was clicked
+                if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
+                    window.location.href = this.dataset.href;
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection
