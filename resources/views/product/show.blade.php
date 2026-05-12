@@ -56,8 +56,12 @@
 
                 <div class="card bg-light border-0 rounded-4 p-4 mb-5">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-white rounded-circle p-2 me-3 shadow-sm">
-                            <i class="bi bi-shop text-primary fs-4"></i>
+                        <div class="bg-white rounded-circle p-2 me-3 shadow-sm d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            @if($product->store->logo)
+                                <img src="{{ Storage::url($product->store->logo) }}" alt="{{ $product->store->name }}" class="img-fluid rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <i class="bi bi-shop text-primary fs-4"></i>
+                            @endif
                         </div>
                         <div>
                             <div class="small text-muted">Sold by</div>
@@ -97,5 +101,47 @@
             </div>
         </div>
     </div>
+
+    @if(isset($availableStores) && $availableStores->count() > 0)
+        <div class="mt-5 pt-5 border-top">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1">Available Brands in {{ $city->name }}</h3>
+                    <p class="text-muted mb-0">Discover more gifts from local stores</p>
+                </div>
+            </div>
+            
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4">
+                @foreach($availableStores as $store)
+                    <div class="col">
+                        <a href="{{ route('store.show', ['city_slug' => $city->slug, 'store_slug' => $store->slug]) }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 text-center store-card transition-hover">
+                                <div class="card-body p-4">
+                                    <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; overflow: hidden; border: 1px solid #eee;">
+                                        @if($store->logo)
+                                            <img src="{{ Storage::url($store->logo) }}" alt="{{ $store->name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @else
+                                            <i class="bi bi-shop text-muted fs-1"></i>
+                                        @endif
+                                    </div>
+                                    <h6 class="fw-bold text-dark mb-0">{{ $store->name }}</h6>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
 @endsection
