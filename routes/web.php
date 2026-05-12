@@ -51,6 +51,7 @@ Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
         
         // Store Management (Singleton)
         Route::singleton('store', App\Http\Controllers\Partner\StoreController::class);
+        Route::post('store/upload-chunk', [App\Http\Controllers\Partner\StoreController::class, 'uploadChunk'])->name('store.upload_chunk');
         
         // Branch Management
         Route::resource('branches', App\Http\Controllers\Partner\BranchController::class);

@@ -19,7 +19,7 @@
                     <div class="row g-0">
                         <div class="col-md-4 bg-light d-flex align-items-center justify-content-center p-4">
                             @if($store->logo)
-                                <img src="{{ asset('storage/' . $store->logo) }}" alt="{{ $store->name }}" class="img-fluid rounded shadow-sm" style="max-height: 200px;">
+                                <img src="{{ Storage::url($store->logo) }}" alt="{{ $store->name }}" class="img-fluid rounded shadow-sm" style="max-height: 200px;">
                             @else
                                 <div class="text-center text-muted">
                                     <i class="bi bi-shop h1 d-block mb-2"></i>
