@@ -66,41 +66,6 @@
                                 <i class="bi bi-gift me-2"></i> Redeem Voucher
                             </button>
 
-                            <!-- Claim Modal -->
-                            <div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content border-0 rounded-4 shadow">
-                                        <div class="modal-header border-0 pb-0">
-                                            <h5 class="modal-title fw-bold" id="claimModalLabel text-primary">Confirm Redemption</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{{ route('partner.vouchers.claim', $voucher) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <div class="modal-body text-start pt-4">
-                                                <div class="alert alert-warning small border-0 rounded-3 mb-4">
-                                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                                    <strong>Important:</strong> This action is non-reversable.
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
-                                                    <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
-                                                </div>
-
-                                                <div class="mb-0">
-                                                    <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
-                                                    <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="3" placeholder="Add any internal notes here..."></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer border-0 pt-0 pb-4 px-4">
-                                                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Confirm & Claim</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         @elseif($voucher->status === 'claimed')
                             <div class="mb-4">
                                 <i class="bi bi-info-circle-fill display-1 text-secondary"></i>
@@ -131,4 +96,42 @@
         </div>
     </div>
 </div>
+
+@if(!isset($error) && isset($voucher) && $voucher->status === 'active')
+    <!-- Claim Modal (Moved to end to avoid backdrop issues) -->
+    <div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold text-primary" id="claimModalLabel">Confirm Redemption</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('partner.vouchers.claim', $voucher) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body text-start px-4 pt-3">
+                        <div class="alert alert-warning small border-0 rounded-3 mb-4">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Important:</strong> This action is non-reversable.
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
+                            <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
+                            <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="3" placeholder="Add any internal notes here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0 pb-4 px-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Confirm & Claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endif
 @endsection
