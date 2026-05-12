@@ -1,0 +1,155 @@
+// Custom variables for sleek pastel minimalist theme
+$primary: #FF6F61; // Coral
+$secondary: #6CA5D8; // Soft Blue
+$warning: #FFD700; // Gold
+$info: #A88FBB; // Soft Purple
+$light: #f8f9fa;
+$body-bg: #FFFFFF;
+$body-color: #4a4a4a;
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+.hero-carousel {
+    .carousel-item {
+        height: 60vh;
+        min-height: 400px;
+        background-color: $secondary;
+        
+        img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+
+    .card-body {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-title {
+        min-height: 3rem; /* Height for ~2 lines of text */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-brand {
+        min-height: 1.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-footer {
+        flex-shrink: 0;
+    }
+}
+
+/* Horizontal Scroll for Mobile Cards */
+@media (max-width: 767.98px) {
+    .mobile-horizontal-scroll {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scroll-item {
+            flex: 0 0 85% !important;
+            max-width: 85% !important;
+            margin-right: 1rem;
+            
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.bi-quote-reverse {
+    display: inline-block;
+    transform: rotate(180deg);
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    display: none; /* Hidden by default on desktop */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 15px rgba(0,0,0,0.08);
+    z-index: 1030;
+    padding-bottom: env(safe-area-inset-bottom); /* iOS support */
+    
+    .nav-item {
+        flex: 1;
+        
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.6rem 0;
+            color: #6c757d;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-decoration: none;
+            
+            i {
+                font-size: 1.3rem;
+                margin-bottom: 2px;
+            }
+            
+            &.active {
+                color: $primary;
+            }
+
+            .badge {
+                top: 5px !important;
+                right: 50% !important;
+                transform: translateX(120%) !important;
+                font-size: 0.55rem;
+                padding: 0.25em 0.4em;
+            }
+        }
+    }
+}
+
+@media (max-width: 991.98px) {
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    
+    body {
+        padding-bottom: 70px; /* Space for the fixed bar */
+    }
+}

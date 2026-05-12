@@ -1,0 +1,83 @@
+@extends('layouts.app')
+
+@section('title', 'My Store')
+
+@section('content')
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100">
+                <div class="card-body p-0">
+                    <h5 class="fw-bold text-primary mb-4">Partner Menu</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="{{ route('partner.dashboard') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Dashboard</a>
+                        <a href="{{ route('partner.store.show') }}" class="list-group-item list-group-item-action active rounded-pill mb-1">My Store</a>
+                        <a href="{{ route('partner.branches.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Manage Branches</a>
+                        <a href="{{ route('partner.products.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Products</a>
+                        <a href="{{ route('partner.vouchers.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Vouchers</a>
+                        <a href="{{ route('partner.vouchers.scan') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Scan QR</a>
+                        <form action="{{ route('partner.logout') }}" method="POST" class="mt-3">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 fw-bold mb-0 text-primary">Store Settings</h1>
+                <a href="{{ route('partner.store.edit') }}" class="btn btn-primary rounded-pill px-4">Edit Store Info</a>
+            </div>
+
+            <div class="card shadow-sm border-0 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4 bg-light d-flex align-items-center justify-content-center p-4">
+                            @if($store->logo)
+                                <img src="{{ asset('storage/' . $store->logo) }}" alt="{{ $store->name }}" class="img-fluid rounded shadow-sm" style="max-height: 200px;">
+                            @else
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-shop h1 d-block mb-2"></i>
+                                    <span>No Logo Uploaded</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col-md-8 p-4">
+                            <div class="mb-4">
+                                <h3 class="fw-bold mb-1">{{ $store->name }}</h3>
+                                <p class="text-muted small">URL: <code class="bg-light px-2 py-1 rounded">{{ $store->slug }}</code></p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-muted text-uppercase small">Description</h6>
+                                <p class="mb-0">{{ $store->description ?: 'No description provided.' }}</p>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <div class="h4 fw-bold mb-0 text-primary">{{ $store->branches_count }}</div>
+                                        <div class="small text-muted">Active Branches</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <div class="h4 fw-bold mb-0 text-primary">{{ $store->products_count }}</div>
+                                        <div class="small text-muted">Active Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 d-flex gap-2">
+                <a href="{{ route('partner.branches.index') }}" class="btn btn-outline-primary rounded-pill flex-grow-1">Manage Branches</a>
+                <a href="{{ route('partner.products.index') }}" class="btn btn-outline-primary rounded-pill flex-grow-1">Manage Products Catalog</a>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
