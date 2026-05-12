@@ -85,6 +85,7 @@ class ManagerController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+            $data['must_change_password'] = true;
         }
 
         $manager->update($data);

@@ -53,6 +53,8 @@
                                         <td class="pe-4">
                                             @if($product->is_banned)
                                                 <span class="badge bg-danger rounded-pill">Banned</span>
+                                            @elseif($product->status === 'Inactive')
+                                                <span class="badge bg-secondary rounded-pill">Inactive</span>
                                             @else
                                                 <span class="badge bg-success rounded-pill">Active</span>
                                             @endif

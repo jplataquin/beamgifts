@@ -12,7 +12,8 @@ class CityController extends Controller
     public function showProduct($city_slug, $product_slug)
     {
         $city = app('current_city');
-        $product = Product::where('slug', $product_slug)
+        $product = Product::active()
+            ->where('slug', $product_slug)
             ->whereHas('store.branches', function($query) use ($city) {
                 $query->where('city_id', $city->id);
             })->with(['store.branches' => function($q) use ($city) {
@@ -26,7 +27,7 @@ class CityController extends Controller
     {
         $city = app('current_city');
         
-        $query = Product::whereHas('store.branches', function($query) use ($city) {
+        $query = Product::active()->whereHas('store.branches', function($query) use ($city) {
             $query->where('city_id', $city->id);
         })->with(['store', 'category_rel']);
 

@@ -19,6 +19,7 @@ class Product extends Model
         'category',
         'images',
         'is_banned',
+        'status',
     ];
 
     protected $casts = [
@@ -27,6 +28,14 @@ class Product extends Model
         'markup_price' => 'decimal:2',
         'is_banned' => 'boolean',
     ];
+
+    /**
+     * Scope a query to only include active products.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active')->where('is_banned', false);
+    }
 
     /**
      * Get the store that owns the product.

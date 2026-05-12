@@ -13,7 +13,9 @@ class StoreController extends Controller
         $store = Store::where('slug', $store_slug)
             ->whereHas('branches', function($query) use ($city) {
                 $query->where('city_id', $city->id);
-            })->with(['products', 'branches' => function($query) use ($city) {
+            })->with(['products' => function($query) {
+                $query->active();
+            }, 'branches' => function($query) use ($city) {
                 $query->where('city_id', $city->id);
             }])->firstOrFail();
 

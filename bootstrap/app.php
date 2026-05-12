@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'city.context' => \App\Http\Middleware\SetCityContext::class,
+            'manager.force_password_change' => \App\Http\Middleware\ForceManagerPasswordChange::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

@@ -16,6 +16,7 @@ class Manager extends Authenticatable
         'name',
         'email',
         'password',
+        'must_change_password',
     ];
 
     protected $hidden = [
@@ -25,6 +26,7 @@ class Manager extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'must_change_password' => 'boolean',
     ];
 
     /**

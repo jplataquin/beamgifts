@@ -77,10 +77,16 @@ Route::group(['prefix' => 'manager', 'as' => 'manager.'], function () {
     Route::post('/logout', [App\Http\Controllers\Manager\Auth\LoginController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => 'auth:manager'], function () {
-        Route::get('/scan', [App\Http\Controllers\Manager\VoucherController::class, 'scan'])->name('vouchers.scan');
-        Route::get('/scan/{token}', [App\Http\Controllers\Manager\VoucherController::class, 'scanResult'])->name('vouchers.scan.result');
-        Route::patch('/vouchers/{voucher}/claim', [App\Http\Controllers\Manager\VoucherController::class, 'claim'])->name('vouchers.claim');
-        Route::get('/transactions', [App\Http\Controllers\Manager\VoucherController::class, 'transactions'])->name('vouchers.transactions');
+        // Password Change Routes (No force middleware here)
+        Route::get('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'edit'])->name('password.edit');
+        Route::put('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'update'])->name('password.update');
+
+        Route::group(['middleware' => 'manager.force_password_change'], function () {
+            Route::get('/scan', [App\Http\Controllers\Manager\VoucherController::class, 'scan'])->name('vouchers.scan');
+            Route::get('/scan/{token}', [App\Http\Controllers\Manager\VoucherController::class, 'scanResult'])->name('vouchers.scan.result');
+            Route::patch('/vouchers/{voucher}/claim', [App\Http\Controllers\Manager\VoucherController::class, 'claim'])->name('vouchers.claim');
+            Route::get('/transactions', [App\Http\Controllers\Manager\VoucherController::class, 'transactions'])->name('vouchers.transactions');
+        });
     });
 });
 

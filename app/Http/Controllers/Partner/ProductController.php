@@ -47,6 +47,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'status' => 'required|in:Active,Inactive',
             'images' => 'nullable|array',
             'images.*' => 'string', // Filenames from chunked upload
         ]);
@@ -61,6 +62,7 @@ class ProductController extends Controller
             'slug' => Str::slug($validated['name']) . '-' . rand(1000, 9999),
             'description' => $validated['description'],
             'price' => $validated['price'],
+            'status' => $validated['status'],
             'images' => $validated['images'] ?? [],
         ]);
 
@@ -84,6 +86,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'status' => 'required|in:Active,Inactive',
             'images' => 'nullable|array',
         ]);
 

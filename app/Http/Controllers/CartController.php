@@ -31,6 +31,11 @@ class CartController extends Controller
             return back()->with('error', 'This product is not available in ' . $city->name);
         }
 
+        // Verify product is active
+        if ($product->status !== 'Active' || $product->is_banned) {
+            return back()->with('error', 'This product is no longer available.');
+        }
+
         $cartKey = "cart_{$city->id}";
         $cart = Session::get($cartKey, []);
 

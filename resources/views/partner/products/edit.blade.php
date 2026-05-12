@@ -53,6 +53,16 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <div class="col-md-12">
+                                        <label for="status" class="form-label fw-bold">Status</label>
+                                        <select name="status" id="status" class="form-select @error('status') is-invalid @enderror" required>
+                                            <option value="Active" {{ old('status', $product->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                            <option value="Inactive" {{ old('status', $product->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                        @error('status')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <div class="mb-4">

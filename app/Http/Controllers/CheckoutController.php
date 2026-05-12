@@ -39,6 +39,13 @@ class CheckoutController extends Controller
             if ($item['quantity'] > 3) {
                 return redirect()->route('cart.index', $city_slug)->with('error', 'Maximum quantity per item is 3.');
             }
+            
+            // Validate product is still active
+            $product = Product::find($item['id']);
+            if (!$product || $product->status !== 'Active' || $product->is_banned) {
+                return redirect()->route('cart.index', $city_slug)->with('error', "Sorry, the product '{$item['name']}' is no longer available.");
+            }
+
             $subtotal += $item['price'] * $item['quantity'];
         }
 
