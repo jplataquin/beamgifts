@@ -25,6 +25,12 @@ class ProductController extends Controller
         return view('partner.products.index', compact('products'));
     }
 
+    public function show(Product $product)
+    {
+        $this->authorizeProduct($product);
+        return view('partner.products.show', compact('product'));
+    }
+
     public function create()
     {
         $store = Auth::guard('partner')->user()->store;

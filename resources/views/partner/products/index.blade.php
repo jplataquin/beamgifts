@@ -30,13 +30,12 @@
                                     <th class="ps-4">Product</th>
                                     <th>Category</th>
                                     <th>Price</th>
-                                    <th>Status</th>
-                                    <th class="text-end pe-4">Actions</th>
+                                    <th class="pe-4">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($products as $product)
-                                    <tr>
+                                    <tr class="clickable-row" data-href="{{ route('partner.products.show', $product) }}" style="cursor: pointer;">
                                         <td class="ps-4">
                                             <div class="d-flex align-items-center">
                                                 @if(!empty($product->images))
@@ -50,26 +49,18 @@
                                             </div>
                                         </td>
                                         <td><span class="badge bg-light text-dark rounded-pill">{{ $product->category }}</span></td>
-                                        <td>₱{{ number_format($product->price, 2) }}</td>
-                                        <td>
+                                        <td class="fw-bold text-primary">₱{{ number_format($product->price, 2) }}</td>
+                                        <td class="pe-4">
                                             @if($product->is_banned)
                                                 <span class="badge bg-danger rounded-pill">Banned</span>
                                             @else
                                                 <span class="badge bg-success rounded-pill">Active</span>
                                             @endif
                                         </td>
-                                        <td class="text-end pe-4">
-                                            <a href="{{ route('partner.products.edit', $product) }}" class="btn btn-sm btn-light rounded-pill">Edit</a>
-                                            <form action="{{ route('partner.products.destroy', $product) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this product?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Delete</button>
-                                            </form>
-                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-5 text-muted">No products found.</td>
+                                        <td colspan="4" class="text-center py-5 text-muted">No products found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -84,4 +75,20 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function(e) {
+                // Redirect to the data-href unless a link or button was clicked
+                if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
+                    window.location.href = this.dataset.href;
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection
