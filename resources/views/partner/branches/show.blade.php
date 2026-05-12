@@ -6,21 +6,11 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="d-flex align-items-center">
-                    <a href="{{ route('partner.branches.index') }}" class="btn btn-light rounded-pill me-3">
-                        &larr; Back
-                    </a>
-                    <h1 class="h3 fw-bold mb-0 text-primary">Branch Details</h1>
-                </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('partner.branches.edit', $branch) }}" class="btn btn-primary rounded-pill px-4">Edit</a>
-                    <form action="{{ route('partner.branches.destroy', $branch) }}" method="POST" onsubmit="return confirm('Delete this branch?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger rounded-pill px-4">Delete</button>
-                    </form>
-                </div>
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ route('partner.branches.index') }}" class="btn btn-light rounded-pill me-3">
+                    &larr; Back
+                </a>
+                <h1 class="h3 fw-bold mb-0 text-primary">Branch Details</h1>
             </div>
 
             <div class="card shadow-sm border-0 p-4">
@@ -56,6 +46,15 @@
                             </div>
                         </div>
                     @endif
+
+                    <div class="mt-5 pt-4 border-top d-flex gap-3">
+                        <a href="{{ route('partner.branches.edit', $branch) }}" class="btn btn-primary rounded-pill px-4">Edit Branch</a>
+                        <form action="{{ route('partner.branches.destroy', $branch) }}" method="POST" onsubmit="return confirm('Delete this branch?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger rounded-pill px-4">Delete Branch</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
