@@ -151,7 +151,7 @@
 </div>
 
 <script>
-    const CHUNK_SIZE = 1024 * 1024; // 1MB
+    const CHUNK_SIZE = 512 * 1024; // 512KB chunks to prevent 413 Payload Too Large
 
     document.querySelectorAll('.photo-input').forEach(input => {
         input.addEventListener('change', async function(e) {

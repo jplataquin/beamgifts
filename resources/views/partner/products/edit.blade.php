@@ -148,7 +148,7 @@
 </div>
 
 <script>
-    const CHUNK_SIZE = 1024 * 1024;
+    const CHUNK_SIZE = 512 * 1024; // 512KB chunks to prevent 413 Payload Too Large
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
     const imageList = document.getElementById('imageList');
