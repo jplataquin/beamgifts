@@ -96,7 +96,7 @@ class StoreController extends Controller
 
             if ($lock->get()) {
                 try {
-                    $finalName = Str::random(40) . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+                    $finalName = Str::random(40) . '.webp';
                     $finalPath = "logos/{$finalName}";
 
                     if (!Storage::disk('public')->exists('logos')) {
@@ -118,6 +118,11 @@ class StoreController extends Controller
                         fclose($in);
                     }
                     fclose($out);
+
+                    // Convert to WebP using Intervention Image v3
+                    $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                    $image = $manager->read($fullFinalPath);
+                    $image->toWebp(80)->save($fullFinalPath);
 
                     Storage::disk('local')->deleteDirectory($tempPath);
 
