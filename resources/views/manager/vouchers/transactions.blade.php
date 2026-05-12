@@ -20,6 +20,7 @@
                     <tr>
                         <th class="ps-4 py-3">Redeemed At</th>
                         <th class="py-3">Product</th>
+                        <th class="py-3">Price</th>
                         <th class="py-3">Gifter</th>
                         <th class="py-3">Voucher ID</th>
                     </tr>
@@ -32,12 +33,13 @@
                                 <div class="small text-muted">{{ $voucher->claimed_at->format('h:i A') }}</div>
                             </td>
                             <td class="fw-bold">{{ $voucher->product->name }}</td>
+                            <td class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
                             <td>{{ $voucher->order->gifter->name }}</td>
-                            <td><code>{{ $voucher->unique_token }}</code></td>
+                            <td><code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">No transactions recorded for this branch yet.</td>
+                            <td colspan="5" class="text-center py-5 text-muted">No transactions recorded for this branch yet.</td>
                         </tr>
                     @endforelse
                 </tbody>

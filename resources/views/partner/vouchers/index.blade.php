@@ -16,10 +16,6 @@
                         <a href="{{ route('partner.products.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Products</a>
                         <a href="{{ route('partner.vouchers.index') }}" class="list-group-item list-group-item-action active rounded-pill mb-1 border-0">Vouchers</a>
                         <a href="{{ route('partner.vouchers.scan') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Scan QR</a>
-                        <form action="{{ route('partner.logout') }}" method="POST" class="mt-3">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">Logout</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -42,6 +38,7 @@
                                 <tr>
                                     <th class="ps-4">Product</th>
                                     <th>Gifter</th>
+                                    <th>Price</th>
                                     <th>Status</th>
                                     <th>Purchased</th>
                                     <th class="text-end pe-4">Action</th>
@@ -54,6 +51,7 @@
                                             <div class="fw-bold">{{ $voucher->product->name }}</div>
                                         </td>
                                         <td>{{ $voucher->order->gifter->name }}</td>
+                                        <td class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
                                         <td>
                                             @if($voucher->status === 'active')
                                                 <span class="badge bg-success rounded-pill">Active</span>
@@ -74,7 +72,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-5 text-muted">No vouchers found.</td>
+                                        <td colspan="6" class="text-center py-5 text-muted">No vouchers found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -14,13 +14,9 @@
                         <a href="{{ route('partner.stores.index') }}" class="list-group-item list-group-item-action active rounded-pill mb-1 border-0">My Stores</a>
                         <a href="#" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Products</a>
                         <a href="#" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Vouchers</a>
-                        <a href="#" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Scan QR</a>
-                        <form action="{{ route('partner.logout') }}" method="POST" class="mt-3">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">Logout</button>
-                        </form>
-                    </div>
-                </div>
+                        <a href="{{ route('partner.vouchers.scan') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Scan QR</a>
+                        </div>
+                        </div>
             </div>
         </div>
         <div class="col-md-9">
