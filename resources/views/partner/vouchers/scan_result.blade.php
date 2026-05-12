@@ -63,6 +63,11 @@
                                     <input type="text" name="claimed_by" id="claimed_by" class="form-control form-control-lg rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
                                 </div>
 
+                                <div class="mb-4 text-start">
+                                    <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
+                                    <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="3" placeholder="Add any internal notes here..."></textarea>
+                                </div>
+
                                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm" onclick="return confirm('Are you sure?, this action is non-reversable')">Mark as Claimed</button>
                             </form>
                         @elseif($voucher->status === 'claimed')
@@ -71,7 +76,15 @@
                             </div>
                             <h1 class="h3 fw-bold mb-1">Already Redeemed</h1>
                             <p class="text-muted mb-2">This voucher was claimed on {{ $voucher->claimed_at->format('M d, Y H:i') }}</p>
-                            <p class="fw-bold mb-5">Claimed By: {{ $voucher->claimed_by ?? 'N/A' }}</p>
+                            <p class="fw-bold mb-3">Claimed By: {{ $voucher->claimed_by ?? 'N/A' }}</p>
+                            @if($voucher->remarks)
+                                <div class="bg-light p-3 rounded-4 mb-5 text-start small">
+                                    <div class="fw-bold text-muted mb-1 text-uppercase" style="font-size: 0.65rem;">Internal Remarks</div>
+                                    {{ $voucher->remarks }}
+                                </div>
+                            @else
+                                <div class="mb-5"></div>
+                            @endif
                             <a href="{{ route('partner.vouchers.scan') }}" class="btn btn-light rounded-pill px-5 py-3">Back to Scanner</a>
                         @else
                             <div class="mb-4">

@@ -52,6 +52,12 @@
                                 <span class="text-muted">Claimed By:</span>
                                 <span class="fw-bold text-success">{{ $voucher->claimed_by ?? 'N/A' }}</span>
                             </div>
+                            @if($voucher->remarks)
+                                <div class="mt-3 p-3 bg-light rounded-4 small text-start">
+                                    <div class="fw-bold text-muted small text-uppercase mb-1" style="font-size: 0.65rem;">Remarks</div>
+                                    {{ $voucher->remarks }}
+                                </div>
+                            @endif
                         @endif
                     </div>
 
@@ -60,9 +66,14 @@
                             @csrf
                             @method('PATCH')
                             
-                            <div class="mb-4 text-start">
+                            <div class="mb-3 text-start">
                                 <label for="claimed_by" class="form-label small fw-bold text-muted">Claimed By (Claimant Name)</label>
                                 <input type="text" name="claimed_by" id="claimed_by" class="form-control rounded-pill border-primary border-opacity-25" placeholder="Enter name of person claiming" required>
+                            </div>
+
+                            <div class="mb-4 text-start">
+                                <label for="remarks" class="form-label small fw-bold text-muted">Remarks (Optional)</label>
+                                <textarea name="remarks" id="remarks" class="form-control rounded-4 border-primary border-opacity-25" rows="2" placeholder="Internal notes..."></textarea>
                             </div>
 
                             <div class="d-grid">

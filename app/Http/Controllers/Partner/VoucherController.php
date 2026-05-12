@@ -76,12 +76,14 @@ class VoucherController extends Controller
 
         $request->validate([
             'claimed_by' => 'required|string|max:255',
+            'remarks' => 'nullable|string|max:1000',
         ]);
 
         $voucher->update([
             'status' => 'claimed',
             'claimed_at' => now(),
             'claimed_by' => $request->claimed_by,
+            'remarks' => $request->remarks,
         ]);
 
         return redirect()->route('partner.vouchers.index')->with('success', 'Voucher claimed successfully!');

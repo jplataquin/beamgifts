@@ -49,6 +49,7 @@ class VoucherController extends Controller
 
         $request->validate([
             'claimed_by' => 'required|string|max:255',
+            'remarks' => 'nullable|string|max:1000',
         ]);
 
         $voucher->update([
@@ -56,6 +57,7 @@ class VoucherController extends Controller
             'claimed_at' => now(),
             'claimed_branch_id' => $manager->branch_id,
             'claimed_by' => $request->claimed_by,
+            'remarks' => $request->remarks,
         ]);
 
         return redirect()->route('manager.vouchers.transactions')->with('success', 'Voucher claimed successfully at ' . $manager->branch->name . '!');
