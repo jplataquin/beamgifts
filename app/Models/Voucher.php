@@ -55,4 +55,13 @@ class Voucher extends Model
     {
         return $this->belongsTo(Branch::class, 'claimed_branch_id');
     }
+
+    /**
+     * Get the computed validation code for proving a scan.
+     */
+    public function getValidationCodeAttribute()
+    {
+        $hash = hash('sha256', $this->unique_token . config('app.key'));
+        return strtoupper(substr($hash, 0, 3) . substr($hash, -3));
+    }
 }

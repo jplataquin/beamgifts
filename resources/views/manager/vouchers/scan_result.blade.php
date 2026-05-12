@@ -21,7 +21,8 @@
                             <img src="{{ Storage::url($voucher->product->images[0]) }}" class="rounded-4 mb-4 shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
                         @endif
                         <h2 class="h4 fw-bold mb-1">{{ $voucher->product->name }}</h2>
-                        <p class="text-muted fw-bold">ID: <code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></p>
+                        <p class="text-muted fw-bold mb-0">ID: <code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></p>
+                        <p class="text-primary small font-monospace fw-bold mt-1">Validation: {{ $voucher->validation_code }}</p>
                     </div>
 
                     <div class="bg-light rounded-4 p-4 mb-4">

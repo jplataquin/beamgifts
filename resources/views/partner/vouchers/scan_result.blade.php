@@ -37,6 +37,10 @@
                                     <div class="col-7 fw-bold">#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</div>
                                 </div>
                                 <div class="row mb-2 border-bottom pb-2">
+                                    <div class="col-5 text-muted small">Validation Code</div>
+                                    <div class="col-7 fw-bold font-monospace text-primary">{{ $voucher->validation_code }}</div>
+                                </div>
+                                <div class="row mb-2 border-bottom pb-2">
                                     <div class="col-5 text-muted small">Product</div>
                                     <div class="col-7 fw-bold">{{ $voucher->product->name }}</div>
                                 </div>
