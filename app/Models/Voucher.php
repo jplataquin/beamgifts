@@ -10,6 +10,8 @@ class Voucher extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'price',
+        'markup_price',
         'unique_token',
         'qr_payload',
         'personal_message',
@@ -24,6 +26,8 @@ class Voucher extends Model
     protected $casts = [
         'expires_at' => 'datetime',
         'claimed_at' => 'datetime',
+        'price' => 'decimal:2',
+        'markup_price' => 'decimal:2',
     ];
 
     /**

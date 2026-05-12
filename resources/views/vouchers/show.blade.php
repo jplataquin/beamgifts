@@ -67,7 +67,7 @@
                         @endif
 
                         <h2 class="h3 fw-bold mb-1">{{ $voucher->product->name }}</h2>
-                        <div class="h5 text-primary fw-bold mb-3">₱{{ number_format($voucher->product->markup_price, 2) }}</div>
+                        <div class="h5 text-primary fw-bold mb-3">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</div>
                         <p class="text-muted mb-2">By: <strong>{{ $voucher->product->store->name }}</strong></p>
                         
                         @if($voucher->product->description)

@@ -166,12 +166,14 @@ class CheckoutController extends Controller
             $order->update(['status' => 'paid']);
 
             // Generate Vouchers for each quantity of each item
-            foreach ($order->items as $item) {
+            foreach ($order->items()->with('product')->get() as $item) {
                 for ($i = 0; $i < $item->quantity; $i++) {
                     $token = Str::random(32);
                     Voucher::create([
                         'order_id' => $order->id,
                         'product_id' => $item->product_id,
+                        'price' => $item->product->price ?? $item->price,
+                        'markup_price' => $item->product->markup_price ?? null,
                         'unique_token' => $token,
                         'qr_payload' => route('voucher.show', $token),
                         'status' => 'active',
