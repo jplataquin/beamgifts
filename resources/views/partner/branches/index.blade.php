@@ -32,28 +32,19 @@
                                 <tr>
                                     <th class="ps-4">Branch Name</th>
                                     <th>City</th>
-                                    <th>Address</th>
-                                    <th class="text-end pe-4">Actions</th>
+                                    <th class="pe-4">Address</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($branches as $branch)
-                                    <tr>
+                                    <tr onclick="window.location='{{ route('partner.branches.show', $branch) }}'" style="cursor: pointer;">
                                         <td class="ps-4 fw-bold">{{ $branch->name }}</td>
                                         <td><span class="badge bg-secondary rounded-pill">{{ $branch->city->name }}</span></td>
-                                        <td class="small text-muted">{{ $branch->address }}</td>
-                                        <td class="text-end pe-4">
-                                            <a href="{{ route('partner.branches.edit', $branch) }}" class="btn btn-sm btn-light rounded-pill">Edit</a>
-                                            <form action="{{ route('partner.branches.destroy', $branch) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this branch?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Delete</button>
-                                            </form>
-                                        </td>
+                                        <td class="small text-muted pe-4">{{ $branch->address }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center py-5 text-muted">No branches found for this store.</td>
+                                        <td colspan="3" class="text-center py-5 text-muted">No branches found for this store.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

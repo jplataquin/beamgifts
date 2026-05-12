@@ -17,6 +17,14 @@ class BranchController extends Controller
         return view('partner.branches.index', compact('store', 'branches'));
     }
 
+    public function show(Branch $branch)
+    {
+        $store = Auth::guard('partner')->user()->store;
+        if ($branch->store_id !== $store->id) abort(403);
+
+        return view('partner.branches.show', compact('store', 'branch'));
+    }
+
     public function create()
     {
         $store = Auth::guard('partner')->user()->store;
