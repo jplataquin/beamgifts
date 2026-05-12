@@ -21,7 +21,7 @@ class VoucherController extends Controller
         // Generate QR Code as SVG
         $qrCode = QrCode::size(250)
             ->margin(1)
-            ->generate(route('partner.vouchers.scan.result', ['token' => $token]));
+            ->generate($token);
 
         return view('vouchers.show', compact('voucher', 'qrCode'));
     }

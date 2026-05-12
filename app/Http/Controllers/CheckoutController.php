@@ -175,7 +175,7 @@ class CheckoutController extends Controller
                         'price' => $item->product->price ?? $item->price,
                         'markup_price' => $item->product->markup_price ?? null,
                         'unique_token' => $token,
-                        'qr_payload' => route('voucher.show', $token),
+                        'qr_payload' => $token,
                         'status' => 'active',
                         'expires_at' => now()->addMonths(6),
                     ]);
