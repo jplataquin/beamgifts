@@ -18,6 +18,14 @@ class ManagerController extends Controller
         return view('partner.managers.index', compact('managers'));
     }
 
+    public function show(Manager $manager)
+    {
+        $partner = Auth::guard('partner')->user();
+        if ($manager->store_id !== $partner->store->id) abort(403);
+        
+        return view('partner.managers.show', compact('manager'));
+    }
+
     public function create()
     {
         $partner = Auth::guard('partner')->user();
