@@ -67,7 +67,14 @@
                         @endif
 
                         <h2 class="h3 fw-bold mb-1">{{ $voucher->product->name }}</h2>
-                        <p class="text-muted mb-4">By: <strong>{{ $voucher->product->store->name }}</strong></p>
+                        <div class="h5 text-primary fw-bold mb-3">₱{{ number_format($voucher->product->markup_price, 2) }}</div>
+                        <p class="text-muted mb-2">By: <strong>{{ $voucher->product->store->name }}</strong></p>
+                        
+                        @if($voucher->product->description)
+                            <div class="mb-4 px-md-5">
+                                <p class="text-muted small">{{ $voucher->product->description }}</p>
+                            </div>
+                        @endif
 
                         @if($voucher->personal_message)
                             <div class="mb-5 px-md-5">
@@ -89,21 +96,33 @@
 
                         <div class="text-start bg-light p-4 rounded-4">
                             <h5 class="h6 fw-bold mb-3"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Participating Branches</h5>
-                            <ul class="list-unstyled mb-0">
-                                @foreach($voucher->product->store->branches as $branch)
-                                    <li class="mb-3 d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <div class="fw-bold small">{{ $branch->name }}</div>
-                                            <div class="text-muted" style="font-size: 0.75rem;">{{ $branch->address }}</div>
-                                        </div>
-                                        @if($branch->map_url)
-                                            <a href="{{ $branch->map_url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill ms-3" title="View on Google Maps">
-                                                <i class="bi bi-geo-alt-fill"></i>
-                                            </a>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
+                            
+                            @php
+                                $groupedBranches = $voucher->product->store->branches->groupBy(function($branch) {
+                                    return $branch->city->name ?? 'Other';
+                                });
+                            @endphp
+
+                            @foreach($groupedBranches as $cityName => $branches)
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-1 mb-3">{{ $cityName }}</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach($branches as $branch)
+                                            <li class="mb-3 d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="fw-bold small">{{ $branch->name }}</div>
+                                                    <div class="text-muted" style="font-size: 0.75rem;">{{ $branch->address }}</div>
+                                                </div>
+                                                @if($branch->map_url)
+                                                    <a href="{{ $branch->map_url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill ms-3" title="View on Google Maps">
+                                                        <i class="bi bi-geo-alt-fill"></i>
+                                                    </a>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endforeach
                         </div>
 
                         <div class="mt-5 text-muted small">

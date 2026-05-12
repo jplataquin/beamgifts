@@ -52,12 +52,19 @@ php artisan db:seed --class=DatabaseSeeder --force
 ```
 
 ### 5. Directory Permissions
-Laravel requires certain directories to be writable by the web server (usually `www-data`):
+Laravel requires the `storage` and `bootstrap/cache` directories to be writable by the web server (usually `www-data`).
+
+Run the following commands using `sudo` from the root of your project:
 ```bash
-chown -R www-data:www-data /var/www/beamgifts
-chmod -R 775 /var/www/beamgifts/storage
-chmod -R 775 /var/www/beamgifts/bootstrap/cache
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
 ```
+
+*Optional but recommended:* Add your current user to the `www-data` group so you can safely run Artisan commands without permission errors:
+```bash
+sudo usermod -aG www-data $USER
+```
+*(You may need to log out and back in for the group change to take effect).*
 
 ### 6. Storage Link
 Create the symbolic link for file uploads:

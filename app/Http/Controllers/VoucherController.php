@@ -16,7 +16,7 @@ class VoucherController extends Controller
      */
     public function show($token)
     {
-        $voucher = Voucher::where('unique_token', $token)->with(['product.store.branches'])->firstOrFail();
+        $voucher = Voucher::where('unique_token', $token)->with(['product.store.branches.city'])->firstOrFail();
         
         // Generate QR Code as SVG
         $qrCode = QrCode::size(250)
