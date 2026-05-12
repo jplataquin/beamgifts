@@ -6,18 +6,7 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-md-3">
-            <div class="card p-3 shadow-sm border-0 h-100">
-                <div class="card-body p-0">
-                    <h5 class="fw-bold text-primary mb-4">Partner Menu</h5>
-                    <div class="list-group list-group-flush">
-                        <a href="{{ route('partner.dashboard') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Dashboard</a>
-                        <a href="{{ route('partner.store.show') }}" class="list-group-item list-group-item-action active rounded-pill mb-1">My Store</a>
-                        <a href="{{ route('partner.branches.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Manage Branches</a>
-                        <a href="{{ route('partner.products.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Products</a>
-                        <a href="{{ route('partner.vouchers.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Vouchers</a>
-                    </div>
-                </div>
-            </div>
+            @include('partner.partials.menu')
         </div>
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
