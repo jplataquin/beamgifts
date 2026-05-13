@@ -116,6 +116,10 @@ Route::group(['middleware' => 'auth:web'], function () {
     // Order History
     Route::get('/my-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('my-orders');
     Route::get('/my-orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('my-orders.show');
+
+    // Reviews
+    Route::get('/my-gifts/reviews', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/my-gifts/reviews/{voucher}', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
 Route::group(['prefix' => '{city_slug}', 'middleware' => 'city.context'], function () {

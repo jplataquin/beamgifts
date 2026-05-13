@@ -57,6 +57,14 @@ class Voucher extends Model
     }
 
     /**
+     * Get the review for this voucher.
+     */
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+
+    /**
      * Get the computed validation code for proving a scan.
      */
     public function getValidationCodeAttribute()

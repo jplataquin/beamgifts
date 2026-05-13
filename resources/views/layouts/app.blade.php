@@ -116,6 +116,58 @@
         </div>
     </nav>
 
+    @auth('web')
+        @php
+            $unreviewedCount = \App\Models\Voucher::whereHas('order', function($q) {
+                $q->where('gifter_id', Auth::id());
+            })
+            ->whereNotNull('claimed_at')
+            ->whereDoesntHave('review')
+            ->count();
+        @endphp
+
+        @if($unreviewedCount > 0)
+            <div class="bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: relative; overflow: hidden;">
+                <div class="container d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-stars fs-4 me-2"></i>
+                        <span class="fw-bold">
+                            {{ $unreviewedCount }} {{ Str::plural('gift', $unreviewedCount) }} {{ $unreviewedCount > 1 ? 'have' : 'has' }} been claimed! 
+                            <span class="d-none d-md-inline">Share your thoughts with a review.</span>
+                        </span>
+                    </div>
+                    <a href="{{ route('reviews.index') }}" class="btn btn-sm btn-light rounded-pill px-4 fw-bold shadow-sm">
+                        Review Now
+                    </a>
+                </div>
+                <div class="glow-effect"></div>
+            </div>
+
+            <style>
+                .animate-pulse {
+                    animation: pulse-glow 3s infinite ease-in-out;
+                }
+                @keyframes pulse-glow {
+                    0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
+                    70% { box-shadow: 0 0 0 15px rgba(13, 110, 253, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+                }
+                .glow-effect {
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 50%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                    animation: slide-glow 4s infinite linear;
+                }
+                @keyframes slide-glow {
+                    to { left: 200%; }
+                }
+            </style>
+        @endif
+    @endauth
+
     <main>
         @yield('content')
     </main>

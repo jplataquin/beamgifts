@@ -12,7 +12,8 @@
                     <div class="list-group list-group-flush">
                         <a href="{{ route('profile') }}" class="list-group-item list-group-item-action active rounded-pill mb-1">My Profile</a>
                         <a href="{{ route('my-gifts') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">My Gifts</a>
-                        <a href="#" class="list-group-item list-group-item-action rounded-pill mb-1 border-0 text-muted">Order History</a>
+                        <a href="{{ route('reviews.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Reviews Awaiting</a>
+                        <a href="{{ route('my-orders') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Order History</a>
                         <form action="{{ route('logout') }}" method="POST" class="mt-3">
                             @csrf
                             <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">Logout</button>

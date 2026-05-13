@@ -9,6 +9,7 @@ class Review extends Model
     protected $fillable = [
         'product_id',
         'gifter_id',
+        'voucher_id',
         'rating',
         'comment',
     ];
@@ -21,5 +22,10 @@ class Review extends Model
     public function gifter()
     {
         return $this->belongsTo(Gifter::class);
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
     }
 }
