@@ -127,7 +127,7 @@
         @endphp
 
         @if($unreviewedCount > 0)
-            <div class="review-notification-bar bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: sticky; top: 70px; z-index: 1020; overflow: hidden; border: 2px solid #ffc107; box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);">
+            <div class="review-notification-bar bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: sticky; top: 60px; z-index: 1010; overflow: hidden; border-top: 2px solid #ffc107; border-bottom: 2px solid #ffc107; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);">
                 <div class="container d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-stars fs-4 me-2 text-warning"></i>
@@ -148,12 +148,9 @@
                     animation: border-pulse 2s infinite ease-in-out;
                 }
                 @keyframes border-pulse {
-                    0% { border-color: #ffc107; box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
-                    50% { border-color: #fff; box-shadow: 0 0 20px rgba(255, 193, 7, 0.8); }
-                    100% { border-color: #ffc107; box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
-                }
-                .animate-pulse {
-                    /* Overriding the previous animation with border-pulse */
+                    0% { border-top-color: #ffc107; border-bottom-color: #ffc107; box-shadow: 0 4px 5px rgba(255, 193, 7, 0.3); }
+                    50% { border-top-color: #fff; border-bottom-color: #fff; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6); }
+                    100% { border-top-color: #ffc107; border-bottom-color: #ffc107; box-shadow: 0 4px 5px rgba(255, 193, 7, 0.3); }
                 }
                 .glow-effect {
                     position: absolute;
