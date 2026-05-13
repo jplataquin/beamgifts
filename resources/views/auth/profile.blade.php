@@ -6,21 +6,7 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-md-3">
-            <div class="card p-3 shadow-sm border-0 h-100">
-                <div class="card-body p-0">
-                    <h5 class="fw-bold text-primary mb-4">Account Menu</h5>
-                    <div class="list-group list-group-flush">
-                        <a href="{{ route('profile') }}" class="list-group-item list-group-item-action active rounded-pill mb-1">My Profile</a>
-                        <a href="{{ route('my-gifts') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">My Gifts</a>
-                        <a href="{{ route('reviews.index') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Reviews Awaiting</a>
-                        <a href="{{ route('my-orders') }}" class="list-group-item list-group-item-action rounded-pill mb-1 border-0">Order History</a>
-                        <form action="{{ route('logout') }}" method="POST" class="mt-3">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill">Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            @include('partials.account-menu')
         </div>
         <div class="col-md-9">
             <h1 class="h3 fw-bold mb-4 text-primary">Account Settings</h1>
