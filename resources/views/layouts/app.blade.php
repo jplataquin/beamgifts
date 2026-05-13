@@ -127,16 +127,16 @@
         @endphp
 
         @if($unreviewedCount > 0)
-            <div class="bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: relative; overflow: hidden;">
+            <div class="review-notification-bar bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: sticky; top: 70px; z-index: 1020; overflow: hidden; border: 2px solid #ffc107; box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);">
                 <div class="container d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <i class="bi bi-stars fs-4 me-2"></i>
+                        <i class="bi bi-stars fs-4 me-2 text-warning"></i>
                         <span class="fw-bold">
                             {{ $unreviewedCount }} {{ Str::plural('gift', $unreviewedCount) }} {{ $unreviewedCount > 1 ? 'have' : 'has' }} been claimed! 
                             <span class="d-none d-md-inline">Share your thoughts with a review.</span>
                         </span>
                     </div>
-                    <a href="{{ route('reviews.index') }}" class="btn btn-sm btn-light rounded-pill px-4 fw-bold shadow-sm">
+                    <a href="{{ route('reviews.index') }}" class="btn btn-sm btn-warning rounded-pill px-4 fw-bold shadow-sm">
                         Review Now
                     </a>
                 </div>
@@ -144,13 +144,16 @@
             </div>
 
             <style>
-                .animate-pulse {
-                    animation: pulse-glow 3s infinite ease-in-out;
+                .review-notification-bar {
+                    animation: border-pulse 2s infinite ease-in-out;
                 }
-                @keyframes pulse-glow {
-                    0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
-                    70% { box-shadow: 0 0 0 15px rgba(13, 110, 253, 0); }
-                    100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+                @keyframes border-pulse {
+                    0% { border-color: #ffc107; box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
+                    50% { border-color: #fff; box-shadow: 0 0 20px rgba(255, 193, 7, 0.8); }
+                    100% { border-color: #ffc107; box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
+                }
+                .animate-pulse {
+                    /* Overriding the previous animation with border-pulse */
                 }
                 .glow-effect {
                     position: absolute;
