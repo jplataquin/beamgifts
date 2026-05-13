@@ -19,6 +19,9 @@
             @if(session('success'))
                 <div class="alert alert-success rounded-pill px-4 mb-4">{{ session('success') }}</div>
             @endif
+            @if(session('error'))
+                <div class="alert alert-danger rounded-pill px-4 mb-4">{{ session('error') }}</div>
+            @endif
 
             <div class="row g-4">
                 <!-- Left Column: Details & Personalization -->
@@ -27,23 +30,32 @@
                     <div class="card shadow-sm border-0 rounded-4 mb-4">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-4">Personalize Your Gift</h5>
+                            
+                            @if($voucher->status !== 'active')
+                                <div class="alert alert-warning rounded-3 mb-4">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    This gift has been <strong>{{ $voucher->status }}</strong>. Personalization can no longer be edited.
+                                </div>
+                            @endif
+
                             <form action="{{ route('vouchers.update_message', $voucher) }}" method="POST" id="personalization-form">
                                 @csrf
                                 <div class="mb-4">
                                     <label class="form-label small fw-bold text-muted text-uppercase">Gift Message</label>
-                                    <textarea name="personal_message" class="form-control border-light bg-light rounded-3" rows="4" placeholder="Happy Birthday!..." maxlength="1000">{{ old('personal_message', $voucher->personal_message) }}</textarea>
+                                    <textarea name="personal_message" class="form-control border-light bg-light rounded-3" rows="4" placeholder="Happy Birthday!..." maxlength="1000" {{ $voucher->status !== 'active' ? 'disabled' : '' }}>{{ old('personal_message', $voucher->personal_message) }}</textarea>
                                     <div class="form-text small">This message will appear when the recipient unwraps the gift.</div>
                                 </div>
                                 
                                 <div class="mb-4">
                                     <label class="form-label small fw-bold text-muted text-uppercase">Custom Photo</label>
                                     <div class="photo-upload-zone border rounded-4 p-4 text-center bg-light" style="border-style: dashed !important;">
-                                        <input type="file" class="photo-input d-none" id="photo-input" accept="image/*">
+                                        <input type="file" class="photo-input d-none" id="photo-input" accept="image/*" {{ $voucher->status !== 'active' ? 'disabled' : '' }}>
                                         
                                         <div class="photo-preview-container mb-3 {{ $voucher->custom_photo ? '' : 'd-none' }}">
                                             <img src="{{ $voucher->custom_photo ? Storage::url($voucher->custom_photo) : '' }}" class="img-thumbnail rounded-4 shadow-sm" style="max-height: 250px;">
                                         </div>
 
+                                        @if($voucher->status === 'active')
                                         <div class="upload-ui">
                                             <i class="bi bi-camera text-primary fs-2 mb-2 d-block"></i>
                                             <p class="mb-3 small text-muted">Upload a photo to appear during the unwrap reveal.</p>
@@ -58,15 +70,18 @@
                                             </div>
                                             <p class="small text-muted mt-2 mb-0">Uploading... <span class="percent">0</span>%</p>
                                         </div>
+                                        @endif
                                     </div>
                                     <input type="hidden" name="custom_photo" id="final-photo-path" value="{{ $voucher->custom_photo }}">
                                 </div>
 
+                                @if($voucher->status === 'active')
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold" id="submit-save">
                                         Save Personalization
                                     </button>
                                 </div>
+                                @endif
                             </form>
                         </div>
                     </div>

@@ -64,6 +64,10 @@ class VoucherController extends Controller
             abort(403, 'Unauthorized.');
         }
 
+        if ($voucher->status !== 'active') {
+            return back()->with('error', 'Cannot personalize a voucher that is already ' . $voucher->status . '.');
+        }
+
         $request->validate([
             'personal_message' => 'nullable|string|max:1000',
             'custom_photo' => 'nullable|string' // Path from chunked upload
