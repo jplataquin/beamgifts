@@ -38,6 +38,21 @@ class VoucherController extends Controller
         return view('vouchers.index', compact('vouchers'));
     }
 
+    public function manage(Voucher $voucher)
+    {
+        $ownerId = \Illuminate\Support\Facades\DB::table('orders')
+            ->where('id', $voucher->order_id)
+            ->value('gifter_id');
+
+        if ($ownerId != Auth::id()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $voucher->load(['product.store.branches.city']);
+
+        return view('vouchers.manage', compact('voucher'));
+    }
+
     public function updateMessage(Request $request, Voucher $voucher)
     {
         // Authorization Check

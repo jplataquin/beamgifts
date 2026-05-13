@@ -101,6 +101,7 @@ Route::post('/logout', [App\Http\Controllers\Auth\GifterAuthController::class, '
 Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/profile', [App\Http\Controllers\Auth\GifterAuthController::class, 'profile'])->name('profile');
     Route::get('/my-gifts', [App\Http\Controllers\VoucherController::class, 'index'])->name('my-gifts');
+    Route::get('/my-gifts/{voucher}/manage', [App\Http\Controllers\VoucherController::class, 'manage'])->name('vouchers.manage');
     Route::post('/my-gifts/{voucher}/message', [App\Http\Controllers\VoucherController::class, 'updateMessage'])->name('vouchers.update_message');
     Route::post('/my-gifts/upload-chunk', [App\Http\Controllers\VoucherController::class, 'uploadChunk'])->name('vouchers.upload_chunk');
     
