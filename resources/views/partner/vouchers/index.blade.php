@@ -28,6 +28,7 @@
                                     <th>Gifter</th>
                                     <th>Price</th>
                                     <th>Status</th>
+                                    <th>Processed By</th>
                                     <th>Purchased</th>
                                     <th class="text-end pe-4">Action</th>
                                 </tr>
@@ -47,6 +48,13 @@
                                                 <span class="badge bg-secondary rounded-pill">Claimed</span>
                                             @elseif($voucher->status === 'expired')
                                                 <span class="badge bg-danger rounded-pill">Expired</span>
+                                            @endif
+                                        </td>
+                                        <td class="small text-muted">
+                                            @if($voucher->status === 'claimed')
+                                                {{ $voucher->claimedByUser ? $voucher->claimedByUser->name : 'N/A' }}
+                                            @else
+                                                -
                                             @endif
                                         </td>
                                         <td class="small text-muted">{{ $voucher->created_at->format('M d, Y') }}</td>

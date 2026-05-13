@@ -20,6 +20,7 @@ class Voucher extends Model
         'status',
         'expires_at',
         'claimed_at',
+        'processed_at',
         'claimed_branch_id',
         'claimed_by',
         'remarks',
@@ -28,6 +29,7 @@ class Voucher extends Model
     protected $casts = [
         'expires_at' => 'datetime',
         'claimed_at' => 'datetime',
+        'processed_at' => 'datetime',
         'price' => 'decimal:2',
         'markup_price' => 'decimal:2',
     ];
@@ -62,6 +64,14 @@ class Voucher extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    /**
+     * Get the user (Partner or Manager) who claimed the voucher.
+     */
+    public function claimedByUser(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
     }
 
     /**

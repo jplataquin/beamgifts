@@ -19,7 +19,7 @@ class VoucherController extends Controller
 
         $vouchers = Voucher::whereIn('product_id', function($q) use ($storeId) {
             $q->select('id')->from('products')->where('store_id', $storeId);
-        })->with(['product.store', 'order.gifter'])->latest()->paginate(15);
+        })->with(['product.store', 'order.gifter', 'claimedByUser'])->latest()->paginate(15);
 
         return view('partner.vouchers.index', compact('vouchers'));
     }
@@ -82,8 +82,11 @@ class VoucherController extends Controller
         $voucher->update([
             'status' => 'claimed',
             'claimed_at' => now(),
+            'processed_at' => now(),
             'claimed_by' => $request->claimed_by,
             'remarks' => $request->remarks,
+            'claimed_by_user_id' => $partner->id,
+            'claimed_by_user_type' => get_class($partner)
         ]);
 
         return redirect()->route('partner.vouchers.index')->with('success', 'Voucher claimed successfully!');

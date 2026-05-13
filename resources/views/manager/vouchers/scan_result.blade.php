@@ -53,6 +53,10 @@
                                 <span class="text-muted">Claimed By:</span>
                                 <span class="fw-bold text-success">{{ $voucher->claimed_by ?? 'N/A' }}</span>
                             </div>
+                            <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                <span class="text-muted">Processed By:</span>
+                                <span class="fw-bold text-success">{{ $voucher->claimedByUser ? $voucher->claimedByUser->name : 'N/A' }}</span>
+                            </div>
                             @if($voucher->remarks)
                                 <div class="mt-3 p-3 bg-light rounded-4 small text-start">
                                     <div class="fw-bold text-muted small text-uppercase mb-1" style="font-size: 0.65rem;">Remarks</div>

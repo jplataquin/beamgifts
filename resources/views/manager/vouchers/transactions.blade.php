@@ -21,7 +21,7 @@
                         <th class="ps-4 py-3">Redeemed At</th>
                         <th class="py-3">Product</th>
                         <th class="py-3">Price</th>
-                        <th class="py-3">Gifter</th>
+                        <th class="py-3">Processed By</th>
                         <th class="py-3">Voucher ID</th>
                     </tr>
                 </thead>
@@ -34,7 +34,7 @@
                             </td>
                             <td class="fw-bold">{{ $voucher->product->name }}</td>
                             <td class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
-                            <td>{{ $voucher->order->gifter->name }}</td>
+                            <td>{{ $voucher->claimedByUser ? $voucher->claimedByUser->name : 'N/A' }}</td>
                             <td><code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></td>
                         </tr>
                     @empty

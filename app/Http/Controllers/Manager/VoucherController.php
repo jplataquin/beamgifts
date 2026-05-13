@@ -55,9 +55,12 @@ class VoucherController extends Controller
         $voucher->update([
             'status' => 'claimed',
             'claimed_at' => now(),
+            'processed_at' => now(),
             'claimed_branch_id' => $manager->branch_id,
             'claimed_by' => $request->claimed_by,
             'remarks' => $request->remarks,
+            'claimed_by_user_id' => $manager->id,
+            'claimed_by_user_type' => get_class($manager)
         ]);
 
         return redirect()->route('manager.vouchers.transactions')->with('success', 'Voucher claimed successfully at ' . $manager->branch->name . '!');
@@ -67,7 +70,7 @@ class VoucherController extends Controller
     {
         $manager = Auth::guard('manager')->user();
         $vouchers = Voucher::where('claimed_branch_id', $manager->branch_id)
-                           ->with(['product', 'order.gifter'])
+                           ->with(['product', 'order.gifter', 'claimedByUser'])
                            ->latest('claimed_at')
                            ->paginate(20);
 
