@@ -101,6 +101,54 @@
             </div>
         </div>
     </div>
+
+    <!-- Reviews Section -->
+    <div class="row mt-5 pt-5 border-top">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-4">Customer Reviews</h3>
+            
+            @forelse($product->reviews as $review)
+                <div class="card border-0 shadow-sm rounded-4 mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <div class="fw-bold text-dark mb-1">{{ $review->gifter->name }}</div>
+                                <div class="text-warning small">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="bi bi-star-fill {{ $i <= $review->rating ? '' : 'text-muted opacity-25' }}"></i>
+                                    @endfor
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
+                        </div>
+                        @if($review->comment)
+                            <p class="text-muted mb-0 italic">"{{ $review->comment }}"</p>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div class="text-center py-5 bg-light rounded-4">
+                    <i class="bi bi-chat-dots text-muted display-4 mb-3 d-block"></i>
+                    <p class="text-muted mb-0">No reviews yet for this product. Be the first to gift and review!</p>
+                </div>
+            @endforelse
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-primary text-white p-4">
+                <h4 class="fw-bold mb-3">Average Rating</h4>
+                <div class="d-flex align-items-baseline mb-2">
+                    <span class="display-3 fw-bold me-2">{{ $product->average_rating }}</span>
+                    <span class="h4 opacity-75">/ 5</span>
+                </div>
+                <div class="text-warning mb-3">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="bi bi-star-fill fs-4 {{ $i <= $product->average_rating ? '' : 'text-white opacity-25' }}"></i>
+                    @endfor
+                </div>
+                <p class="mb-0 opacity-75">Based on {{ $product->reviews_count }} customer {{ Str::plural('review', $product->reviews_count) }}.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>

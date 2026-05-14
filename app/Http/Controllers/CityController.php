@@ -18,7 +18,7 @@ class CityController extends Controller
                 $query->where('city_id', $city->id);
             })->with(['store.branches' => function($q) use ($city) {
                 $q->where('city_id', $city->id);
-            }, 'category_rel'])->firstOrFail();
+            }, 'category_rel', 'reviews.gifter'])->firstOrFail();
 
         return view('product.show', compact('city', 'product'));
     }
