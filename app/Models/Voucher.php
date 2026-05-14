@@ -24,6 +24,8 @@ class Voucher extends Model
         'claimed_branch_id',
         'claimed_by',
         'remarks',
+        'claimed_by_user_id',
+        'claimed_by_user_type',
     ];
 
     protected $casts = [
