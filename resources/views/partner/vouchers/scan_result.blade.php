@@ -23,9 +23,21 @@
                                 <h1 class="h3 fw-bold mb-1 text-success">Valid Voucher</h1>
                                 <p class="text-muted mb-0">Ready to be redeemed</p>
                             @elseif($voucher->status === 'claimed')
-                                <i class="bi bi-info-circle-fill display-1 text-secondary"></i>
-                                <h1 class="h3 fw-bold mb-1">Redeemed</h1>
-                                <p class="text-muted mb-0">This voucher has been used</p>
+                                <div class="bg-danger bg-opacity-10 rounded-4 p-4 mb-4 border border-danger border-2 animate-pulse-red">
+                                    <i class="bi bi-exclamation-octagon-fill display-1 text-danger d-block mb-3"></i>
+                                    <h1 class="h2 fw-bold mb-1 text-danger text-uppercase">Already Redeemed</h1>
+                                    <p class="text-danger fw-bold mb-0">This voucher was previously used and is no longer valid.</p>
+                                </div>
+                                <style>
+                                    @keyframes pulse-red {
+                                        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+                                        70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+                                        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+                                    }
+                                    .animate-pulse-red {
+                                        animation: pulse-red 2s infinite;
+                                    }
+                                </style>
                             @elseif($voucher->status === 'expired')
                                 <i class="bi bi-exclamation-triangle-fill display-1 text-warning"></i>
                                 <h1 class="h3 fw-bold mb-1 text-warning">Expired</h1>

@@ -16,6 +16,24 @@
 
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
                 <div class="card-body p-4 p-md-5">
+                    @if($voucher->status === 'claimed')
+                        <div class="bg-danger bg-opacity-10 rounded-4 p-4 mb-5 border border-danger border-2 text-center animate-pulse-red">
+                            <i class="bi bi-exclamation-octagon-fill display-1 text-danger d-block mb-3"></i>
+                            <h1 class="h2 fw-bold mb-1 text-danger text-uppercase">Already Redeemed</h1>
+                            <p class="text-danger fw-bold mb-0">This voucher was previously used and is no longer valid.</p>
+                        </div>
+                        <style>
+                            @keyframes pulse-red {
+                                0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+                                70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+                                100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+                            }
+                            .animate-pulse-red {
+                                animation: pulse-red 2s infinite;
+                            }
+                        </style>
+                    @endif
+
                     <div class="text-center mb-4">
                         @if(!empty($voucher->product->images))
                             <img src="{{ Storage::url($voucher->product->images[0]) }}" class="rounded-4 mb-4 shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
