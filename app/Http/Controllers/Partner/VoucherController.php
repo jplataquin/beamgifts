@@ -12,14 +12,20 @@ class VoucherController extends Controller
     /**
      * List all vouchers belonging to the partner's store.
      */
-    public function index()
+    public function index(Request $request)
     {
         $partner = Auth::guard('partner')->user();
         $storeId = $partner->store->id;
 
-        $vouchers = Voucher::whereIn('product_id', function($q) use ($storeId) {
+        $query = Voucher::whereIn('product_id', function($q) use ($storeId) {
             $q->select('id')->from('products')->where('store_id', $storeId);
-        })->with(['product.store', 'order.gifter', 'claimedByUser'])->latest()->paginate(15);
+        })->with(['product.store', 'order.gifter', 'claimedByUser']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $vouchers = $query->latest()->paginate(15);
 
         return view('partner.vouchers.index', compact('vouchers'));
     }

@@ -16,28 +16,34 @@
             
             <div class="row g-4 mb-5">
                 <div class="col-md-4">
-                    <div class="card bg-white shadow-sm border-0 text-center py-4">
-                        <div class="card-body">
-                            <h2 class="h1 fw-bold text-primary mb-0">{{ $branchCount }}</h2>
-                            <p class="text-muted mb-0">Branches</p>
+                    <a href="{{ route('partner.branches.index') }}" class="text-decoration-none">
+                        <div class="card bg-white shadow-sm border-0 text-center py-4 transition-hover">
+                            <div class="card-body">
+                                <h2 class="h1 fw-bold text-primary mb-0">{{ $branchCount }}</h2>
+                                <p class="text-muted mb-0">Branches</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card bg-white shadow-sm border-0 text-center py-4">
-                        <div class="card-body">
-                            <h2 class="h1 fw-bold text-primary mb-0">{{ $productCount }}</h2>
-                            <p class="text-muted mb-0">Products</p>
+                    <a href="{{ route('partner.products.index') }}" class="text-decoration-none">
+                        <div class="card bg-white shadow-sm border-0 text-center py-4 transition-hover">
+                            <div class="card-body">
+                                <h2 class="h1 fw-bold text-primary mb-0">{{ $productCount }}</h2>
+                                <p class="text-muted mb-0">Products</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card bg-white shadow-sm border-0 text-center py-4">
-                        <div class="card-body">
-                            <h2 class="h1 fw-bold text-primary mb-0">0</h2>
-                            <p class="text-muted mb-0">Unclaimed Vouchers</p>
+                    <a href="{{ route('partner.vouchers.index') }}?status=active" class="text-decoration-none">
+                        <div class="card bg-white shadow-sm border-0 text-center py-4 transition-hover">
+                            <div class="card-body">
+                                <h2 class="h1 fw-bold text-primary mb-0">{{ $unclaimedVoucherCount }}</h2>
+                                <p class="text-muted mb-0">Unclaimed Vouchers</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -64,3 +70,13 @@
     </div>
 </div>
 @endsection
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
