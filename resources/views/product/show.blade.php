@@ -113,7 +113,14 @@
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <div class="fw-bold text-dark mb-1">
-                                    {{ Str::mask($review->gifter->name, '*', 1) }}
+                                    @php
+                                        $firstName = Str::before($review->gifter->name, ' ');
+                                        $len = strlen($firstName);
+                                        $maskedName = $len > 4 
+                                            ? Str::mask($firstName, '*', 1, $len - 4) 
+                                            : Str::mask($firstName, '*', 1);
+                                    @endphp
+                                    {{ $maskedName }}
                                 </div>
                                 <div class="text-warning small">
                                     @for($i = 1; $i <= 5; $i++)
