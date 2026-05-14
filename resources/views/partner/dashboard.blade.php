@@ -58,9 +58,9 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('partner.vouchers.scan') }}" class="btn btn-light w-100 py-3 rounded-4 text-start border">
-                                <div class="fw-bold">Scan Voucher</div>
-                                <div class="small text-muted">Redeem a digital gift card</div>
+                            <a href="{{ route('partner.vouchers.index') }}" class="btn btn-light w-100 py-3 rounded-4 text-start border">
+                                <div class="fw-bold">View Vouchers</div>
+                                <div class="small text-muted">Track sales and redemptions</div>
                             </a>
                         </div>
                     </div>

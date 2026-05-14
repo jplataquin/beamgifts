@@ -14,7 +14,7 @@
                         </div>
                         <h1 class="h3 fw-bold mb-3">Unauthorized</h1>
                         <p class="text-muted mb-5 lead">{{ $error }}</p>
-                        <a href="{{ route('partner.vouchers.scan') }}" class="btn btn-primary rounded-pill px-5 py-3 fw-bold">Try Another Scan</a>
+                        <a href="{{ route('partner.vouchers.index') }}" class="btn btn-primary rounded-pill px-5 py-3 fw-bold">Back to Vouchers</a>
                     @else
                         <!-- Status Header -->
                         <div class="mb-4">

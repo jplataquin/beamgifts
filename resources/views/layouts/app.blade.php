@@ -182,12 +182,11 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="{{ route('partner.vouchers.scan') }}" class="nav-link {{ Request::routeIs('partner.vouchers.scan') ? 'active' : '' }}">
-                    <i class="bi bi-qr-code-scan"></i>
-                    <span>Scan</span>
-                </a>
-            </div>
-            <div class="nav-item">
+               <a href="{{ route('partner.vouchers.index') }}" class="nav-link {{ Request::routeIs('partner.vouchers.index') ? 'active' : '' }}">
+                   <i class="bi bi-gift"></i>
+                   <span>Vouchers</span>
+               </a>
+            </div>            <div class="nav-item">
                 <a href="{{ route('partner.managers.index') }}" class="nav-link {{ Request::routeIs('partner.managers.*') ? 'active' : '' }}">
                     <i class="bi bi-people"></i>
                     <span>Managers</span>
