@@ -5,8 +5,19 @@
 @section('content')
 <div class="bg-light py-5 mb-5">
     <div class="container">
-        <h1 class="display-4 fw-bold text-primary">{{ $store->name }}</h1>
-        <p class="lead">{{ $store->description }}</p>
+        <div class="d-flex align-items-center">
+            <div class="bg-white rounded-circle p-2 me-4 shadow-sm d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; flex-shrink: 0; overflow: hidden;">
+                @if($store->logo)
+                    <img src="{{ Storage::url($store->logo) }}" alt="{{ $store->name }}" class="img-fluid rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
+                    <i class="bi bi-shop text-primary display-4"></i>
+                @endif
+            </div>
+            <div>
+                <h1 class="display-4 fw-bold text-primary mb-1">{{ $store->name }}</h1>
+                <p class="lead mb-0">{{ $store->description }}</p>
+            </div>
+        </div>
     </div>
 </div>
 
