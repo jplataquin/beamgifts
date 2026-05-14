@@ -22,7 +22,7 @@ class LoginController extends Controller
 
         if (Auth::guard('manager')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('manager.vouchers.scan'));
+            return redirect()->intended(route('manager.vouchers.transactions'));
         }
 
         return back()->withErrors([

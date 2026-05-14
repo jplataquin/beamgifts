@@ -34,6 +34,6 @@ class PasswordController extends Controller
             'must_change_password' => false,
         ]);
 
-        return redirect()->route('manager.vouchers.scan')->with('success', 'Password updated successfully. You can now use the application.');
+        return redirect()->route('manager.vouchers.transactions')->with('success', 'Password updated successfully. You can now use the application.');
     }
 }
