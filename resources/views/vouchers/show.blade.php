@@ -86,13 +86,26 @@
                             </div>
                         @endif
 
-                        <div class="my-5 p-3 bg-white d-inline-block rounded-4 shadow-sm border">
-                            {!! $qrCode !!}
-                        </div>
-
-                        <p class="text-muted small mb-5 px-md-4">
-                            Please present this QR code at any participating store branch to redeem your gift.
-                        </p>
+                        @if($voucher->status === 'claimed' || $voucher->status === 'expired')
+                            <div class="my-5 mx-auto p-4 bg-light d-flex flex-column justify-content-center align-items-center rounded-4 shadow-sm border" style="width: 250px; height: 250px;">
+                                @if($voucher->status === 'claimed')
+                                    <i class="bi bi-gift-fill text-secondary mb-3" style="font-size: 3rem;"></i>
+                                    <h4 class="fw-bold text-secondary mb-1">Redeemed</h4>
+                                    <p class="small text-muted mb-0 text-center">This voucher has been claimed.</p>
+                                @else
+                                    <i class="bi bi-clock-history text-danger mb-3" style="font-size: 3rem;"></i>
+                                    <h4 class="fw-bold text-danger mb-1">Expired</h4>
+                                    <p class="small text-muted mb-0 text-center">This voucher is no longer valid.</p>
+                                @endif
+                            </div>
+                        @else
+                            <div class="my-5 p-3 bg-white d-inline-block rounded-4 shadow-sm border">
+                                {!! $qrCode !!}
+                            </div>
+                            <p class="text-muted small mb-5 px-md-4">
+                                Please present this QR code at any participating store branch to redeem your gift.
+                            </p>
+                        @endif
 
                         <div class="text-start bg-light p-4 rounded-4">
                             <h5 class="h6 fw-bold mb-3"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Participating Branches</h5>
