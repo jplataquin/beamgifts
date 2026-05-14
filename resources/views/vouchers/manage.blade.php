@@ -109,11 +109,11 @@
                                     @csrf
                                     <div class="mb-4">
                                         <label class="form-label small fw-bold text-muted text-uppercase mb-3">How would you rate this product?</label>
-                                        <div class="rating-input d-flex gap-2">
-                                            @for($i = 1; $i <= 5; $i++)
+                                        <div class="rating-input d-flex flex-row-reverse justify-content-end gap-2">
+                                            @for($i = 5; $i >= 1; $i--)
                                                 <input type="radio" name="rating" value="{{ $i }}" id="star-{{ $i }}" class="btn-check" required>
-                                                <label for="star-{{ $i }}" class="btn btn-outline-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                                    <i class="bi bi-star-fill"></i>
+                                                <label for="star-{{ $i }}" class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center star-label" style="width: 45px; height: 45px;">
+                                                    <i class="bi bi-star-fill text-muted"></i>
                                                 </label>
                                             @endfor
                                         </div>
@@ -237,10 +237,18 @@
 </div>
 
 <style>
-    .rating-input .btn-check:checked + .btn-outline-warning {
-        background-color: var(--bs-warning);
-        color: white;
-        border-color: var(--bs-warning);
+    .rating-input .btn-check:checked ~ .star-label,
+    .rating-input .btn-check:checked + .star-label,
+    .rating-input .star-label:hover,
+    .rating-input .star-label:hover ~ .star-label {
+        background-color: var(--bs-warning) !important;
+        border-color: var(--bs-warning) !important;
+    }
+    .rating-input .btn-check:checked ~ .star-label i,
+    .rating-input .btn-check:checked + .star-label i,
+    .rating-input .star-label:hover i,
+    .rating-input .star-label:hover ~ .star-label i {
+        color: white !important;
     }
 </style>
 
