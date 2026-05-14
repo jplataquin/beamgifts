@@ -15,7 +15,8 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
         $partner = Auth::guard('partner')->user();
-        $storeId = $partner->store->id;
+        $store = $partner->store;
+        $storeId = $store->id;
 
         $query = Voucher::whereIn('product_id', function($q) use ($storeId) {
             $q->select('id')->from('products')->where('store_id', $storeId);
@@ -23,6 +24,10 @@ class VoucherController extends Controller
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->filled('branch_id')) {
+            $query->where('claimed_branch_id', $request->branch_id);
         }
 
         if ($request->filled('from_date')) {
@@ -34,8 +39,9 @@ class VoucherController extends Controller
         }
 
         $vouchers = $query->latest()->paginate(15)->withQueryString();
+        $branches = $store->branches;
 
-        return view('partner.vouchers.index', compact('vouchers'));
+        return view('partner.vouchers.index', compact('vouchers', 'branches'));
     }
 
     /**

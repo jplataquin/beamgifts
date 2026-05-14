@@ -20,7 +20,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
                     <form action="{{ route('partner.vouchers.index') }}" method="GET" class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label small fw-bold">Status</label>
                             <select name="status" class="form-select rounded-pill">
                                 <option value="">All Statuses</option>
@@ -30,10 +30,19 @@
                             </select>
                         </div>
                         <div class="col-md-3">
+                            <label class="form-label small fw-bold">Branch</label>
+                            <select name="branch_id" class="form-select rounded-pill">
+                                <option value="">All Branches</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label small fw-bold">From Date</label>
                             <input type="date" name="from_date" class="form-control rounded-pill" value="{{ request('from_date') }}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label small fw-bold">To Date</label>
                             <input type="date" name="to_date" class="form-control rounded-pill" value="{{ request('to_date') }}">
                         </div>

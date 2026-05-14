@@ -99,6 +99,10 @@
                                     <div class="col-7 fw-bold text-success">{{ $voucher->claimed_by ?? 'N/A' }}</div>
                                 </div>
                                 <div class="row mb-2">
+                                    <div class="col-5 text-muted small">Branch</div>
+                                    <div class="col-7 fw-bold text-success">{{ $voucher->claimedBranch ? $voucher->claimedBranch->name : 'N/A' }}</div>
+                                </div>
+                                <div class="row mb-2">
                                     <div class="col-5 text-muted">Processed By:</div>
                                     <div class="col-7 fw-bold text-success">{{ $voucher->claimedByUser ? $voucher->claimedByUser->name : 'N/A' }}</div>
                                 </div>
