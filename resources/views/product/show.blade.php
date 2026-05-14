@@ -112,7 +112,9 @@
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <div class="fw-bold text-dark mb-1">{{ $review->gifter->name }}</div>
+                                <div class="fw-bold text-dark mb-1">
+                                    {{ Str::mask($review->gifter->name, '*', 1) }}
+                                </div>
                                 <div class="text-warning small">
                                     @for($i = 1; $i <= 5; $i++)
                                         <i class="bi bi-star-fill {{ $i <= $review->rating ? '' : 'text-muted opacity-25' }}"></i>
