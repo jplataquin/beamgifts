@@ -126,7 +126,7 @@
             ->count();
         @endphp
 
-        @if($unreviewedCount > 0)
+        @if($unreviewedCount > 0 && !request()->routeIs('vouchers.manage'))
             <div class="review-notification-bar bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: sticky; top: 60px; z-index: 1010; overflow: hidden; border-top: 2px solid #ffc107; border-bottom: 2px solid #ffc107; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);">
                 <div class="container d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
