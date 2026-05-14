@@ -15,8 +15,12 @@
                 <div class="card-body">
                     <h5 class="fw-bold mb-4">Personal Information</h5>
                     <div class="row mb-3">
-                        <div class="col-sm-3 text-muted">Full Name</div>
-                        <div class="col-sm-9 fw-bold">{{ $gifter->name }}</div>
+                        <div class="col-sm-3 text-muted">First Name</div>
+                        <div class="col-sm-9 fw-bold">{{ $gifter->first_name }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3 text-muted">Last Name</div>
+                        <div class="col-sm-9 fw-bold">{{ $gifter->last_name }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-sm-3 text-muted">Email Address</div>

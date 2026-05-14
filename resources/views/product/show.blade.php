@@ -114,7 +114,7 @@
                             <div>
                                 <div class="fw-bold text-dark mb-1">
                                     @php
-                                        $firstName = Str::before($review->gifter->name, ' ');
+                                        $firstName = $review->gifter->first_name;
                                         $len = strlen($firstName);
                                         $maskedName = $len > 4 
                                             ? Str::mask($firstName, '*', 1, $len - 4) 
