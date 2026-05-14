@@ -30,7 +30,7 @@
                 <i class="bi bi-info-circle me-2"></i> Position the voucher QR code within the frame to scan.
             </div>
 
-            <a href="{{ route('vouchers.transactions') }}" class="btn btn-light rounded-pill px-4 mt-4">View Transactions</a>
+            <a href="{{ route('manager.vouchers.transactions') }}" class="btn btn-light rounded-pill px-4 mt-4">View Transactions</a>
         </div>
     </div>
 </div>
