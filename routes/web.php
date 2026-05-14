@@ -65,9 +65,7 @@ Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
 
         // Voucher Redemption
         Route::get('/vouchers', [App\Http\Controllers\Partner\VoucherController::class, 'index'])->name('vouchers.index');
-        Route::get('/vouchers/scan', [App\Http\Controllers\Partner\VoucherController::class, 'scan'])->name('vouchers.scan');
-        Route::get('/vouchers/scan/{token}', [App\Http\Controllers\Partner\VoucherController::class, 'scanResult'])->name('vouchers.scan.result');
-        Route::patch('/vouchers/{voucher}/claim', [App\Http\Controllers\Partner\VoucherController::class, 'claim'])->name('vouchers.claim');
+        Route::get('/vouchers/{voucher}', [App\Http\Controllers\Partner\VoucherController::class, 'show'])->name('vouchers.show');
     });
 });
 

@@ -19,7 +19,7 @@ class VoucherController extends Controller
 
         $query = Voucher::whereIn('product_id', function($q) use ($storeId) {
             $q->select('id')->from('products')->where('store_id', $storeId);
-        })->with(['product.store', 'order.gifter', 'claimedByUser']);
+        })->with(['product.store', 'order.gifter', 'claimedByUser', 'claimedBranch']);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -39,70 +39,18 @@ class VoucherController extends Controller
     }
 
     /**
-     * Show the scanning interface.
+     * Show the voucher details.
      */
-    public function scan()
-    {
-        return view('partner.vouchers.scan');
-    }
-
-    /**
-     * Process the scanned QR code token.
-     */
-    public function scanResult($token)
+    public function show(Voucher $voucher)
     {
         $partner = Auth::guard('partner')->user();
         $storeId = $partner->store->id;
-
-        $voucher = Voucher::where('unique_token', $token)->with(['product.store', 'order.gifter'])->firstOrFail();
 
         // Security check: Ensure voucher belongs to this partner
-        if ($voucher->product->store_id !== $storeId) {
-            return view('partner.vouchers.scan_result', [
-                'error' => 'This voucher belongs to a different partner/store.',
-                'voucher' => $voucher
-            ]);
-        }
-
-        return view('partner.vouchers.scan_result', compact('voucher'));
-    }
-
-    /**
-     * Mark the voucher as claimed.
-     */
-    public function claim(Request $request, Voucher $voucher)
-    {
-        $partner = Auth::guard('partner')->user();
-        $storeId = $partner->store->id;
-
         if ($voucher->product->store_id !== $storeId) {
             abort(403);
         }
 
-        if ($voucher->status !== 'active') {
-            return back()->with('error', 'Only active vouchers can be claimed.');
-        }
-
-        if ($voucher->expires_at && $voucher->expires_at->isPast()) {
-            $voucher->update(['status' => 'expired']);
-            return back()->with('error', 'This voucher has expired.');
-        }
-
-        $request->validate([
-            'claimed_by' => 'required|string|max:255',
-            'remarks' => 'nullable|string|max:1000',
-        ]);
-
-        $voucher->update([
-            'status' => 'claimed',
-            'claimed_at' => now(),
-            'processed_at' => now(),
-            'claimed_by' => $request->claimed_by,
-            'remarks' => $request->remarks,
-            'claimed_by_user_id' => $partner->id,
-            'claimed_by_user_type' => get_class($partner)
-        ]);
-
-        return redirect()->route('partner.vouchers.index')->with('success', 'Voucher claimed successfully!');
+        return view('partner.vouchers.show', compact('voucher'));
     }
 }

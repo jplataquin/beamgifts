@@ -11,7 +11,6 @@
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3 fw-bold mb-0 text-primary">Gift Vouchers</h1>
-                <a href="{{ route('partner.vouchers.scan') }}" class="btn btn-primary rounded-pill px-4"><i class="bi bi-qr-code-scan me-2"></i>Scan to Redeem</a>
             </div>
 
             @if(session('success'))
@@ -53,6 +52,7 @@
                             <thead class="bg-light">
                                 <tr>
                                     <th class="ps-4">Product</th>
+                                    <th>Branch</th>
                                     <th>Gifter</th>
                                     <th>Price</th>
                                     <th>Status</th>
@@ -63,9 +63,16 @@
                             </thead>
                             <tbody>
                                 @forelse($vouchers as $voucher)
-                                    <tr class="clickable-row" data-href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" style="cursor: pointer;">
+                                    <tr class="clickable-row" data-href="{{ route('partner.vouchers.show', $voucher) }}" style="cursor: pointer;">
                                         <td class="ps-4">
                                             <div class="fw-bold">{{ $voucher->product->name }}</div>
+                                        </td>
+                                        <td>
+                                            @if($voucher->claimedBranch)
+                                                <span class="small fw-bold text-dark">{{ $voucher->claimedBranch->name }}</span>
+                                            @else
+                                                <span class="text-muted small">-</span>
+                                            @endif
                                         </td>
                                         <td>{{ $voucher->order->gifter->name }}</td>
                                         <td class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
@@ -87,16 +94,12 @@
                                         </td>
                                         <td class="small text-muted">{{ $voucher->created_at->format('M d, Y') }}</td>
                                         <td class="text-end pe-4">
-                                            @if($voucher->status === 'active')
-                                                <a href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" class="btn btn-sm btn-outline-primary rounded-pill">View/Claim</a>
-                                            @else
-                                                <a href="{{ route('partner.vouchers.scan.result', $voucher->unique_token) }}" class="btn btn-sm btn-light rounded-pill">View History</a>
-                                            @endif
+                                            <a href="{{ route('partner.vouchers.show', $voucher) }}" class="btn btn-sm btn-outline-primary rounded-pill">View Details</a>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-5 text-muted">No vouchers found.</td>
+                                        <td colspan="8" class="text-center py-5 text-muted">No vouchers found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
