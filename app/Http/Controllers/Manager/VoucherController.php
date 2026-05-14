@@ -66,13 +66,25 @@ class VoucherController extends Controller
         return redirect()->route('manager.vouchers.transactions')->with('success', 'Voucher claimed successfully at ' . $manager->branch->name . '!');
     }
 
-    public function transactions()
+    public function transactions(Request $request)
     {
         $manager = Auth::guard('manager')->user();
-        $vouchers = Voucher::where('claimed_branch_id', $manager->branch_id)
-                           ->with(['product', 'order.gifter', 'claimedByUser'])
-                           ->latest('claimed_at')
-                           ->paginate(20);
+        $query = Voucher::where('claimed_branch_id', $manager->branch_id)
+                           ->with(['product', 'order.gifter', 'claimedByUser']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('claimed_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('claimed_at', '<=', $request->to_date);
+        }
+
+        $vouchers = $query->latest('claimed_at')->paginate(20)->withQueryString();
 
         return view('manager.vouchers.transactions', compact('vouchers'));
     }
