@@ -117,7 +117,7 @@
                                         $firstName = $review->gifter->first_name;
                                         $len = strlen($firstName);
                                         $maskedName = $len > 4 
-                                            ? Str::mask($firstName, '*', 1, $len - 4) 
+                                            ? Str::mask($firstName, '*', 1, $len - 3) 
                                             : Str::mask($firstName, '*', 1);
                                     @endphp
                                     {{ $maskedName }}
