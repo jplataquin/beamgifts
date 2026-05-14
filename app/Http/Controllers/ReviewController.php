@@ -10,23 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class ReviewController extends Controller
 {
     /**
-     * Display a listing of claimed vouchers awaiting review.
-     */
-    public function index()
-    {
-        $vouchers = Voucher::whereHas('order', function($q) {
-                $q->where('gifter_id', Auth::id());
-            })
-            ->whereNotNull('claimed_at')
-            ->whereDoesntHave('review')
-            ->with(['product.store'])
-            ->latest('claimed_at')
-            ->get();
-
-        return view('reviews.index', compact('vouchers'));
-    }
-
-    /**
      * Store a newly created review in storage.
      */
     public function store(Request $request, Voucher $voucher)
@@ -59,6 +42,6 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('reviews.index')->with('success', 'Thank you for your review!');
+        return redirect()->route('vouchers.manage', $voucher)->with('success', 'Thank you for your review!');
     }
 }

@@ -48,7 +48,7 @@ class VoucherController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $voucher->load(['product.store.branches.city']);
+        $voucher->load(['product.store.branches.city', 'review']);
 
         return view('vouchers.manage', compact('voucher'));
     }

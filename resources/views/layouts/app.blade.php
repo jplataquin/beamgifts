@@ -116,58 +116,6 @@
         </div>
     </nav>
 
-    @auth('web')
-        @php
-            $unreviewedCount = \App\Models\Voucher::whereHas('order', function($q) {
-                $q->where('gifter_id', Auth::id());
-            })
-            ->whereNotNull('claimed_at')
-            ->whereDoesntHave('review')
-            ->count();
-        @endphp
-
-        @if($unreviewedCount > 0)
-            <div class="review-notification-bar bg-primary text-white py-2 shadow-sm animate-pulse" style="background: linear-gradient(90deg, var(--bs-primary), #6f42c1); position: sticky; top: 60px; z-index: 1010; overflow: hidden; border-top: 2px solid #ffc107; border-bottom: 2px solid #ffc107; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);">
-                <div class="container d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-stars fs-4 me-2 text-warning"></i>
-                        <span class="fw-bold">
-                            {{ $unreviewedCount }} {{ Str::plural('gift', $unreviewedCount) }} {{ $unreviewedCount > 1 ? 'have' : 'has' }} been claimed! 
-                            <span class="d-none d-md-inline">Share your thoughts with a review.</span>
-                        </span>
-                    </div>
-                    <a href="{{ route('reviews.index') }}" class="btn btn-sm btn-warning rounded-pill px-4 fw-bold shadow-sm">
-                        Review Now
-                    </a>
-                </div>
-                <div class="glow-effect"></div>
-            </div>
-
-            <style>
-                .review-notification-bar {
-                    animation: border-pulse 2s infinite ease-in-out;
-                }
-                @keyframes border-pulse {
-                    0% { border-top-color: #ffc107; border-bottom-color: #ffc107; box-shadow: 0 4px 5px rgba(255, 193, 7, 0.3); }
-                    50% { border-top-color: #fff; border-bottom-color: #fff; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6); }
-                    100% { border-top-color: #ffc107; border-bottom-color: #ffc107; box-shadow: 0 4px 5px rgba(255, 193, 7, 0.3); }
-                }
-                .glow-effect {
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 50%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-                    animation: slide-glow 4s infinite linear;
-                }
-                @keyframes slide-glow {
-                    to { left: 200%; }
-                }
-            </style>
-        @endif
-    @endauth
-
     <main>
         @yield('content')
     </main>

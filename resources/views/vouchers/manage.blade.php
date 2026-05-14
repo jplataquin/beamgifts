@@ -86,6 +86,55 @@
                         </div>
                     </div>
 
+                    @if($voucher->claimed_at)
+                    <!-- Review Card -->
+                    <div class="card shadow-sm border-0 rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Review Your Gift</h5>
+                            
+                            @if($voucher->review)
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="text-warning me-2">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="bi bi-star-fill {{ $i <= $voucher->review->rating ? '' : 'text-light' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <span class="fw-bold">{{ $voucher->review->rating }}/5</span>
+                                </div>
+                                @if($voucher->review->comment)
+                                    <p class="text-muted mb-0 italic">"{{ $voucher->review->comment }}"</p>
+                                @endif
+                            @else
+                                <form action="{{ route('reviews.store', $voucher) }}" method="POST">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label class="form-label small fw-bold text-muted text-uppercase mb-3">How would you rate this product?</label>
+                                        <div class="rating-input d-flex gap-2">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <input type="radio" name="rating" value="{{ $i }}" id="star-{{ $i }}" class="btn-check" required>
+                                                <label for="star-{{ $i }}" class="btn btn-outline-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                                    <i class="bi bi-star-fill"></i>
+                                                </label>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label small fw-bold text-muted text-uppercase">Your Feedback (Optional)</label>
+                                        <textarea name="comment" class="form-control border-light bg-light rounded-3" rows="4" placeholder="Tell us what you liked or how we can improve..." maxlength="1000"></textarea>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold">
+                                            Submit Review
+                                        </button>
+                                    </div>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Redemption Info -->
                     <div class="card shadow-sm border-0 rounded-4">
                         <div class="card-body p-4">
@@ -186,6 +235,14 @@
         </div>
     </div>
 </div>
+
+<style>
+    .rating-input .btn-check:checked + .btn-outline-warning {
+        background-color: var(--bs-warning);
+        color: white;
+        border-color: var(--bs-warning);
+    }
+</style>
 
 <script>
     const CHUNK_SIZE = 512 * 1024; // 512KB

@@ -119,7 +119,6 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/my-orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('my-orders.show');
 
     // Reviews
-    Route::get('/my-gifts/reviews', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews.index');
     Route::post('/my-gifts/reviews/{voucher}', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
