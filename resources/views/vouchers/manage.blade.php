@@ -223,6 +223,16 @@
                                     <div class="small text-muted mb-1">Valid Until</div>
                                     <div class="fw-bold small">{{ $voucher->expires_at ? $voucher->expires_at->format('M d, Y') : 'N/A' }}</div>
                                 </div>
+                                @if($voucher->claimed_at)
+                                <div class="col-6">
+                                    <div class="small text-muted mb-1">Claimed On</div>
+                                    <div class="fw-bold small">{{ $voucher->claimed_at->format('M d, Y h:i A') }}</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="small text-muted mb-1">Claimed By</div>
+                                    <div class="fw-bold small">{{ $voucher->claimed_by ?? 'N/A' }}</div>
+                                </div>
+                                @endif
                                 <div class="col-12">
                                     <div class="small text-muted mb-1">Voucher ID</div>
                                     <code class="small">{{ $voucher->unique_token }}</code>
