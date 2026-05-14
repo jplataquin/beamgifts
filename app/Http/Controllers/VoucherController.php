@@ -29,11 +29,21 @@ class VoucherController extends Controller
     /**
      * Gifter's view of their own vouchers.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vouchers = Voucher::whereHas('order', function($q) {
+        $query = Voucher::whereHas('order', function($q) {
             $q->where('gifter_id', Auth::id());
-        })->with(['product.store'])->latest()->paginate(10);
+        })->with(['product.store']);
+
+        if ($request->filled('status')) {
+            if ($request->status === 'needs_review') {
+                $query->whereNotNull('claimed_at')->whereDoesntHave('review');
+            } else {
+                $query->where('status', $request->status);
+            }
+        }
+
+        $vouchers = $query->latest()->paginate(10);
 
         return view('vouchers.index', compact('vouchers'));
     }

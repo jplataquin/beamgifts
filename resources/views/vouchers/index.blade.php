@@ -9,7 +9,14 @@
             @include('partials.account-menu')
         </div>
         <div class="col-md-9">
-            <h1 class="h3 fw-bold mb-4 text-primary">My Purchased Gifts</h1>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 fw-bold mb-0 text-primary">My Purchased Gifts</h1>
+                @if(request('status'))
+                    <a href="{{ route('my-gifts') }}" class="btn btn-link btn-sm text-decoration-none">
+                        <i class="bi bi-x-circle me-1"></i> Clear filters
+                    </a>
+                @endif
+            </div>
             <p class="text-muted mb-5">Personalize your gifts with a note and a photo before sending the link.</p>
             
             @if(session('success'))
