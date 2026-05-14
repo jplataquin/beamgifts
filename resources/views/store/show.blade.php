@@ -13,23 +13,33 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <h2 class="h3 mb-4">Products</h2>
+            <h2 class="h3 fw-bold mb-4">Our Products</h2>
             <div class="row">
                 @foreach($store->products as $product)
                     <div class="col-md-6 mb-4">
-                        <div class="card h-100 shadow-sm border-0">
+                        <div class="card h-100 shadow-sm border-0 product-card transition-hover">
                             <a href="{{ route('product.show', ['city_slug' => $city->slug, 'product_slug' => $product->slug]) }}" class="text-decoration-none text-dark">
+                                @if(!empty($product->images))
+                                    <img src="{{ Storage::url($product->images[0]) }}" class="card-img-top" style="height: 200px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                                @else
+                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                                        <i class="bi bi-image text-muted display-4"></i>
+                                    </div>
+                                @endif
                                 <div class="card-body">
-                                    <h5 class="card-title fw-bold">{{ $product->name }}</h5>
-                                    <p class="fw-bold text-primary h5">₱{{ number_format($product->price, 2) }}</p>
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-light text-dark rounded-pill">{{ $product->category_rel->name ?? 'Uncategorized' }}</span>
+                                        <p class="fw-bold text-primary mb-0">₱{{ number_format($product->price, 2) }}</p>
+                                    </div>
+                                    <h5 class="card-title fw-bold mb-1">{{ $product->name }}</h5>
                                 </div>
                             </a>
                             <div class="card-footer bg-white border-0 pb-4 px-3">
-                                <div class="mb-1">
+                                <div class="mb-1 text-center">
                                     @for($i = 1; $i <= 5; $i++)
                                         <i class="bi bi-star-fill {{ $i <= $product->average_rating ? 'text-warning' : 'text-muted opacity-25' }}"></i>
                                     @endfor
-                                    <span class="small text-muted ms-2">({{ $product->reviews_count }} reviews)</span>
+                                    <div class="small text-muted mt-1">({{ $product->reviews_count }} reviews)</div>
                                 </div>
                             </div>
                         </div>
@@ -63,3 +73,13 @@
     </div>
 </div>
 @endsection
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
