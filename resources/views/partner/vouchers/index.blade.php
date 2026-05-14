@@ -18,6 +18,34 @@
                 <div class="alert alert-success rounded-pill px-4 mb-4">{{ session('success') }}</div>
             @endif
 
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <form action="{{ route('partner.vouchers.index') }}" method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Status</label>
+                            <select name="status" class="form-select rounded-pill">
+                                <option value="">All Statuses</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="claimed" {{ request('status') === 'claimed' ? 'selected' : '' }}>Claimed</option>
+                                <option value="expired" {{ request('status') === 'expired' ? 'selected' : '' }}>Expired</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">From Date</label>
+                            <input type="date" name="from_date" class="form-control rounded-pill" value="{{ request('from_date') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">To Date</label>
+                            <input type="date" name="to_date" class="form-control rounded-pill" value="{{ request('to_date') }}">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary rounded-pill w-100">Filter</button>
+                            <a href="{{ route('partner.vouchers.index') }}" class="btn btn-light rounded-pill ms-2">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card shadow-sm border-0">
                 <div class="card-body p-0">
                     <div class="table-responsive">

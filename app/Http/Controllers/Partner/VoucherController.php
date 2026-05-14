@@ -25,7 +25,15 @@ class VoucherController extends Controller
             $query->where('status', $request->status);
         }
 
-        $vouchers = $query->latest()->paginate(15);
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $vouchers = $query->latest()->paginate(15)->withQueryString();
 
         return view('partner.vouchers.index', compact('vouchers'));
     }

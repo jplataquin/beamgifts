@@ -17,12 +17,17 @@ class PasswordController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password:manager'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
-
         $manager = Auth::guard('manager')->user();
+
+        $rules = [
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ];
+
+        if (!$manager->must_change_password) {
+            $rules['current_password'] = ['required', 'current_password:manager'];
+        }
+
+        $request->validate($rules);
 
         $manager->update([
             'password' => Hash::make($request->password),
