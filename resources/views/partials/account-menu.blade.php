@@ -6,10 +6,7 @@
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('profile') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-person me-md-2"></i> My Profile
             </a>
-            <a href="{{ route('settings') }}" 
-               class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('settings') ? 'active shadow-sm' : '' }}">
-               <i class="bi bi-gear me-md-2"></i> Settings
-            </a>
+            
             <a href="{{ route('my-gifts') }}" 
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('my-gifts') || request()->routeIs('vouchers.manage') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-gift me-md-2"></i> My Gifts
@@ -17,6 +14,11 @@
             <a href="{{ route('my-orders') }}" 
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('my-orders') || request()->routeIs('my-orders.show') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-clock-history me-md-2"></i> Order History
+            </a>
+            
+            <a href="{{ route('settings') }}" 
+               class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('settings') ? 'active shadow-sm' : '' }}">
+               <i class="bi bi-gear me-md-2"></i> Settings
             </a>
             
             <form action="{{ route('logout') }}" method="POST" class="ms-auto ms-md-0 mt-md-3 flex-shrink-0">
