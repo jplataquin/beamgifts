@@ -31,7 +31,7 @@
                     <h3 class="h5 fw-bold text-dark">Become a Partner</h3>
                     <p class="text-muted small mb-4 flex-grow-1">Join our platform and start selling digital vouchers for your local business.</p>
                     <div>
-                        <a href="#" class="btn btn-outline-primary rounded-pill px-4">Learn More</a>
+                        <a href="{{ route('page.partner-intro') }}" class="btn btn-outline-primary rounded-pill px-4">Learn More</a>
                     </div>
                 </div>
             </div>

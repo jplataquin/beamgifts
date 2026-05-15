@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::get('/about', [App\Http\Controllers\PageController::class, 'about'])->name('page.about');
 Route::get('/terms', [App\Http\Controllers\PageController::class, 'terms'])->name('page.terms');
 Route::get('/privacy', [App\Http\Controllers\PageController::class, 'privacy'])->name('page.privacy');
+Route::get('/become-a-partner', [App\Http\Controllers\PageController::class, 'partnerIntro'])->name('page.partner-intro');
+Route::post('/become-a-partner', [App\Http\Controllers\PageController::class, 'partnerApply'])->name('page.partner-apply');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/login', [App\Http\Controllers\Admin\LoginController::class, 'showLoginForm'])->name('login');
