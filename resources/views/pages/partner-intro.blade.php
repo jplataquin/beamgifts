@@ -98,6 +98,13 @@
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">Submit Application</button>
                         </div>
                         
+                        <div class="text-center mt-4">
+                            <p class="mb-1 text-muted small">Already a partner?</p>
+                            <a href="{{ route('partner.login') }}" class="btn btn-link text-primary text-decoration-none fw-bold small">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Login as Partner
+                            </a>
+                        </div>
+                        
                         <p class="text-center text-muted small mt-4 mb-0">
                             By submitting, you agree to our <a href="{{ route('page.terms') }}" class="text-primary text-decoration-none">Terms of Service</a>.
                         </p>
