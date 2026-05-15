@@ -110,7 +110,8 @@
                     
                     <div class="mb-4">
                         <label for="email" class="form-label small fw-bold">Email Address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email" value="{{ old('email', $gifter->email) }}" required>
+                        <input type="email" class="form-control bg-light text-muted border-0" id="email" name="email" value="{{ $gifter->email }}" readonly>
+                        <div class="form-text small text-muted">Your email address cannot be changed.</div>
                     </div>
 
                     <hr class="my-4">

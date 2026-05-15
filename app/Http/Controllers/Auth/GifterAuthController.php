@@ -90,14 +90,12 @@ class GifterAuthController extends Controller
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:gifters,email,' . $gifter->id],
             'current_password' => ['nullable', 'required_with:password', 'current_password'],
             'password' => ['nullable', 'confirmed', Password::defaults()],
         ]);
 
         $gifter->first_name = $request->first_name;
         $gifter->last_name = $request->last_name;
-        $gifter->email = $request->email;
 
         if ($request->filled('password')) {
             $gifter->password = Hash::make($request->password);
