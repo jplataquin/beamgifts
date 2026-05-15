@@ -73,6 +73,38 @@ class GifterAuthController extends Controller
     public function profile()
     {
         $gifter = Auth::user();
-        return view('auth.profile', compact('gifter'));
+        // Load the 5 most recent orders for the activity section
+        $recentOrders = \App\Models\Order::where('gifter_id', $gifter->id)
+            ->with('items')
+            ->latest()
+            ->take(5)
+            ->get();
+            
+        return view('auth.profile', compact('gifter', 'recentOrders'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $gifter = Auth::user();
+
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:gifters,email,' . $gifter->id],
+            'current_password' => ['nullable', 'required_with:password', 'current_password'],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+        ]);
+
+        $gifter->first_name = $request->first_name;
+        $gifter->last_name = $request->last_name;
+        $gifter->email = $request->email;
+
+        if ($request->filled('password')) {
+            $gifter->password = Hash::make($request->password);
+        }
+
+        $gifter->save();
+
+        return back()->with('success', 'Profile updated successfully.');
     }
 }
