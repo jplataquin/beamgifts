@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Gifter extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'gifters';
 
@@ -25,7 +26,16 @@ class Gifter extends Authenticatable
         'last_name',
         'email',
         'password',
+        'default_city_id',
     ];
+
+    /**
+     * Get the default city for the gifter.
+     */
+    public function defaultCity()
+    {
+        return $this->belongsTo(City::class, 'default_city_id');
+    }
 
     /**
      * The attributes that should be appends for serialization.

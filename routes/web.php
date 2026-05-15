@@ -5,8 +5,16 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\StoreController;
 
 Route::get('/', function () {
+    if (Auth::guard('web')->check() && Auth::guard('web')->user()->default_city_id) {
+        $city = \App\Models\City::where('id', Auth::guard('web')->user()->default_city_id)
+            ->where('is_active', true)
+            ->first();
+        if ($city) {
+            return redirect()->route('city.home', ['city_slug' => $city->slug]);
+        }
+    }
     return view('welcome');
-});
+})->name('home');
 
 // Public Content Pages
 Route::get('/about', [App\Http\Controllers\PageController::class, 'about'])->name('page.about');
@@ -99,6 +107,11 @@ Route::post('/logout', [App\Http\Controllers\Auth\GifterAuthController::class, '
 Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/profile', [App\Http\Controllers\Auth\GifterAuthController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\Auth\GifterAuthController::class, 'updateProfile'])->name('profile.update');
+    
+    Route::get('/settings', [App\Http\Controllers\Auth\GifterSettingsController::class, 'edit'])->name('settings');
+    Route::put('/settings', [App\Http\Controllers\Auth\GifterSettingsController::class, 'update'])->name('settings.update');
+    Route::delete('/settings/deactivate', [App\Http\Controllers\Auth\GifterSettingsController::class, 'deactivate'])->name('settings.deactivate');
+
     Route::get('/my-gifts', [App\Http\Controllers\VoucherController::class, 'index'])->name('my-gifts');
     Route::get('/my-gifts/{voucher}/manage', [App\Http\Controllers\VoucherController::class, 'manage'])->name('vouchers.manage');
     Route::post('/my-gifts/{voucher}/message', [App\Http\Controllers\VoucherController::class, 'updateMessage'])->name('vouchers.update_message');

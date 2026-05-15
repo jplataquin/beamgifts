@@ -6,6 +6,10 @@
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('profile') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-person me-md-2"></i> My Profile
             </a>
+            <a href="{{ route('settings') }}" 
+               class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('settings') ? 'active shadow-sm' : '' }}">
+               <i class="bi bi-gear me-md-2"></i> Settings
+            </a>
             <a href="{{ route('my-gifts') }}" 
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('my-gifts') || request()->routeIs('vouchers.manage') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-gift me-md-2"></i> My Gifts
