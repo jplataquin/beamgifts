@@ -52,12 +52,7 @@ return [
             'driver' => 'session',
             'provider' => 'partners',
         ],
-
-        'manager' => [
-            'driver' => 'session',
-            'provider' => 'managers',
-        ],
-        ],
+    ],
 
         /*
         |--------------------------------------------------------------------------
@@ -91,12 +86,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Partner::class,
         ],
-
-        'managers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Manager::class,
-        ],
-        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------

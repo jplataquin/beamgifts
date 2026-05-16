@@ -31,4 +31,12 @@ class Branch extends Model
     {
         return $this->belongsTo(City::class);
     }
+
+    /**
+     * Get the managers assigned to this branch.
+     */
+    public function managers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Partner::class)->where('role', 'manager');
+    }
 }

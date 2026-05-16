@@ -29,17 +29,18 @@ class PartnerVoucherFilterTest extends TestCase
         $city = City::create(['name' => 'Test City', 'slug' => 'test-city']);
         $category = Category::create(['name' => 'Test Category', 'slug' => 'test-category']);
 
+        $this->store = Store::create([
+            'name' => 'Test Store',
+            'slug' => 'test-store',
+        ]);
+
         $this->partner = Partner::create([
             'name' => 'Test Partner',
             'email' => 'partner@test.com',
             'business_name' => 'Test Business',
             'password' => bcrypt('password'),
-        ]);
-
-        $this->store = Store::create([
-            'partner_id' => $this->partner->id,
-            'name' => 'Test Store',
-            'slug' => 'test-store',
+            'role' => 'owner',
+            'store_id' => $this->store->id,
         ]);
 
         $this->product = Product::create([

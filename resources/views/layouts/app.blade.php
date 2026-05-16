@@ -55,33 +55,22 @@
                                 </ul>
                             </div>
                         @elseif(Auth::guard('partner')->check())
+                            @php $partnerUser = Auth::guard('partner')->user(); @endphp
                             <div class="dropdown">
                                 <a class="btn btn-outline-primary rounded-pill dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    Partner: {{ Auth::guard('partner')->user()->name }}
+                                    {{ $partnerUser->role === 'owner' ? 'Partner' : 'Manager' }}: {{ $partnerUser->name }}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                    <li><a class="dropdown-item" href="{{ route('partner.dashboard') }}">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('partner.managers.index') }}">Branch Managers</a></li>
+                                    @if($partnerUser->isOwner())
+                                        <li><a class="dropdown-item" href="{{ route('partner.dashboard') }}">Dashboard</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('partner.managers.index') }}">Branch Managers</a></li>
+                                    @else
+                                        <li><a class="dropdown-item" href="{{ route('manager.vouchers.scan') }}">QR Scanner</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('manager.vouchers.transactions') }}">Transactions</a></li>
+                                    @endif
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('partner.logout') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item text-danger">Logout</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @elseif(Auth::guard('manager')->check())
-                            <div class="dropdown">
-                                <a class="btn btn-outline-primary rounded-pill dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    Manager: {{ Auth::guard('manager')->user()->name }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                    <li><a class="dropdown-item" href="{{ route('manager.vouchers.scan') }}">QR Scanner</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('manager.vouchers.transactions') }}">Transactions</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form action="{{ route('manager.logout') }}" method="POST">
                                             @csrf
                                             <button type="submit" class="dropdown-item text-danger">Logout</button>
                                         </form>
@@ -175,43 +164,47 @@
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="mobile-bottom-nav border-top">
         @if(Auth::guard('partner')->check())
-            <div class="nav-item">
-                <a href="{{ route('partner.dashboard') }}" class="nav-link {{ Request::routeIs('partner.dashboard') ? 'active' : '' }}">
-                    <i class="bi bi-speedometer2"></i>
-                    <span>Dashboard</span>
-                </a>
-            </div>
-            <div class="nav-item">
-               <a href="{{ route('partner.vouchers.index') }}" class="nav-link {{ Request::routeIs('partner.vouchers.index') ? 'active' : '' }}">
-                   <i class="bi bi-gift"></i>
-                   <span>Vouchers</span>
-               </a>
-            </div>            <div class="nav-item">
-                <a href="{{ route('partner.managers.index') }}" class="nav-link {{ Request::routeIs('partner.managers.*') ? 'active' : '' }}">
-                    <i class="bi bi-people"></i>
-                    <span>Managers</span>
-                </a>
-            </div>
-        @elseif(Auth::guard('manager')->check())
-            <div class="nav-item">
-                <a href="{{ route('manager.vouchers.scan') }}" class="nav-link {{ Request::routeIs('manager.vouchers.scan') ? 'active' : '' }}">
-                    <i class="bi bi-qr-code-scan"></i>
-                    <span>Scan</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ route('manager.vouchers.transactions') }}" class="nav-link {{ Request::routeIs('manager.vouchers.transactions') ? 'active' : '' }}">
-                    <i class="bi bi-clock-history"></i>
-                    <span>History</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <form action="{{ route('manager.logout') }}" method="POST" id="managerLogoutForm" class="d-none">@csrf</form>
-                <a href="javascript:void(0)" onclick="document.getElementById('managerLogoutForm').submit()" class="nav-link text-danger">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
+            @php $partnerUser = Auth::guard('partner')->user(); @endphp
+            @if($partnerUser->isOwner())
+                <div class="nav-item">
+                    <a href="{{ route('partner.dashboard') }}" class="nav-link {{ Request::routeIs('partner.dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="{{ route('partner.vouchers.index') }}" class="nav-link {{ Request::routeIs('partner.vouchers.index') ? 'active' : '' }}">
+                        <i class="bi bi-gift"></i>
+                        <span>Vouchers</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="{{ route('partner.managers.index') }}" class="nav-link {{ Request::routeIs('partner.managers.*') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span>Managers</span>
+                    </a>
+                </div>
+            @else
+                <div class="nav-item">
+                    <a href="{{ route('manager.vouchers.scan') }}" class="nav-link {{ Request::routeIs('manager.vouchers.scan') ? 'active' : '' }}">
+                        <i class="bi bi-qr-code-scan"></i>
+                        <span>Scan</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="{{ route('manager.vouchers.transactions') }}" class="nav-link {{ Request::routeIs('manager.vouchers.transactions') ? 'active' : '' }}">
+                        <i class="bi bi-clock-history"></i>
+                        <span>History</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <form action="{{ route('partner.logout') }}" method="POST" id="partnerLogoutForm" class="d-none">@csrf</form>
+                    <a href="javascript:void(0)" onclick="document.getElementById('partnerLogoutForm').submit()" class="nav-link text-danger">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            @endif
         @else
             <div class="nav-item">
                 <a href="{{ url('/') }}" class="nav-link {{ Request::is('/') ? 'active' : '' }}">

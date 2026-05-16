@@ -16,7 +16,7 @@ class VoucherController extends Controller
 
     public function scanResult($token)
     {
-        $manager = Auth::guard('manager')->user();
+        $manager = Auth::guard('partner')->user();
         $voucher = Voucher::where('unique_token', $token)->with(['product.store', 'order.gifter'])->firstOrFail();
 
         // Security: Ensure voucher belongs to the manager's store
@@ -32,7 +32,7 @@ class VoucherController extends Controller
 
     public function claim(Request $request, Voucher $voucher)
     {
-        $manager = Auth::guard('manager')->user();
+        $manager = Auth::guard('partner')->user();
 
         if ($voucher->product->store_id !== $manager->store_id) {
             abort(403);
@@ -68,7 +68,7 @@ class VoucherController extends Controller
 
     public function transactions(Request $request)
     {
-        $manager = Auth::guard('manager')->user();
+        $manager = Auth::guard('partner')->user();
         $query = Voucher::where('claimed_branch_id', $manager->branch_id)
                            ->with(['product', 'order.gifter', 'claimedByUser']);
 

@@ -56,7 +56,7 @@ Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
     Route::post('/login', [App\Http\Controllers\Partner\LoginController::class, 'login'])->name('login.submit');
     Route::post('/logout', [App\Http\Controllers\Partner\LoginController::class, 'logout'])->name('logout');
 
-    Route::group(['middleware' => 'auth:partner'], function () {
+    Route::group(['middleware' => ['auth:partner', 'role:owner']], function () {
         Route::get('/dashboard', [App\Http\Controllers\Partner\DashboardController::class, 'index'])->name('dashboard');
         
         // Store Management (Singleton)
@@ -81,11 +81,7 @@ Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
 
 // Branch Manager Routes
 Route::group(['prefix' => 'manager', 'as' => 'manager.'], function () {
-    Route::get('/login', [App\Http\Controllers\Manager\Auth\LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Manager\Auth\LoginController::class, 'login'])->name('login.submit');
-    Route::post('/logout', [App\Http\Controllers\Manager\Auth\LoginController::class, 'logout'])->name('logout');
-
-    Route::group(['middleware' => 'auth:manager'], function () {
+    Route::group(['middleware' => ['auth:partner', 'role:manager']], function () {
         // Password Change Routes (No force middleware here)
         Route::get('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'update'])->name('password.update');

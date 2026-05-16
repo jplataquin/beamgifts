@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'city.context' => \App\Http\Middleware\SetCityContext::class,
             'manager.force_password_change' => \App\Http\Middleware\ForceManagerPasswordChange::class,
+            'role' => \App\Http\Middleware\CheckPartnerRole::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

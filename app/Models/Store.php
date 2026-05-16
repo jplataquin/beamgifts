@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Store extends Model
 {
     protected $fillable = [
-        'partner_id',
         'name',
         'slug',
         'description',
@@ -21,11 +20,19 @@ class Store extends Model
     ];
 
     /**
-     * Get the partner that owns the store.
+     * Get all partners (owners and managers) for the store.
      */
-    public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function partners(): HasMany
     {
-        return $this->belongsTo(Partner::class);
+        return $this->hasMany(Partner::class);
+    }
+
+    /**
+     * Get the owner of the store.
+     */
+    public function owner(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Partner::class)->where('role', 'owner');
     }
 
     /**

@@ -16,11 +16,11 @@ class ForceManagerPasswordChange
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $manager = Auth::guard('manager')->user();
+        $manager = \Illuminate\Support\Facades\Auth::guard('partner')->user();
 
         if ($manager && $manager->must_change_password) {
             // Exclude the password change route and logout route to avoid loops
-            if (!$request->routeIs('manager.password.edit') && !$request->routeIs('manager.password.update') && !$request->routeIs('manager.logout')) {
+            if (!$request->routeIs('manager.password.edit') && !$request->routeIs('manager.password.update') && !$request->routeIs('partner.logout')) {
                 return redirect()->route('manager.password.edit');
             }
         }

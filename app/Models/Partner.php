@@ -18,6 +18,10 @@ class Partner extends Authenticatable
         'password',
         'business_name',
         'is_banned',
+        'role',
+        'store_id',
+        'branch_id',
+        'must_change_password',
     ];
 
     protected $hidden = [
@@ -29,13 +33,32 @@ class Partner extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_banned' => 'boolean',
+        'must_change_password' => 'boolean',
     ];
 
     /**
-     * Get the store owned by the partner.
+     * Get the store that the partner belongs to.
      */
-    public function store(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(Store::class);
+        return $this->belongsTo(Store::class);
+    }
+
+    /**
+     * Get the branch that the partner is assigned to (for managers).
+     */
+    public function branch(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->role === 'owner';
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
     }
 }

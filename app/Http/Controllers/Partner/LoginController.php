@@ -21,7 +21,21 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('partner')->attempt($credentials)) {
+            $user = Auth::guard('partner')->user();
+
+            if ($user->is_banned) {
+                Auth::guard('partner')->logout();
+                return back()->withErrors([
+                    'email' => 'Your account has been suspended.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
+
+            if ($user->isManager()) {
+                return redirect()->intended(route('manager.vouchers.scan'));
+            }
+
             return redirect()->intended(route('partner.dashboard'));
         }
 
