@@ -33,7 +33,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             if ($user->isManager()) {
-                return redirect()->intended(route('manager.vouchers.scan'));
+                return redirect()->intended(route('manager.vouchers.transactions'));
             }
 
             return redirect()->intended(route('partner.dashboard'));
