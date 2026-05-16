@@ -70,13 +70,6 @@
                 <div class="alert alert-success rounded-pill px-4 mb-4 border-0 shadow-sm no-print">{{ session('success') }}</div>
             @endif
 
-            <!-- Mobile Scan Button (shows only on smaller screens) -->
-            <div class="d-lg-none mb-4 no-print">
-                 <a href="{{ route('manager.vouchers.scan') }}" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
-                    <i class="bi bi-qr-code-scan me-2"></i> Scan Voucher
-                </a>
-            </div>
-
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 no-print">
                 <div class="card-body">
                     <form action="{{ route('manager.vouchers.transactions') }}" method="GET" class="row g-3">
