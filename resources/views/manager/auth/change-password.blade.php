@@ -9,7 +9,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white text-center py-4 border-0">
                     <h1 class="h3 fw-bold mb-1 text-primary">Change Your Password</h1>
-                    @if (auth('manager')->user()->must_change_password)
+                    @if (auth('partner')->user()->must_change_password)
                         <p class="text-muted small mb-0">For security reasons, you must change your password before continuing.</p>
                     @else
                         <p class="text-muted small mb-0">Update your account password.</p>
@@ -30,7 +30,7 @@
                         @csrf
                         @method('PUT')
 
-                        @if (!auth('manager')->user()->must_change_password)
+                        @if (!auth('partner')->user()->must_change_password)
                         <div class="mb-4">
                             <label for="current_password" class="form-label fw-bold">Current Password</label>
                             <input id="current_password" type="password" class="form-control" name="current_password" required autofocus>
@@ -39,7 +39,7 @@
 
                         <div class="mb-4">
                             <label for="password" class="form-label fw-bold">New Password</label>
-                            <input id="password" type="password" class="form-control" name="password" required {{ auth('manager')->user()->must_change_password ? 'autofocus' : '' }}>
+                            <input id="password" type="password" class="form-control" name="password" required {{ auth('partner')->user()->must_change_password ? 'autofocus' : '' }}>
                         </div>
 
                         <div class="mb-4">

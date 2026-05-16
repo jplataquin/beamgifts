@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
-use App\Models\Manager;
+use App\Models\Partner;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +14,17 @@ class ManagerController extends Controller
     public function index()
     {
         $partner = Auth::guard('partner')->user();
-        $managers = Manager::where('store_id', $partner->store->id)->with('branch')->get();
+        $managers = Partner::where('store_id', $partner->store->id)
+            ->where('role', 'manager')
+            ->with('branch')
+            ->get();
         return view('partner.managers.index', compact('managers'));
     }
 
-    public function show(Manager $manager)
+    public function show(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id) abort(403);
+        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
         
         return view('partner.managers.show', compact('manager'));
     }
@@ -39,7 +42,7 @@ class ManagerController extends Controller
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:managers,email',
+            'email' => 'required|email|unique:partners,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -48,7 +51,8 @@ class ManagerController extends Controller
                         ->where('store_id', $partner->store->id)
                         ->firstOrFail();
 
-        Manager::create([
+        Partner::create([
+            'role' => 'manager',
             'store_id' => $partner->store->id,
             'branch_id' => $branch->id,
             'name' => $request->name,
@@ -59,24 +63,24 @@ class ManagerController extends Controller
         return redirect()->route('partner.managers.index')->with('success', 'Manager created successfully.');
     }
 
-    public function edit(Manager $manager)
+    public function edit(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id) abort(403);
+        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
         
         $branches = Branch::where('store_id', $partner->store->id)->get();
         return view('partner.managers.edit', compact('manager', 'branches'));
     }
 
-    public function update(Request $request, Manager $manager)
+    public function update(Request $request, Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id) abort(403);
+        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
 
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:managers,email,' . $manager->id,
+            'email' => 'required|email|unique:partners,email,' . $manager->id,
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -101,10 +105,10 @@ class ManagerController extends Controller
         return redirect()->route('partner.managers.index')->with('success', 'Manager updated successfully.');
     }
 
-    public function destroy(Manager $manager)
+    public function destroy(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id) abort(403);
+        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
 
         $manager->delete();
         return redirect()->route('partner.managers.index')->with('success', 'Manager deleted.');

@@ -31,7 +31,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 fw-bold mb-0 text-primary">Redemption History</h1>
-            <p class="text-muted">History of vouchers claimed at <strong>{{ Auth::guard('manager')->user()->branch->name }}</strong>.</p>
+            <p class="text-muted">History of vouchers claimed at <strong>{{ Auth::guard('partner')->user()->branch->name }}</strong>.</p>
         </div>
         <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4 no-print">
             <i class="bi bi-printer me-2"></i>Print

@@ -7,7 +7,7 @@
     <div class="row justify-content-center text-center">
         <div class="col-md-6">
             <h1 class="h3 fw-bold mb-2 text-primary">Redeem Voucher</h1>
-            <p class="text-muted mb-5">Branch: <strong>{{ Auth::guard('manager')->user()->branch->name }}</strong></p>
+            <p class="text-muted mb-5">Branch: <strong>{{ Auth::guard('partner')->user()->branch->name }}</strong></p>
             
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
                 <div id="reader" style="width: 100%; min-height: 400px; background: #000;"></div>
