@@ -88,4 +88,42 @@ class VoucherController extends Controller
 
         return view('manager.vouchers.transactions', compact('vouchers'));
     }
+
+    /**
+     * Print transaction history for the manager's branch.
+     */
+    public function printTransactions(Request $request)
+    {
+        $manager = Auth::guard('partner')->user();
+        $query = Voucher::where('claimed_branch_id', $manager->branch_id)
+                           ->with(['product', 'order.gifter', 'claimedByUser']);
+
+        $filters = [];
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+            $filters['Status'] = ucfirst($request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('claimed_at', '>=', $request->from_date);
+            $filters['From Date'] = \Carbon\Carbon::parse($request->from_date)->format('M d, Y');
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('claimed_at', '<=', $request->to_date);
+            $filters['To Date'] = \Carbon\Carbon::parse($request->to_date)->format('M d, Y');
+        }
+
+        $vouchers = $query->latest('claimed_at')->get();
+        
+        $grandTotal = $vouchers->sum(function($voucher) {
+            return $voucher->price ?? $voucher->product->price;
+        });
+
+        $branch = $manager->branch;
+        $store = $manager->store;
+
+        return view('manager.vouchers.print_transactions', compact('vouchers', 'filters', 'grandTotal', 'branch', 'store'));
+    }
 }

@@ -3,34 +3,10 @@
 @section('title', 'Branch Transactions')
 
 @section('content')
-<style>
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        .print-section, .print-section * {
-            visibility: visible;
-        }
-        .print-section {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
-        .no-print {
-            display: none !important;
-        }
-        .card {
-            border: none !important;
-            box-shadow: none !important;
-        }
-    }
-</style>
-
-<div class="container py-5 print-section">
+<div class="container py-5">
     <div class="row">
         <!-- Sidebar Navigation (Desktop) -->
-        <div class="col-lg-3 mb-4 no-print d-none d-lg-block">
+        <div class="col-lg-3 mb-4 d-none d-lg-block">
             <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 80px;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-4">Manager Menu</h5>
@@ -61,18 +37,18 @@
                     <h1 class="h3 fw-bold mb-0 text-primary">Redemption History</h1>
                     <p class="text-muted">History of vouchers claimed at <strong>{{ Auth::guard('partner')->user()->branch->name }}</strong>.</p>
                 </div>
-                <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4 no-print">
+                <button type="button" onclick="printTransactions()" class="btn btn-outline-secondary rounded-pill px-4">
                     <i class="bi bi-printer me-2"></i>Print
                 </button>
             </div>
 
             @if(session('success'))
-                <div class="alert alert-success rounded-pill px-4 mb-4 border-0 shadow-sm no-print">{{ session('success') }}</div>
+                <div class="alert alert-success rounded-pill px-4 mb-4 border-0 shadow-sm">{{ session('success') }}</div>
             @endif
 
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 no-print">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
                 <div class="card-body">
-                    <form action="{{ route('manager.vouchers.transactions') }}" method="GET" class="row g-3">
+                    <form action="{{ route('manager.vouchers.transactions') }}" method="GET" class="row g-3" id="transactionFilterForm">
                         <div class="col-md-3">
                             <label class="form-label small fw-bold">Status</label>
                             <select name="status" class="form-select rounded-pill">
@@ -145,10 +121,22 @@
                 </div>
             </div>
 
-            <div class="mt-4 no-print">
+            <div class="mt-4">
                 {{ $vouchers->links() }}
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function printTransactions() {
+        const form = document.getElementById('transactionFilterForm');
+        const formData = new FormData(form);
+        const searchParams = new URLSearchParams(formData);
+        
+        window.open('{{ route('manager.vouchers.transactions.print') }}?' + searchParams.toString(), '_blank');
+    }
+</script>
+@endpush
 @endsection

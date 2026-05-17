@@ -92,6 +92,7 @@ Route::group(['prefix' => 'manager', 'as' => 'manager.'], function () {
             Route::get('/scan/{token}', [App\Http\Controllers\Manager\VoucherController::class, 'scanResult'])->name('vouchers.scan.result');
             Route::patch('/vouchers/{voucher}/claim', [App\Http\Controllers\Manager\VoucherController::class, 'claim'])->name('vouchers.claim');
             Route::get('/transactions', [App\Http\Controllers\Manager\VoucherController::class, 'transactions'])->name('vouchers.transactions');
+            Route::get('/transactions/print', [App\Http\Controllers\Manager\VoucherController::class, 'printTransactions'])->name('vouchers.transactions.print');
         });
     });
 });

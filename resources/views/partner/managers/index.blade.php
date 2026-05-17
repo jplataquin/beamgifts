@@ -15,9 +15,6 @@
                     <p class="text-muted">Manage accounts for your branch staff.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('partner.dashboard') }}" class="btn btn-light rounded-pill px-4">
-                        <i class="bi bi-arrow-left me-2"></i>Dashboard
-                    </a>
                     <a href="{{ route('partner.managers.create') }}" class="btn btn-primary rounded-pill px-4">
                         <i class="bi bi-plus-lg me-2"></i>Add Manager
                     </a>
