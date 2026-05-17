@@ -42,27 +42,43 @@
                         <h5 class="fw-bold mb-4">Purchased Items</h5>
                         <div class="table-responsive">
                             <table class="table table-borderless align-middle">
+                                <thead class="border-bottom">
+                                    <tr>
+                                        <th class="ps-0 text-muted small fw-bold text-uppercase">Item</th>
+                                        <th class="text-center text-muted small fw-bold text-uppercase">Qty</th>
+                                        <th class="text-end text-muted small fw-bold text-uppercase">Price</th>
+                                        <th class="text-end pe-0 text-muted small fw-bold text-uppercase">Vouchers</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @foreach($order->items as $item)
                                         <tr class="border-bottom">
                                             <td class="ps-0 py-3">
-                                                <div class="fw-bold">{{ $item->product->name }}</div>
+                                                <div class="fw-bold">{{ $item->product->name ?? $item->product_name }}</div>
                                                 <div class="small text-muted">{{ $item->product->store->name ?? 'Unknown Store' }}</div>
                                             </td>
+                                            <td class="text-center py-3">
+                                                x{{ $item->quantity }}
+                                            </td>
                                             <td class="text-end fw-bold text-primary py-3">
-                                                ₱{{ number_format($item->price, 2) }}
+                                                ₱{{ number_format($item->price * $item->quantity, 2) }}
+                                                @if($item->quantity > 1)
+                                                    <div class="small text-muted fw-normal">₱{{ number_format($item->price, 2) }} each</div>
+                                                @endif
                                             </td>
                                             <td class="text-end pe-0 py-3">
-                                                @if($item->voucher)
-                                                    <span class="badge bg-light text-dark border rounded-pill">Voucher: #{{ str_pad($item->voucher->id, 6, '0', STR_PAD_LEFT) }}</span>
-                                                @endif
+                                                @foreach($order->vouchers->where('product_id', $item->product_id) as $voucher)
+                                                    <div class="mb-1">
+                                                        <span class="badge bg-light text-dark border rounded-pill">Voucher: #{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</span>
+                                                    </div>
+                                                @endforeach
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td class="ps-0 pt-4 fw-bold">Total Amount</td>
+                                        <td colspan="2" class="ps-0 pt-4 fw-bold">Total Amount</td>
                                         <td colspan="2" class="text-end pe-0 pt-4 fw-bold text-primary h5 mb-0">
                                             ₱{{ number_format($order->total_amount, 2) }}
                                         </td>
