@@ -3,39 +3,15 @@
 @section('title', 'All Purchased Vouchers')
 
 @section('content')
-<style>
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        .print-section, .print-section * {
-            visibility: visible;
-        }
-        .print-section {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
-        .no-print {
-            display: none !important;
-        }
-        .card {
-            border: none !important;
-            box-shadow: none !important;
-        }
-    }
-</style>
-
-<div class="container py-5 print-section">
+<div class="container py-5">
     <div class="row">
-        <div class="col-md-3 no-print">
+        <div class="col-md-3">
             @include('partner.partials.menu')
         </div>
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3 fw-bold mb-0 text-primary">Gift Vouchers</h1>
-                <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4 no-print">
+                <button type="button" onclick="printVouchers()" class="btn btn-outline-secondary rounded-pill px-4">
                     <i class="bi bi-printer me-2"></i>Print List
                 </button>
             </div>
@@ -44,9 +20,9 @@
                 <div class="alert alert-success rounded-pill px-4 mb-4">{{ session('success') }}</div>
             @endif
 
-            <div class="card shadow-sm border-0 mb-4 no-print">
+            <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
-                    <form action="{{ route('partner.vouchers.index') }}" method="GET" class="row g-3">
+                    <form action="{{ route('partner.vouchers.index') }}" method="GET" class="row g-3" id="voucherFilterForm">
                         <div class="col-md-2">
                             <label class="form-label small fw-bold">Status</label>
                             <select name="status" class="form-select rounded-pill">
@@ -143,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4 no-print">
+            <div class="mt-4">
                 {{ $vouchers->links() }}
             </div>
         </div>
@@ -163,6 +139,15 @@
             });
         });
     });
+
+    function printVouchers() {
+        const form = document.getElementById('voucherFilterForm');
+        const formData = new FormData(form);
+        const searchParams = new URLSearchParams(formData);
+        
+        // Open the print view in a new tab/window
+        window.open('{{ route('partner.vouchers.print') }}?' + searchParams.toString(), '_blank');
+    }
 </script>
 @endpush
 @endsection

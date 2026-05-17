@@ -4,8 +4,11 @@
 
 @section('content')
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-3">
+            @include('partner.partials.menu')
+        </div>
+        <div class="col-md-9">
             <div class="d-flex align-items-center mb-4">
                 <a href="{{ route('partner.managers.index') }}" class="btn btn-light rounded-pill me-3">
                     &larr; Back

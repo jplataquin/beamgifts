@@ -4,8 +4,11 @@
 
 @section('content')
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+    <div class="row">
+        <div class="col-md-3">
+            @include('partner.partials.menu')
+        </div>
+        <div class="col-md-9">
             <div class="card shadow-sm border-0 rounded-4 p-4">
                 <div class="card-body">
                     <h1 class="h4 fw-bold mb-4 text-primary">Add Branch Manager</h1>
