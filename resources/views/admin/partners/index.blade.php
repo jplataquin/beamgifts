@@ -15,7 +15,7 @@
                         <a href="{{ route('admin.cities.index') }}" class="list-group-item list-group-item-action border-0 rounded-pill mb-1">Cities</a>
                         <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action border-0 rounded-pill mb-1">Categories</a>
                         <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action border-0 rounded-pill mb-1">Products</a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 rounded-pill mb-1 border-0">Orders</a>
+                        <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action border-0 rounded-pill mb-1 border-0">Orders</a>
                         <a href="{{ route('admin.settings.index') }}" class="list-group-item list-group-item-action border-0 rounded-pill mb-1 border-0">Settings</a>
                         <form action="{{ route('admin.logout') }}" method="POST" class="mt-3">
                             @csrf
