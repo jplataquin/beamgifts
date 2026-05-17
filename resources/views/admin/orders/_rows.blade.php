@@ -1,6 +1,6 @@
 @foreach($orders as $order)
     <tr onclick="window.location='{{ route('admin.orders.show', $order) }}'" style="cursor: pointer;">
-        <td class="ps-4 fw-bold text-dark">{{ $order->reference_number }}</td>
+        <td class="ps-4 fw-bold text-dark"><code>#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</code></td>
         <td>{{ $order->gifter->name ?? $order->gifter->email ?? 'Guest' }}</td>
         <td>
             @if($order->items->count() > 0 && $order->items->first()->product && $order->items->first()->product->store)

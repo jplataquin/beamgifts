@@ -32,7 +32,7 @@
                 </a>
                 <div>
                     <h1 class="h3 fw-bold mb-0 text-primary">Order Details</h1>
-                    <p class="text-muted mb-0">Reference: <strong>{{ $order->reference_number }}</strong></p>
+                    <p class="text-muted mb-0">Order ID: <strong>#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</strong></p>
                 </div>
             </div>
 
@@ -86,8 +86,8 @@
                         </div>
                         <div class="small text-muted mt-3">
                             <div><strong>Created:</strong> {{ $order->created_at->format('M d, Y h:i A') }}</div>
-                            @if($order->payment_id)
-                                <div class="mt-1"><strong>Payment ID:</strong><br><span class="text-break">{{ $order->payment_id }}</span></div>
+                            @if($order->hitpay_transaction_id)
+                                <div class="mt-2"><strong>HitPay ID:</strong><br><span class="text-break">{{ $order->hitpay_transaction_id }}</span></div>
                             @endif
                         </div>
                     </div>

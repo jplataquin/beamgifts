@@ -37,7 +37,7 @@
                 <div class="card-body">
                     <form action="{{ route('admin.orders.index') }}" method="GET" class="row g-3">
                         <div class="col-md-4">
-                            <input type="text" name="reference_number" class="form-control rounded-pill" placeholder="Search by Reference #..." value="{{ request('reference_number') }}">
+                            <input type="text" name="search" class="form-control rounded-pill" placeholder="Search by Order ID or HitPay ID..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3">
                             <select name="status" class="form-select rounded-pill">
@@ -62,7 +62,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th class="ps-4 py-3">Reference #</th>
+                                <th class="ps-4 py-3">Order ID</th>
                                 <th class="py-3">Gifter</th>
                                 <th class="py-3">Partner</th>
                                 <th class="py-3">Date</th>

@@ -19,8 +19,15 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('reference_number')) {
-            $query->where('reference_number', 'like', '%' . $request->reference_number . '%');
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                // If the search looks like an ID, search by ID
+                if (is_numeric($search)) {
+                    $q->where('id', $search);
+                }
+                $q->orWhere('hitpay_transaction_id', 'like', '%' . $search . '%');
+            });
         }
 
         $orders = $query->latest()->paginate(15)->withQueryString();
