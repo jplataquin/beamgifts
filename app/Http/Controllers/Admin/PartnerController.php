@@ -15,7 +15,7 @@ class PartnerController extends Controller
 {
     public function index()
     {
-        $partners = Partner::with('store')->latest()->paginate(10);
+        $partners = Partner::where('role', 'owner')->with('store')->latest()->paginate(10);
         return view('admin.partners.index', compact('partners'));
     }
 
