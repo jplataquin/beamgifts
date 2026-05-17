@@ -61,4 +61,12 @@ class Partner extends Authenticatable
     {
         return $this->role === 'manager';
     }
+
+    /**
+     * Get the payouts associated with this partner.
+     */
+    public function payouts(): HasMany
+    {
+        return $this->hasMany(Payout::class);
+    }
 }

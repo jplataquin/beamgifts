@@ -25,6 +25,8 @@ class Voucher extends Model
         'remarks',
         'claimed_by_user_id',
         'claimed_by_user_type',
+        'payout_flag',
+        'payout_id',
     ];
 
     protected $casts = [
@@ -33,6 +35,7 @@ class Voucher extends Model
         'processed_at' => 'datetime',
         'price' => 'decimal:2',
         'markup_price' => 'decimal:2',
+        'payout_flag' => 'boolean',
     ];
 
     /**
@@ -41,6 +44,14 @@ class Voucher extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * Get the payout that this voucher belongs to.
+     */
+    public function payout(): BelongsTo
+    {
+        return $this->belongsTo(Payout::class);
     }
 
     /**
