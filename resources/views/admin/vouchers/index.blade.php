@@ -77,7 +77,7 @@
                         </thead>
                         <tbody>
                             @forelse($vouchers as $voucher)
-                                <tr>
+                                <tr onclick="window.location='{{ route('admin.vouchers.show', $voucher) }}'" style="cursor: pointer;">
                                     <td class="ps-4 fw-bold text-dark">
                                         <code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code>
                                     </td>

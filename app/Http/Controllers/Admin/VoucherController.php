@@ -43,4 +43,13 @@ class VoucherController extends Controller
 
         return view('admin.vouchers.index', compact('vouchers'));
     }
+
+    /**
+     * Display the specified voucher details.
+     */
+    public function show(Voucher $voucher)
+    {
+        $voucher->load(['product.store', 'order.gifter', 'claimedBranch', 'claimedByUser', 'review']);
+        return view('admin.vouchers.show', compact('voucher'));
+    }
 }

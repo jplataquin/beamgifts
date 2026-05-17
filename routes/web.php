@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         // Voucher Report
         Route::get('/vouchers-report', [App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+        Route::get('/vouchers-report/{voucher}', [App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
 
         // Site Settings
         Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
