@@ -71,10 +71,6 @@
                                         <p class="text-muted fst-italic mb-0">None provided</p>
                                     @endif
                                 </div>
-                                <div>
-                                    <label class="text-muted small fw-bold text-uppercase mb-1">Closing Remark</label>
-                                    <p class="mb-0">{{ $voucher->closing_remark ?? 'None provided' }}</p>
-                                </div>
                             </div>
                             <div class="col-md-4">
                                 <label class="text-muted small fw-bold text-uppercase mb-1">Custom Photo</label>

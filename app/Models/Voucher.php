@@ -15,7 +15,6 @@ class Voucher extends Model
         'unique_token',
         'qr_payload',
         'personal_message',
-        'closing_remark',
         'custom_photo',
         'status',
         'expires_at',
