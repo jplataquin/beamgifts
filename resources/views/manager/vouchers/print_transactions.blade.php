@@ -68,7 +68,6 @@
                     <th>Gifter</th>
                     <th>Claimed By (Customer)</th>
                     <th>Status</th>
-                    <th>Processed By</th>
                     <th>Date</th>
                     <th class="text-end">Price</th>
                 </tr>
@@ -81,19 +80,18 @@
                         <td>{{ $voucher->order->gifter->name ?? 'N/A' }}</td>
                         <td>{{ $voucher->claimed_by ?? '-' }}</td>
                         <td>{{ ucfirst($voucher->status) }}</td>
-                        <td>{{ $voucher->claimedByUser ? $voucher->claimedByUser->name : '-' }}</td>
                         <td>{{ $voucher->claimed_at ? $voucher->claimed_at->format('M d, Y h:i A') : $voucher->created_at->format('M d, Y') }}</td>
                         <td class="text-end">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center py-4">No transactions found matching the criteria.</td>
+                        <td colspan="7" class="text-center py-4">No transactions found matching the criteria.</td>
                     </tr>
                 @endforelse
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="7" class="text-end fw-bold">Grand Total:</td>
+                    <td colspan="6" class="text-end fw-bold">Grand Total:</td>
                     <td class="text-end fw-bold">₱{{ number_format($grandTotal, 2) }}</td>
                 </tr>
             </tfoot>
