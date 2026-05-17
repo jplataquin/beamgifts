@@ -64,6 +64,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th>Voucher ID</th>
                     <th>Product</th>
                     <th>Branch</th>
                     <th>Gifter</th>
@@ -76,6 +77,7 @@
             <tbody>
                 @forelse($vouchers as $voucher)
                     <tr>
+                        <td><code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></td>
                         <td>{{ $voucher->product->name }}</td>
                         <td>{{ $voucher->claimedBranch ? $voucher->claimedBranch->name : '-' }}</td>
                         <td>{{ $voucher->order->gifter->name ?? 'N/A' }}</td>
@@ -86,13 +88,13 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center py-4">No vouchers found matching the criteria.</td>
+                        <td colspan="8" class="text-center py-4">No vouchers found matching the criteria.</td>
                     </tr>
                 @endforelse
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" class="text-end fw-bold">Grand Total:</td>
+                    <td colspan="7" class="text-end fw-bold">Grand Total:</td>
                     <td class="text-end fw-bold">₱{{ number_format($grandTotal, 2) }}</td>
                 </tr>
             </tfoot>
