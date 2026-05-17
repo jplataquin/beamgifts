@@ -70,6 +70,7 @@
                                 <th class="ps-4 py-3">Voucher ID</th>
                                 <th class="py-3">Product & Store</th>
                                 <th class="py-3">Gifter</th>
+                                <th class="py-3">Received By</th>
                                 <th class="py-3">Price</th>
                                 <th class="py-3">Status</th>
                                 <th class="py-3 pe-4">Purchased On</th>
@@ -86,6 +87,13 @@
                                         <div class="small text-muted">{{ $voucher->product->store->name ?? 'Unknown Store' }}</div>
                                     </td>
                                     <td>{{ $voucher->order->gifter->name ?? $voucher->order->gifter->email ?? 'Guest' }}</td>
+                                    <td>
+                                        @if($voucher->status === 'claimed')
+                                            <span class="fw-bold text-dark">{{ $voucher->claimed_by ?? 'Unknown' }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td class="fw-bold text-primary">₱{{ number_format($voucher->price ?? $voucher->product->price, 2) }}</td>
                                     <td>
                                         @if($voucher->status === 'active')
@@ -105,7 +113,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">No vouchers found on the platform.</td>
+                                    <td colspan="7" class="text-center py-5 text-muted">No vouchers found on the platform.</td>
                                 </tr>
                             @endforelse
                         </tbody>
