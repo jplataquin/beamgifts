@@ -25,6 +25,11 @@ class OrderController extends Controller
 
         $orders = $query->latest()->paginate(15)->withQueryString();
 
+        if ($request->ajax()) {
+            return response(view('admin.orders._rows', compact('orders'))->render())
+                ->header('X-Has-More-Pages', $orders->hasMorePages() ? '1' : '0');
+        }
+
         return view('admin.orders.index', compact('orders'));
     }
 

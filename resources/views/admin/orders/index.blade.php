@@ -70,47 +70,83 @@
                                 <th class="py-3">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse($orders as $order)
-                                <tr onclick="window.location='{{ route('admin.orders.show', $order) }}'" style="cursor: pointer;">
-                                    <td class="ps-4 fw-bold text-dark">{{ $order->reference_number }}</td>
-                                    <td>{{ $order->gifter->name ?? $order->gifter->email ?? 'Guest' }}</td>
-                                    <td>
-                                        @if($order->items->count() > 0 && $order->items->first()->product && $order->items->first()->product->store)
-                                            <span class="badge bg-light text-dark rounded-pill">{{ $order->items->first()->product->store->name }}</span>
-                                            @if($order->items->count() > 1)
-                                                <span class="badge bg-secondary rounded-pill small">+{{ $order->items->count() - 1 }}</span>
-                                            @endif
-                                        @else
-                                            <span class="text-muted small">Unknown</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-muted">{{ $order->created_at->format('M d, Y h:i A') }}</td>
-                                    <td class="fw-bold text-primary">₱{{ number_format($order->total_amount, 2) }}</td>
-                                    <td>
-                                        @if($order->status === 'paid')
-                                            <span class="badge bg-success rounded-pill">Paid</span>
-                                        @elseif($order->status === 'pending')
-                                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
-                                        @else
-                                            <span class="badge bg-danger rounded-pill">{{ ucfirst($order->status) }}</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">No orders found on the platform.</td>
-                                </tr>
-                            @endforelse
+                        <tbody id="orders-table-body">
+                            @include('admin.orders._rows')
                         </tbody>
                     </table>
                 </div>
             </div>
             
-            <div class="mt-4">
-                {{ $orders->links() }}
+            <div id="load-more-container" class="mt-4 text-center {{ !$orders->hasMorePages() ? 'd-none' : '' }}">
+                <button id="load-more-btn" class="btn btn-outline-primary rounded-pill px-5 py-2 fw-bold" data-next-page="{{ $orders->currentPage() + 1 }}">
+                    Show More Orders
+                </button>
+            </div>
+            <div id="loading-spinner" class="mt-4 text-center d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const container = document.getElementById('load-more-container');
+        const spinner = document.getElementById('loading-spinner');
+        const tableBody = document.getElementById('orders-table-body');
+
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                const nextPage = this.getAttribute('data-next-page');
+                if (!nextPage) return;
+
+                // Show spinner, hide button
+                container.classList.add('d-none');
+                spinner.classList.remove('d-none');
+
+                // Prepare URL with current filters
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', nextPage);
+
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    const hasMore = response.headers.get('X-Has-More-Pages') === '1';
+                    return response.text().then(html => ({ html, hasMore }));
+                })
+                .then(({ html, hasMore }) => {
+                    if (html.trim().length > 0) {
+                        tableBody.insertAdjacentHTML('beforeend', html);
+                        
+                        const currentNextPage = parseInt(nextPage);
+                        this.setAttribute('data-next-page', currentNextPage + 1);
+                        
+                        spinner.classList.add('d-none');
+                        if (hasMore) {
+                            container.classList.remove('d-none');
+                        } else {
+                            container.classList.add('d-none');
+                        }
+                    } else {
+                        spinner.classList.add('d-none');
+                        container.classList.add('d-none');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading more orders:', error);
+                    spinner.classList.add('d-none');
+                    container.classList.remove('d-none');
+                });
+            });
+        }
+    });
+</script>
+@endpush
 @endsection
