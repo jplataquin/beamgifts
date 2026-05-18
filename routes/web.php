@@ -55,7 +55,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         // Payout Management
         Route::get('/payouts', [App\Http\Controllers\Admin\PayoutController::class, 'index'])->name('payouts.index');
-        Route::post('/payouts/tag', [App\Http\Controllers\Admin\PayoutController::class, 'tag'])->name('payouts.tag');
+        Route::post('/payouts/store', [App\Http\Controllers\Admin\PayoutController::class, 'store'])->name('payouts.store');
 
         // Site Settings
         Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');

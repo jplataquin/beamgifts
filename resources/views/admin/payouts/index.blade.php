@@ -14,6 +14,9 @@
             @if(session('success'))
                 <div class="alert alert-success rounded-pill px-4 mb-4 border-0 shadow-sm">{{ session('success') }}</div>
             @endif
+            @if(session('error'))
+                <div class="alert alert-danger rounded-pill px-4 mb-4 border-0 shadow-sm">{{ session('error') }}</div>
+            @endif
 
             <div class="card shadow-sm border-0 rounded-4 mb-4">
                 <div class="card-body p-4">
@@ -52,8 +55,8 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill px-4" id="flagged-tab" data-bs-toggle="pill" data-bs-target="#flagged" type="button" role="tab">
-                        Flagged for Payout ({{ $flaggedVouchers->flatten()->count() }})
+                    <button class="nav-link rounded-pill px-4" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders" type="button" role="tab">
+                        Payout Orders ({{ $payouts->count() }})
                     </button>
                 </li>
             </ul>
@@ -63,8 +66,11 @@
                 <div class="tab-pane fade show active" id="eligible" role="tabpanel">
                     <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
                         <div class="card-body p-0">
-                            <form action="{{ route('admin.payouts.tag') }}" method="POST" id="tagForm">
+                            <form action="{{ route('admin.payouts.store') }}" method="POST" id="payoutForm">
                                 @csrf
+                                <input type="hidden" name="from_date" value="{{ request('from_date') }}">
+                                <input type="hidden" name="to_date" value="{{ request('to_date') }}">
+                                
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
                                         <thead class="bg-light">
@@ -88,6 +94,7 @@
                                                     <td>
                                                         <div class="fw-bold">{{ $voucher->product->name ?? 'Unknown' }}</div>
                                                         <div class="small text-muted">{{ $voucher->product->store->name ?? 'Unknown Store' }}</div>
+                                                        <div class="small text-primary fw-bold">{{ $voucher->product->store->owner->business_name ?? 'N/A' }}</div>
                                                     </td>
                                                     <td class="text-muted">
                                                         {{ $voucher->claimed_at ? $voucher->claimed_at->format('M d, Y') : 'N/A' }}
@@ -98,7 +105,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="5" class="text-center py-5 text-muted">No eligible vouchers found for tagging.</td>
+                                                    <td colspan="5" class="text-center py-5 text-muted">No eligible vouchers found.</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -107,8 +114,8 @@
 
                                 @if($eligibleVouchers->count() > 0)
                                     <div class="p-4 bg-light border-top text-end">
-                                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold" id="tagBtn" disabled>
-                                            Tag Selected for Payout
+                                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold" id="generateBtn" disabled>
+                                            Generate Payout
                                         </button>
                                     </div>
                                 @endif
@@ -117,64 +124,65 @@
                     </div>
                 </div>
 
-                <!-- Flagged Tab -->
-                <div class="tab-pane fade" id="flagged" role="tabpanel">
-                    @forelse($flaggedVouchers as $partnerId => $vouchers)
-                        @php 
-                            $firstVoucher = $vouchers->first();
-                            $partner = $firstVoucher->product->store->owner ?? null;
-                            $businessName = $partner->business_name ?? ($firstVoucher->product->store->name ?? 'Unknown Partner');
-                        @endphp
-                        <div class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
-                            <div class="card-header bg-white py-3 ps-4 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="mb-0 fw-bold">{{ $businessName }}</h5>
-                                    @if($partner)
-                                        <span class="text-muted small">{{ $partner->name }} ({{ $partner->email }})</span>
-                                    @endif
-                                </div>
-                                <div class="text-end">
-                                    <div class="small text-muted mb-1">{{ $vouchers->count() }} vouchers</div>
-                                    <div class="h5 mb-0 fw-bold text-primary">
-                                        ₱{{ number_format($vouchers->sum(fn($v) => $v->price ?? ($v->product->price ?? 0)), 2) }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-hover align-middle mb-0">
-                                        <thead class="bg-light">
+                <!-- Payout Orders Tab -->
+                <div class="tab-pane fade" id="orders" role="tabpanel">
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="ps-4 py-3">Payout ID</th>
+                                            <th class="py-3">Partner</th>
+                                            <th class="py-3 text-center">Period</th>
+                                            <th class="py-3 text-center">Status</th>
+                                            <th class="py-3 text-center">Vouchers</th>
+                                            <th class="py-3 text-end pe-4">Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($payouts as $payout)
                                             <tr>
-                                                <th class="ps-4 py-2">ID</th>
-                                                <th class="py-2">Product</th>
-                                                <th class="py-2">Claimed</th>
-                                                <th class="py-2 pe-4 text-end">Price</th>
+                                                <td class="ps-4">
+                                                    <span class="badge bg-light text-dark border rounded-pill px-3">
+                                                        #{{ str_pad($payout->id, 6, '0', STR_PAD_LEFT) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">{{ $payout->partner->business_name ?? 'N/A' }}</div>
+                                                    <div class="small text-muted">{{ $payout->partner->name ?? 'N/A' }}</div>
+                                                </td>
+                                                <td class="text-center small">
+                                                    <div>{{ $payout->from ? $payout->from->format('M d, Y') : 'N/A' }}</div>
+                                                    <div class="text-muted">to</div>
+                                                    <div>{{ $payout->to ? $payout->to->format('M d, Y') : 'N/A' }}</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    @if($payout->status == 'pending')
+                                                        <span class="badge bg-warning rounded-pill px-3">Pending</span>
+                                                    @elseif($payout->status == 'completed')
+                                                        <span class="badge bg-success rounded-pill px-3">Completed</span>
+                                                    @else
+                                                        <span class="badge bg-secondary rounded-pill px-3">{{ ucfirst($payout->status) }}</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center fw-bold">
+                                                    {{ $payout->vouchers_count ?? $payout->vouchers->count() }}
+                                                </td>
+                                                <td class="text-end pe-4 fw-bold text-primary">
+                                                    ₱{{ number_format($payout->total_amount, 2) }}
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($vouchers as $voucher)
-                                                <tr>
-                                                    <td class="ps-4"><code>#{{ str_pad($voucher->id, 6, '0', STR_PAD_LEFT) }}</code></td>
-                                                    <td>{{ $voucher->product->name ?? 'Unknown' }}</td>
-                                                    <td class="text-muted small">{{ $voucher->claimed_at ? $voucher->claimed_at->format('M d, Y') : 'N/A' }}</td>
-                                                    <td class="pe-4 text-end">₱{{ number_format($voucher->price ?? ($voucher->product->price ?? 0), 2) }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="p-3 bg-light border-top text-center">
-                                    <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-bold">
-                                        Generate Payout ID for {{ $businessName }}
-                                    </button>
-                                </div>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-5 text-muted">No payout orders found.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    @empty
-                        <div class="card shadow-sm border-0 rounded-4 p-5 text-center text-muted">
-                            No vouchers currently tagged for payout.
-                        </div>
-                    @endforelse
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,24 +194,24 @@
     document.addEventListener('DOMContentLoaded', function() {
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.voucher-checkbox');
-        const tagBtn = document.getElementById('tagBtn');
+        const generateBtn = document.getElementById('generateBtn');
 
         if (selectAll) {
             selectAll.addEventListener('change', function() {
                 checkboxes.forEach(cb => cb.checked = this.checked);
-                updateTagBtn();
+                updateGenerateBtn();
             });
         }
 
         checkboxes.forEach(cb => {
-            cb.addEventListener('change', updateTagBtn);
+            cb.addEventListener('change', updateGenerateBtn);
         });
 
-        function updateTagBtn() {
+        function updateGenerateBtn() {
             const checkedCount = document.querySelectorAll('.voucher-checkbox:checked').length;
-            if (tagBtn) {
-                tagBtn.disabled = checkedCount === 0;
-                tagBtn.textContent = checkedCount > 0 ? `Tag ${checkedCount} selected for Payout` : 'Tag Selected for Payout';
+            if (generateBtn) {
+                generateBtn.disabled = checkedCount === 0;
+                generateBtn.textContent = checkedCount > 0 ? `Generate Payout for ${checkedCount} items` : 'Generate Payout';
             }
         }
     });

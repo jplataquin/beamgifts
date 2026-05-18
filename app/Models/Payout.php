@@ -10,7 +10,14 @@ class Payout extends Model
 {
     protected $fillable = [
         'partner_id',
+        'from',
+        'to',
         'status',
+    ];
+
+    protected $casts = [
+        'from' => 'date',
+        'to' => 'date',
     ];
 
     /**
