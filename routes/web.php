@@ -53,6 +53,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/vouchers-report', [App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
         Route::get('/vouchers-report/{voucher}', [App\Http\Controllers\Admin\VoucherController::class, 'show'])->name('vouchers.show');
 
+        // Payout Management
+        Route::get('/payouts', [App\Http\Controllers\Admin\PayoutController::class, 'index'])->name('payouts.index');
+        Route::post('/payouts/tag', [App\Http\Controllers\Admin\PayoutController::class, 'tag'])->name('payouts.tag');
+
         // Site Settings
         Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
