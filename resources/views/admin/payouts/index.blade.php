@@ -15,6 +15,36 @@
                 <div class="alert alert-success rounded-pill px-4 mb-4 border-0 shadow-sm">{{ session('success') }}</div>
             @endif
 
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <form action="{{ route('admin.payouts.index') }}" method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-muted">Filter by Partner</label>
+                            <select name="partner_id" class="form-select rounded-pill">
+                                <option value="">All Partners</option>
+                                @foreach($partners as $partner)
+                                    <option value="{{ $partner->id }}" {{ request('partner_id') == $partner->id ? 'selected' : '' }}>
+                                        {{ $partner->business_name }} ({{ $partner->name }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold text-muted">From Date (Claimed)</label>
+                            <input type="date" name="from_date" class="form-control rounded-pill" value="{{ request('from_date') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold text-muted">To Date (Claimed)</label>
+                            <input type="date" name="to_date" class="form-control rounded-pill" value="{{ request('to_date') }}">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold me-2">Filter</button>
+                            <a href="{{ route('admin.payouts.index') }}" class="btn btn-light rounded-pill">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <ul class="nav nav-pills mb-4" id="payoutTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active rounded-pill px-4 me-2" id="eligible-tab" data-bs-toggle="pill" data-bs-target="#eligible" type="button" role="tab">

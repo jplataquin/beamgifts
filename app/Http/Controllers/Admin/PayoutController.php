@@ -13,26 +13,50 @@ class PayoutController extends Controller
     /**
      * Display the payouts management dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Vouchers claimed but not yet tagged for payout
-        $eligibleVouchers = Voucher::where('status', 'claimed')
+        $partners = \App\Models\Partner::where('role', 'owner')->orderBy('business_name')->get();
+
+        // 1. Eligible Vouchers Query
+        $eligibleQuery = Voucher::where('status', 'claimed')
             ->where('payout_flag', false)
             ->whereNull('payout_id')
-            ->with(['product.store', 'order.gifter'])
-            ->latest('claimed_at')
-            ->get();
+            ->with(['product.store', 'order.gifter']);
 
-        // Vouchers tagged for payout but no payout record created yet
-        $flaggedVouchers = Voucher::where('payout_flag', true)
+        // 2. Flagged Vouchers Query
+        $flaggedQuery = Voucher::where('payout_flag', true)
             ->whereNull('payout_id')
-            ->with(['product.store'])
-            ->get()
+            ->with(['product.store.partner']);
+
+        // Apply Filters
+        if ($request->filled('partner_id')) {
+            $partnerId = $request->partner_id;
+            $eligibleQuery->whereHas('product.store', function($q) use ($partnerId) {
+                $q->where('partner_id', $partnerId);
+            });
+            $flaggedQuery->whereHas('product.store', function($q) use ($partnerId) {
+                $q->where('partner_id', $partnerId);
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $eligibleQuery->whereDate('claimed_at', '>=', $request->from_date);
+            $flaggedQuery->whereDate('claimed_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $eligibleQuery->whereDate('claimed_at', '<=', $request->to_date);
+            $flaggedQuery->whereDate('claimed_at', '<=', $request->to_date);
+        }
+
+        $eligibleVouchers = $eligibleQuery->latest('claimed_at')->get();
+
+        $flaggedVouchers = $flaggedQuery->get()
             ->groupBy(function($voucher) {
                 return $voucher->product->store->partner_id;
             });
 
-        return view('admin.payouts.index', compact('eligibleVouchers', 'flaggedVouchers'));
+        return view('admin.payouts.index', compact('eligibleVouchers', 'flaggedVouchers', 'partners'));
     }
 
     /**
