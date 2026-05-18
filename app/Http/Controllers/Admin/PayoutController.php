@@ -26,17 +26,26 @@ class PayoutController extends Controller
         // 2. Flagged Vouchers Query
         $flaggedQuery = Voucher::where('payout_flag', true)
             ->whereNull('payout_id')
-            ->with(['product.store.partner']);
+            ->with(['product.store.owner']);
 
         // Apply Filters
         if ($request->filled('partner_id')) {
             $partnerId = $request->partner_id;
-            $eligibleQuery->whereHas('product.store', function($q) use ($partnerId) {
-                $q->where('partner_id', $partnerId);
-            });
-            $flaggedQuery->whereHas('product.store', function($q) use ($partnerId) {
-                $q->where('partner_id', $partnerId);
-            });
+            $partner = \App\Models\Partner::find($partnerId);
+            
+            if ($partner && $partner->store_id) {
+                $storeId = $partner->store_id;
+                $eligibleQuery->whereHas('product', function($q) use ($storeId) {
+                    $q->where('store_id', $storeId);
+                });
+                $flaggedQuery->whereHas('product', function($q) use ($storeId) {
+                    $q->where('store_id', $storeId);
+                });
+            } else {
+                // If partner doesn't exist or has no store, return empty results
+                $eligibleQuery->whereRaw('1 = 0');
+                $flaggedQuery->whereRaw('1 = 0');
+            }
         }
 
         if ($request->filled('from_date')) {
@@ -53,7 +62,7 @@ class PayoutController extends Controller
 
         $flaggedVouchers = $flaggedQuery->get()
             ->groupBy(function($voucher) {
-                return $voucher->product->store->partner_id;
+                return $voucher->product->store->owner->id ?? 0;
             });
 
         return view('admin.payouts.index', compact('eligibleVouchers', 'flaggedVouchers', 'partners'));

@@ -122,7 +122,7 @@
                     @forelse($flaggedVouchers as $partnerId => $vouchers)
                         @php 
                             $firstVoucher = $vouchers->first();
-                            $partner = $firstVoucher->product->store->partner ?? null;
+                            $partner = $firstVoucher->product->store->owner ?? null;
                             $businessName = $partner->business_name ?? ($firstVoucher->product->store->name ?? 'Unknown Partner');
                         @endphp
                         <div class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
