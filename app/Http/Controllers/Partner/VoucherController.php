@@ -16,6 +16,11 @@ class VoucherController extends Controller
     {
         $partner = Auth::guard('partner')->user();
         $store = $partner->store;
+        
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found. Please contact admin.');
+        }
+
         $storeId = $store->id;
 
         $query = Voucher::whereIn('product_id', function($q) use ($storeId) {
@@ -51,6 +56,11 @@ class VoucherController extends Controller
     {
         $partner = Auth::guard('partner')->user();
         $store = $partner->store;
+
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
+
         $storeId = $store->id;
 
         $query = Voucher::whereIn('product_id', function($q) use ($storeId) {
@@ -97,6 +107,9 @@ class VoucherController extends Controller
     public function show(Voucher $voucher)
     {
         $partner = Auth::guard('partner')->user();
+        if (!$partner->store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
         $storeId = $partner->store->id;
 
         // Security check: Ensure voucher belongs to this partner

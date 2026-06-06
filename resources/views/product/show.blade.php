@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' - Beam Gifts')
+@section('title', $product->name . ' - Gift-XP')
 
 @section('content')
 <div class="container py-5">

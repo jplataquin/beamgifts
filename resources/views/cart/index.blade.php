@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Shopping Cart - Beam Gifts')
+@section('title', 'Shopping Cart - Gift-XP')
 
 @section('content')
 <div class="container py-5">
@@ -109,7 +109,16 @@
                             <span id="cart-total" class="h5 fw-bold text-primary">₱{{ number_format($grandTotal, 2) }}</span>
                         </div>
                         
-                        @if(Auth::guard('web')->check())
+                        @if(Auth::guard('admin')->check() || Auth::guard('partner')->check())
+                            <div class="alert alert-warning small rounded-4 border-0">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i> 
+                                Administrator and Partner accounts cannot make purchases. Please <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-cart').submit();" class="fw-bold">Logout</a> and use a Gifter account.
+                                <form id="logout-form-cart" action="{{ Auth::guard('admin')->check() ? route('admin.logout') : route('partner.logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                            <button disabled class="btn btn-secondary w-100 rounded-pill py-3 fw-bold opacity-50">Proceed to Payment</button>
+                        @elseif(Auth::guard('web')->check())
                             <form action="{{ route('checkout.store', ['city_slug' => $city->slug]) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">Proceed to Payment</button>

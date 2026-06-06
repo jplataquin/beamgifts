@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Beam Gifts')</title>
+    <title>@yield('title', 'Gift-XP')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body class="antialiased">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="{{ url('/') }}">Beam Gifts</a>
+            <a class="navbar-brand fw-bold text-primary" href="{{ app()->has('current_city') ? route('city.home', ['city_slug' => app('current_city')->slug]) : url('/') }}">Gift-XP</a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}">Home</a>
+                        <a class="nav-link" href="{{ app()->has('current_city') ? route('city.home', ['city_slug' => app('current_city')->slug]) : url('/') }}">Home</a>
                     </li>
                     
                     @if(app()->has('current_city'))
@@ -157,7 +157,32 @@
         @endif
     @endauth
 
-    <main>
+    <main class="py-4">
+        <div class="container">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('status'))
+                <div class="alert alert-info alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
         @yield('content')
     </main>
 
@@ -207,7 +232,7 @@
             @endif
         @else
             <div class="nav-item">
-                <a href="{{ url('/') }}" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
+                <a href="{{ app()->has('current_city') ? route('city.home', ['city_slug' => app('current_city')->slug]) : url('/') }}" class="nav-link {{ Request::is('/') || Request::routeIs('city.home') ? 'active' : '' }}">
                     <i class="bi bi-shop"></i>
                     <span>Home</span>
                 </a>
@@ -242,14 +267,16 @@
 
     <footer class="bg-light py-5 mt-5 border-top">
         <div class="container text-center">
-            <h4 class="fw-bold text-primary mb-3">Beam Gifts</h4>
+            <h4 class="fw-bold text-primary mb-3">
+                <a href="{{ app()->has('current_city') ? route('city.home', ['city_slug' => app('current_city')->slug]) : url('/') }}" class="text-decoration-none text-primary">Gift-XP</a>
+            </h4>
             <p class="text-muted mb-4">Sharing joy, one gift at a time.</p>
             <div class="mb-4">
                 <a href="{{ route('page.about') }}" class="text-muted text-decoration-none mx-2 small">About Us</a>
                 <a href="{{ route('page.terms') }}" class="text-muted text-decoration-none mx-2 small">Terms of Service</a>
                 <a href="{{ route('page.privacy') }}" class="text-muted text-decoration-none mx-2 small">Privacy Policy</a>
             </div>
-            <p class="text-muted small mb-0">&copy; {{ date('Y') }} Beam Gifts. All rights reserved.</p>
+            <p class="text-muted small mb-0">&copy; {{ date('Y') }} Gift-XP. All rights reserved.</p>
         </div>
     </footer>
     <script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -23,6 +24,18 @@ class CartController extends Controller
 
     public function add(Request $request, $city_slug, Product $product)
     {
+        // Restriction: Only Gifters can add to cart.
+        if (Auth::guard('admin')->check() || Auth::guard('partner')->check()) {
+            $message = 'Administrator and Partner accounts cannot add items to the cart. Please use a Gifter account.';
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 403);
+            }
+            return back()->with('error', $message);
+        }
+
         $city = app('current_city');
         
         // Verify product belongs to a store in this city
@@ -31,8 +44,8 @@ class CartController extends Controller
             return back()->with('error', 'This product is not available in ' . $city->name);
         }
 
-        // Verify product is active
-        if ($product->status !== 'Active' || $product->is_banned) {
+        // Verify product is active and approved
+        if ($product->status !== 'Active' || $product->is_banned || !$product->is_approved) {
             return back()->with('error', 'This product is no longer available.');
         }
 

@@ -9,7 +9,41 @@
             @include('admin.partials.menu')
         </div>
         <div class="col-md-9">
-            <h1 class="h3 fw-bold mb-4 text-primary">Global Product Management</h1>
+            <h1 class="h3 fw-bold mb-4 text-primary">
+                {{ request('status') === 'pending' ? 'Pending Approval' : 'Global Product Management' }}
+            </h1>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <form action="{{ route('admin.products.index') }}" method="GET" class="row g-3 align-items-end">
+                        @if(request('status'))
+                            <input type="hidden" name="status" value="{{ request('status') }}">
+                        @endif
+                        
+                        <div class="col-md-5">
+                            <label class="form-label small fw-bold">Filter by Store</label>
+                            <select name="store_id" class="form-select rounded-pill">
+                                <option value="">All Stores</option>
+                                @foreach($stores as $store)
+                                    <option value="{{ $store->id }}" {{ request('store_id') == $store->id ? 'selected' : '' }}>
+                                        {{ $store->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-filter me-1"></i> Apply Filter
+                            </button>
+                            @if(request('store_id') || request('status'))
+                                <a href="{{ route('admin.products.index') }}" class="btn btn-light rounded-pill px-4 ms-2">
+                                    Clear
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show rounded-pill px-4" role="alert">
@@ -48,6 +82,10 @@
                                             @else
                                                 <span class="badge bg-success rounded-pill">Active</span>
                                             @endif
+
+                                            @if(!$product->is_approved)
+                                                <span class="badge bg-warning text-dark rounded-pill">Pending Approval</span>
+                                            @endif
                                         </td>
                                         <td class="text-end pe-4">
                                             <div class="dropdown">
@@ -55,6 +93,16 @@
                                                     Manage
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                                    <li>
+                                                        <form action="{{ route('admin.products.approve', $product) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="dropdown-item {{ $product->is_approved ? 'text-warning' : 'text-success fw-bold' }}">
+                                                                {{ $product->is_approved ? 'Unapprove' : 'Approve' }} Product
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider"></li>
                                                     <li><a class="dropdown-item" href="{{ route('admin.products.edit', $product) }}">Edit Details</a></li>
                                                     <li>
                                                         <form action="{{ route('admin.products.ban', $product) }}" method="POST">

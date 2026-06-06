@@ -61,6 +61,7 @@ class ProductSeeder extends Seeder
                         'description' => $item['desc'],
                         'price' => $item['price'],
                         'images' => [],
+                        'is_approved' => true,
                     ]);
                 }
             }

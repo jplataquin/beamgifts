@@ -17,6 +17,10 @@ class ProductController extends Controller
     public function index()
     {
         $partner = Auth::guard('partner')->user();
+        if (!$partner->store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found. Please contact admin.');
+        }
+
         $products = Product::where('store_id', $partner->store->id)
             ->with('store')
             ->latest()
@@ -34,6 +38,9 @@ class ProductController extends Controller
     public function create()
     {
         $store = Auth::guard('partner')->user()->store;
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
         $categories = \App\Models\Category::orderBy('name')->get();
         return view('partner.products.create', compact('store', 'categories'));
     }
@@ -41,6 +48,9 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $store = Auth::guard('partner')->user()->store;
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
 
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -64,9 +74,10 @@ class ProductController extends Controller
             'price' => $validated['price'],
             'status' => $validated['status'],
             'images' => $validated['images'] ?? [],
+            'is_approved' => false,
         ]);
 
-        return redirect()->route('partner.products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('partner.products.index')->with('success', 'Product created and is awaiting admin approval.');
     }
 
     public function edit(Product $product)
@@ -177,7 +188,8 @@ class ProductController extends Controller
 
     protected function authorizeProduct(Product $product)
     {
-        if ($product->store->partner_id !== Auth::guard('partner')->id()) {
+        $user = Auth::guard('partner')->user();
+        if (!$user->store_id || $product->store_id !== $user->store_id) {
             abort(403);
         }
     }

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Become a Partner - Beam Gifts')
+@section('title', 'Become a Partner - Gift-XP')
 
 @section('content')
 <div class="container py-5">
     <div class="row align-items-center g-5">
         <div class="col-lg-6">
-            <h1 class="display-4 fw-bold text-primary mb-4">Grow your business with Beam Gifts</h1>
+            <h1 class="display-4 fw-bold text-primary mb-4">Grow your business with Gift-XP</h1>
             <p class="lead text-muted mb-4">
                 Join our network of local partners and start selling digital vouchers to a wider audience. Our platform makes it easy to manage your products, track sales, and provide a seamless gifting experience.
             </p>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Digital Gifts - Beam Gifts')
+@section('title', 'My Digital Gifts - Gift-XP')
 
 @section('content')
 <div class="container py-5">

@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'city.context' => \App\Http\Middleware\SetCityContext::class,
-            'manager.force_password_change' => \App\Http\Middleware\ForceManagerPasswordChange::class,
+            'force_password_change' => \App\Http\Middleware\EnsurePasswordIsChanged::class,
             'role' => \App\Http\Middleware\CheckPartnerRole::class,
         ]);
 

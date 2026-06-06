@@ -26,6 +26,12 @@ class CheckoutController extends Controller
 
     public function store(Request $request, $city_slug)
     {
+        // Restriction: Only Gifters (web guard) can buy products.
+        // Admins and Partners/Managers have their own guards.
+        if (Auth::guard('admin')->check() || Auth::guard('partner')->check()) {
+            return back()->with('error', 'Administrator and Partner accounts cannot make purchases. Please use a Gifter account.');
+        }
+
         $city = app('current_city');
         $cartKey = "cart_{$city->id}";
         $cart = Session::get($cartKey, []);

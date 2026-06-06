@@ -42,6 +42,13 @@ class PartnerController extends Controller
         try {
             DB::beginTransaction();
 
+            // Automatically create a store first
+            $store = Store::create([
+                'name' => $validated['business_name'],
+                'slug' => Str::slug($validated['business_name']) . '-' . rand(1000, 9999),
+                'description' => $validated['store_description'],
+            ]);
+
             $partner = Partner::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -49,13 +56,9 @@ class PartnerController extends Controller
                 'phone2' => $validated['phone2'],
                 'business_name' => $validated['business_name'],
                 'password' => Hash::make($validated['password']),
-            ]);
-
-            // Automatically create a store for the partner
-            $partner->store()->create([
-                'name' => $validated['business_name'],
-                'slug' => Str::slug($validated['business_name']) . '-' . rand(1000, 9999),
-                'description' => $validated['store_description'],
+                'store_id' => $store->id,
+                'role' => 'owner',
+                'must_change_password' => true,
             ]);
 
             DB::commit();

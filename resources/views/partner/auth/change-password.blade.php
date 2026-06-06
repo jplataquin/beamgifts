@@ -1,0 +1,62 @@
+@extends('layouts.app')
+
+@section('title', 'Change Password - Partner')
+
+@section('content')
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white text-center py-4 border-0">
+                    <h1 class="h3 fw-bold mb-1 text-primary">Change Your Password</h1>
+                    @if (auth('partner')->user()->must_change_password)
+                        <p class="text-muted small mb-0">Welcome! For security reasons, you must set a new password before you can access your dashboard.</p>
+                    @else
+                        <p class="text-muted small mb-0">Update your account password.</p>
+                    @endif
+                </div>
+                <div class="card-body px-4 px-md-5 pb-5">
+                    @if ($errors->any())
+                        <div class="alert alert-danger rounded-3">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('partner.password.update') }}">
+                        @csrf
+                        @method('PUT')
+
+                        @if (!auth('partner')->user()->must_change_password)
+                        <div class="mb-4">
+                            <label for="current_password" class="form-label fw-bold">Current Password</label>
+                            <input id="current_password" type="password" class="form-control" name="current_password" required autofocus>
+                        </div>
+                        @endif
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-bold">New Password</label>
+                            <input id="password" type="password" class="form-control" name="password" required {{ auth('partner')->user()->must_change_password ? 'autofocus' : '' }}>
+                            <div class="form-text small text-muted">Use at least 8 characters.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password_confirmation" class="form-label fw-bold">Confirm New Password</label>
+                            <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">
+                                Save New Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

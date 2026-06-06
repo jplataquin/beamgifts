@@ -9,7 +9,7 @@ class PageController extends Controller
 {
     public function about()
     {
-        $content = Setting::get('page_about', 'About Beam Gifts content coming soon.');
+        $content = Setting::get('page_about', 'About Gift-XP content coming soon.');
         return view('pages.show', ['title' => 'About Us', 'content' => $content]);
     }
 

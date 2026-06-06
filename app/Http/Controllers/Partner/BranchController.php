@@ -13,6 +13,9 @@ class BranchController extends Controller
     public function index()
     {
         $store = Auth::guard('partner')->user()->store;
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found. Please contact admin.');
+        }
         $branches = $store->branches()->with('city')->get();
         return view('partner.branches.index', compact('store', 'branches'));
     }
@@ -20,7 +23,7 @@ class BranchController extends Controller
     public function show(Branch $branch)
     {
         $store = Auth::guard('partner')->user()->store;
-        if ($branch->store_id !== $store->id) abort(403);
+        if (!$store || $branch->store_id !== $store->id) abort(403);
 
         return view('partner.branches.show', compact('store', 'branch'));
     }
@@ -28,6 +31,9 @@ class BranchController extends Controller
     public function create()
     {
         $store = Auth::guard('partner')->user()->store;
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
         $cities = City::where('is_active', true)->get();
         return view('partner.branches.create', compact('store', 'cities'));
     }
@@ -35,6 +41,9 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $store = Auth::guard('partner')->user()->store;
+        if (!$store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
         
         $validated = $request->validate([
             'city_id' => 'required|exists:cities,id',
@@ -52,7 +61,7 @@ class BranchController extends Controller
     public function edit(Branch $branch)
     {
         $store = Auth::guard('partner')->user()->store;
-        if ($branch->store_id !== $store->id) abort(403);
+        if (!$store || $branch->store_id !== $store->id) abort(403);
 
         $cities = City::where('is_active', true)->get();
         return view('partner.branches.edit', compact('store', 'branch', 'cities'));
@@ -61,7 +70,7 @@ class BranchController extends Controller
     public function update(Request $request, Branch $branch)
     {
         $store = Auth::guard('partner')->user()->store;
-        if ($branch->store_id !== $store->id) abort(403);
+        if (!$store || $branch->store_id !== $store->id) abort(403);
 
         $validated = $request->validate([
             'city_id' => 'required|exists:cities,id',
@@ -79,7 +88,7 @@ class BranchController extends Controller
     public function destroy(Branch $branch)
     {
         $store = Auth::guard('partner')->user()->store;
-        if ($branch->store_id !== $store->id) abort(403);
+        if (!$store || $branch->store_id !== $store->id) abort(403);
 
         $branch->delete();
         return redirect()->route('partner.branches.index')->with('success', 'Branch deleted successfully.');

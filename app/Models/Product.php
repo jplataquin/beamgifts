@@ -20,6 +20,7 @@ class Product extends Model
         'images',
         'is_banned',
         'status',
+        'is_approved',
     ];
 
     protected $casts = [
@@ -27,6 +28,7 @@ class Product extends Model
         'price' => 'decimal:2',
         'markup_price' => 'decimal:2',
         'is_banned' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     /**
@@ -34,7 +36,9 @@ class Product extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('status', 'Active')->where('is_banned', false);
+        return $query->where('status', 'Active')
+            ->where('is_banned', false)
+            ->where('is_approved', true);
     }
 
     /**

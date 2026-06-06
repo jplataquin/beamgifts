@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Gift - Beam Gifts')
+@section('title', 'Manage Gift - Gift-XP')
 
 @section('content')
 <div class="container py-5">
@@ -240,6 +240,58 @@
                             </div>
                         </div>
                     </div>
+
+                    @if($voucher->status === 'active')
+                    <!-- Refund Request Section -->
+                    <div class="card shadow-sm border-0 rounded-4 mt-4 overflow-hidden">
+                        <div class="card-body p-4 text-center">
+                            <h6 class="fw-bold mb-2">Need a refund?</h6>
+                            <p class="text-muted small mb-3">You can request a refund if this voucher has not been claimed yet.</p>
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#refundModal">
+                                Request Refund
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Refund Modal -->
+                    <div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 rounded-4 shadow">
+                                <div class="modal-header border-0 pb-0">
+                                    <h5 class="modal-title fw-bold" id="refundModalLabel">Request Refund</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('vouchers.refund.request', $voucher) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body p-4">
+                                        <p class="text-muted small mb-4">Please provide a reason for your refund request. Our team will review it within 24-48 hours.</p>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold text-muted text-uppercase">Reason for Refund</label>
+                                            <textarea name="refund_reason" class="form-control border-light bg-light rounded-3" rows="4" placeholder="I made a mistake, the recipient cannot use it, etc..." required></textarea>
+                                        </div>
+                                        <div class="alert alert-info small rounded-3 border-0">
+                                            <i class="bi bi-info-circle me-1"></i> Refund will be processed to your original payment method.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0 pb-4 px-4">
+                                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Submit Request</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @elseif($voucher->status === 'refund_pending')
+                    <div class="card shadow-sm border-0 rounded-4 mt-4 bg-light">
+                        <div class="card-body p-4 text-center">
+                            <div class="icon-circle bg-warning text-white mx-auto mb-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                <i class="bi bi-hourglass-split fs-4"></i>
+                            </div>
+                            <h6 class="fw-bold mb-1">Refund Pending</h6>
+                            <p class="text-muted small mb-0">Your refund request is currently being reviewed by our team.</p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

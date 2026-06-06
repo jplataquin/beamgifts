@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $title . ' - Beam Gifts')
+@section('title', $title . ' - Gift-XP')
 
 @section('content')
 <div class="bg-light py-5 mb-5">

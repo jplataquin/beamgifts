@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Your Digital Gift - Beam Gifts')
+@section('title', 'Your Digital Gift - Gift-XP')
 
 @section('content')
 <div class="container py-5">
@@ -46,7 +46,7 @@
                     
                     <div class="py-4 text-center" style="background-color: var(--bs-primary-bg-subtle); color: var(--bs-primary-text-emphasis);">
                         <h1 class="h4 fw-bold mb-0">Digital Gift Voucher</h1>
-                        <p class="small opacity-75 mb-0">Beam Gifts - Share the Joy</p>
+                        <p class="small opacity-75 mb-0">Gift-XP - Share the Joy</p>
                     </div>
                     
                     <div class="card-body p-4 p-md-5 text-center">
@@ -146,7 +146,7 @@
                 </div>
                 
                 <div class="text-center mt-5">
-                    <a href="{{ url('/') }}" class="btn btn-link text-decoration-none text-muted">Visit Beam Gifts</a>
+                    <a href="{{ url('/') }}" class="btn btn-link text-decoration-none text-muted">Visit Gift-XP</a>
                 </div>
             </div>
         </div>

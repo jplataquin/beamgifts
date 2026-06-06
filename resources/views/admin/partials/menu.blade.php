@@ -26,6 +26,10 @@
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('admin.orders.*') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-cart-check me-md-2"></i> Orders
             </a>
+            <a href="{{ route('admin.refunds.index') }}" 
+               class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('admin.refunds.*') ? 'active shadow-sm' : '' }}">
+               <i class="bi bi-arrow-counterclockwise me-md-2"></i> Refunds
+            </a>
             <a href="{{ route('admin.vouchers.index') }}" 
                class="list-group-item list-group-item-action border-0 rounded-pill mb-md-1 flex-shrink-0 w-auto me-2 me-md-0 px-3 py-1 small text-center text-md-start {{ request()->routeIs('admin.vouchers.*') ? 'active shadow-sm' : '' }}">
                <i class="bi bi-ticket-perforated me-md-2"></i> Vouchers

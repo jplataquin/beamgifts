@@ -86,7 +86,7 @@
         <div class="left-content">
             <i class="bi bi-shop-window display-1 mb-4"></i>
             <h1 class="fw-bold mb-3">Partner Portal</h1>
-            <p class="lead opacity-75">Grow your business, manage your digital storefront, and delight new customers through Beam Gifts.</p>
+            <p class="lead opacity-75">Grow your business, manage your digital storefront, and delight new customers through Gift-XP.</p>
         </div>
     </div>
     

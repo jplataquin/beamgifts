@@ -96,6 +96,34 @@ class VoucherController extends Controller
         return back()->with('success', 'Gift personalized successfully.');
     }
 
+    public function requestRefund(Request $request, Voucher $voucher)
+    {
+        // Authorization Check
+        $ownerId = \Illuminate\Support\Facades\DB::table('orders')
+            ->where('id', $voucher->order_id)
+            ->value('gifter_id');
+
+        if ($ownerId != Auth::id()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if ($voucher->status !== 'active') {
+            return back()->with('error', 'Only active vouchers can be refunded.');
+        }
+
+        $request->validate([
+            'refund_reason' => 'required|string|max:1000',
+        ]);
+
+        $voucher->update([
+            'status' => 'refund_pending',
+            'refund_reason' => $request->refund_reason,
+            'refund_requested_at' => now(),
+        ]);
+
+        return back()->with('success', 'Refund request submitted successfully. Admin will review your request.');
+    }
+
     /**
      * Handle chunked file upload for personalization.
      */

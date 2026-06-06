@@ -1,6 +1,6 @@
-# Beam Gifts - Nginx Installation Guide
+# Gift-XP - Nginx Installation Guide
 
-This guide provides step-by-step instructions for deploying the Beam Gifts application on a Linux server running Nginx.
+This guide provides step-by-step instructions for deploying the Gift-XP application on a Linux server running Nginx.
 
 ## 📋 Prerequisites
 

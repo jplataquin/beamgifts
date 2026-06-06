@@ -1,6 +1,6 @@
-# Beam Gifts - Project Documentation
+# Gift-XP - Project Documentation
 
-Beam Gifts is a digital gift-selling platform where gifters can purchase QR-code vouchers for products from local stores and send them to recipients via a shareable link.
+Gift-XP is a digital gift-selling platform where gifters can purchase QR-code vouchers for products from local stores and send them to recipients via a shareable link.
 
 ## 🚀 Tech Stack
 - **Framework:** Laravel 12 (PHP 8.2)

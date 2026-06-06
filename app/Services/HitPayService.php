@@ -24,10 +24,16 @@ class HitPayService
 
     public function createPaymentRequest(array $data)
     {
-        $response = Http::withHeaders([
+        $request = Http::withHeaders([
             'X-BUSINESS-API-KEY' => $this->apiKey,
             'X-Requested-With' => 'XMLHttpRequest'
-        ])->asJson()->post("{$this->baseUrl}/payment-requests", $data);
+        ]);
+
+        if (app()->isLocal()) {
+            $request->withoutVerifying();
+        }
+
+        $response = $request->asJson()->post("{$this->baseUrl}/payment-requests", $data);
 
         if ($response->successful()) {
             return $response->json();
@@ -44,9 +50,15 @@ class HitPayService
 
     public function getPaymentStatus(string $paymentRequestId)
     {
-        $response = Http::withHeaders([
+        $request = Http::withHeaders([
             'X-BUSINESS-API-KEY' => $this->apiKey,
-        ])->get("{$this->baseUrl}/payment-requests/{$paymentRequestId}");
+        ]);
+
+        if (app()->isLocal()) {
+            $request->withoutVerifying();
+        }
+
+        $response = $request->get("{$this->baseUrl}/payment-requests/{$paymentRequestId}");
 
         if ($response->successful()) {
             return $response->json();

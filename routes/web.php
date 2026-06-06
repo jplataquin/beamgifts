@@ -5,6 +5,11 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\StoreController;
 
 Route::get('/', function () {
+    // If city context is already set in the application (via middleware)
+    if (app()->has('current_city')) {
+        return redirect()->route('city.home', ['city_slug' => app('current_city')->slug]);
+    }
+
     if (Auth::guard('web')->check() && Auth::guard('web')->user()->default_city_id) {
         $city = \App\Models\City::where('id', Auth::guard('web')->user()->default_city_id)
             ->where('is_active', true)
@@ -43,11 +48,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         // Product Management
         Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
+        Route::post('products/upload-chunk', [App\Http\Controllers\Admin\ProductController::class, 'uploadChunk'])->name('products.upload_chunk');
         Route::patch('products/{product}/ban', [App\Http\Controllers\Admin\ProductController::class, 'toggleBan'])->name('products.ban');
+        Route::patch('products/{product}/approve', [App\Http\Controllers\Admin\ProductController::class, 'toggleApproval'])->name('products.approve');
 
         // Order Management
         Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+
+        // Refund Management
+        Route::get('/refunds', [App\Http\Controllers\Admin\RefundController::class, 'index'])->name('refunds.index');
+        Route::post('/refunds/{voucher}/approve', [App\Http\Controllers\Admin\RefundController::class, 'approve'])->name('refunds.approve');
+        Route::post('/refunds/{voucher}/reject', [App\Http\Controllers\Admin\RefundController::class, 'reject'])->name('refunds.reject');
 
         // Voucher Report
         Route::get('/vouchers-report', [App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
@@ -69,26 +81,32 @@ Route::group(['prefix' => 'partner', 'as' => 'partner.'], function () {
     Route::post('/logout', [App\Http\Controllers\Partner\LoginController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => ['auth:partner', 'role:owner']], function () {
-        Route::get('/dashboard', [App\Http\Controllers\Partner\DashboardController::class, 'index'])->name('dashboard');
-        
-        // Store Management (Singleton)
-        Route::singleton('store', App\Http\Controllers\Partner\StoreController::class);
-        Route::post('store/upload-chunk', [App\Http\Controllers\Partner\StoreController::class, 'uploadChunk'])->name('store.upload_chunk');
-        
-        // Branch Management
-        Route::resource('branches', App\Http\Controllers\Partner\BranchController::class);
+        // Password Change Routes
+        Route::get('/password/change', [App\Http\Controllers\Partner\Auth\PasswordController::class, 'edit'])->name('password.edit');
+        Route::put('/password/change', [App\Http\Controllers\Partner\Auth\PasswordController::class, 'update'])->name('password.update');
 
-        // Product Management
-        Route::resource('products', App\Http\Controllers\Partner\ProductController::class);
-        Route::post('products/upload-chunk', [App\Http\Controllers\Partner\ProductController::class, 'uploadChunk'])->name('products.upload_chunk');
+        Route::group(['middleware' => 'force_password_change'], function () {
+            Route::get('/dashboard', [App\Http\Controllers\Partner\DashboardController::class, 'index'])->name('dashboard');
+            
+            // Store Management (Singleton)
+            Route::singleton('store', App\Http\Controllers\Partner\StoreController::class);
+            Route::post('store/upload-chunk', [App\Http\Controllers\Partner\StoreController::class, 'uploadChunk'])->name('store.upload_chunk');
+            
+            // Branch Management
+            Route::resource('branches', App\Http\Controllers\Partner\BranchController::class);
 
-        // Manager Management
-        Route::resource('managers', App\Http\Controllers\Partner\ManagerController::class);
+            // Product Management
+            Route::resource('products', App\Http\Controllers\Partner\ProductController::class);
+            Route::post('products/upload-chunk', [App\Http\Controllers\Partner\ProductController::class, 'uploadChunk'])->name('products.upload_chunk');
 
-        // Voucher Redemption
-        Route::get('/vouchers', [App\Http\Controllers\Partner\VoucherController::class, 'index'])->name('vouchers.index');
-        Route::get('/vouchers/print', [App\Http\Controllers\Partner\VoucherController::class, 'print'])->name('vouchers.print');
-        Route::get('/vouchers/{voucher}', [App\Http\Controllers\Partner\VoucherController::class, 'show'])->name('vouchers.show');
+            // Manager Management
+            Route::resource('managers', App\Http\Controllers\Partner\ManagerController::class);
+
+            // Voucher Redemption
+            Route::get('/vouchers', [App\Http\Controllers\Partner\VoucherController::class, 'index'])->name('vouchers.index');
+            Route::get('/vouchers/print', [App\Http\Controllers\Partner\VoucherController::class, 'print'])->name('vouchers.print');
+            Route::get('/vouchers/{voucher}', [App\Http\Controllers\Partner\VoucherController::class, 'show'])->name('vouchers.show');
+        });
     });
 });
 
@@ -99,7 +117,7 @@ Route::group(['prefix' => 'manager', 'as' => 'manager.'], function () {
         Route::get('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password/change', [App\Http\Controllers\Manager\Auth\PasswordController::class, 'update'])->name('password.update');
 
-        Route::group(['middleware' => 'manager.force_password_change'], function () {
+        Route::group(['middleware' => 'force_password_change'], function () {
             Route::get('/scan', [App\Http\Controllers\Manager\VoucherController::class, 'scan'])->name('vouchers.scan');
             Route::get('/scan/{token}', [App\Http\Controllers\Manager\VoucherController::class, 'scanResult'])->name('vouchers.scan.result');
             Route::patch('/vouchers/{voucher}/claim', [App\Http\Controllers\Manager\VoucherController::class, 'claim'])->name('vouchers.claim');
@@ -127,6 +145,7 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/my-gifts', [App\Http\Controllers\VoucherController::class, 'index'])->name('my-gifts');
     Route::get('/my-gifts/{voucher}/manage', [App\Http\Controllers\VoucherController::class, 'manage'])->name('vouchers.manage');
     Route::post('/my-gifts/{voucher}/message', [App\Http\Controllers\VoucherController::class, 'updateMessage'])->name('vouchers.update_message');
+    Route::post('/my-gifts/{voucher}/refund', [App\Http\Controllers\VoucherController::class, 'requestRefund'])->name('vouchers.refund.request');
     Route::post('/my-gifts/upload-chunk', [App\Http\Controllers\VoucherController::class, 'uploadChunk'])->name('vouchers.upload_chunk');
     
     Route::get('/debug-auth', function() {

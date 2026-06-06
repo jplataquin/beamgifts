@@ -47,7 +47,7 @@
                         <div class="mb-5">
                             <label for="page_about" class="form-label fw-bold">About Us Page</label>
                             <textarea class="form-control" name="page_about" id="page_about" rows="8">{{ old('page_about', $about) }}</textarea>
-                            <div class="form-text small">Explain what Beam Gifts is all about.</div>
+                            <div class="form-text small">Explain what Gift-XP is all about.</div>
                         </div>
 
                         <div class="mb-5">

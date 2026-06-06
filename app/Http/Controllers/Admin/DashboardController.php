@@ -13,6 +13,9 @@ class DashboardController extends Controller
     {
         $partnerCount = Partner::count();
         $productCount = Product::count();
-        return view('admin.dashboard', compact('partnerCount', 'productCount'));
+        $pendingProductCount = Product::where('is_approved', false)->count();
+        $pendingRefundCount = \App\Models\Voucher::where('status', 'refund_pending')->count();
+        
+        return view('admin.dashboard', compact('partnerCount', 'productCount', 'pendingProductCount', 'pendingRefundCount'));
     }
 }

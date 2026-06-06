@@ -14,6 +14,10 @@ class ManagerController extends Controller
     public function index()
     {
         $partner = Auth::guard('partner')->user();
+        if (!$partner->store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found. Please contact admin.');
+        }
+
         $managers = Partner::where('store_id', $partner->store->id)
             ->where('role', 'manager')
             ->with('branch')
@@ -24,7 +28,7 @@ class ManagerController extends Controller
     public function show(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
+        if (!$partner->store || $manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
         
         return view('partner.managers.show', compact('manager'));
     }
@@ -32,6 +36,9 @@ class ManagerController extends Controller
     public function create()
     {
         $partner = Auth::guard('partner')->user();
+        if (!$partner->store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
         $branches = Branch::where('store_id', $partner->store->id)->get();
         return view('partner.managers.create', compact('branches'));
     }
@@ -39,6 +46,10 @@ class ManagerController extends Controller
     public function store(Request $request)
     {
         $partner = Auth::guard('partner')->user();
+        if (!$partner->store) {
+            return redirect()->route('partner.dashboard')->with('error', 'Store not found.');
+        }
+
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
             'name' => 'required|string|max:255',
@@ -58,6 +69,7 @@ class ManagerController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'must_change_password' => true,
         ]);
 
         return redirect()->route('partner.managers.index')->with('success', 'Manager created successfully.');
@@ -66,7 +78,7 @@ class ManagerController extends Controller
     public function edit(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
+        if (!$partner->store || $manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
         
         $branches = Branch::where('store_id', $partner->store->id)->get();
         return view('partner.managers.edit', compact('manager', 'branches'));
@@ -75,7 +87,7 @@ class ManagerController extends Controller
     public function update(Request $request, Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
+        if (!$partner->store || $manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
 
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
@@ -108,7 +120,7 @@ class ManagerController extends Controller
     public function destroy(Partner $manager)
     {
         $partner = Auth::guard('partner')->user();
-        if ($manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
+        if (!$partner->store || $manager->store_id !== $partner->store->id || !$manager->isManager()) abort(403);
 
         $manager->delete();
         return redirect()->route('partner.managers.index')->with('success', 'Manager deleted.');
