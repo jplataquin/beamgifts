@@ -95,6 +95,17 @@
                         $grad = $gradients[$slug] ?? 'linear-gradient(135deg, #E76F51 0%, #457B9D 100%)';
                         $slogan = $citySlogans[$slug] ?? 'Curated local family boutiques';
                         $shadowCol = $shadowColors[$slug] ?? 'rgba(0,0,0,0.03)';
+                        
+                        // Extract dynamic airport abbreviation
+                        $abbr = $slug === 'manila' ? 'MNL' : ($slug === 'cebu' ? 'CEB' : ($slug === 'davao' ? 'DVO' : substr(strtoupper($city->name), 0, 3)));
+                        
+                        // Pick box specific terracotta, sage, peach, and ribbon colors
+                        $boxBodyFill = $slug === 'manila' ? '#E76F51' : ($slug === 'cebu' ? '#F4A261' : ($slug === 'davao' ? '#8A9A86' : '#FAF6F0'));
+                        $boxStrokeFill = $slug === 'manila' ? '#CD5C5C' : ($slug === 'cebu' ? '#E76F51' : ($slug === 'davao' ? '#5A6F50' : '#E2E8F0'));
+                        $boxStripeFill = $slug === 'manila' ? '#E9C46A' : ($slug === 'cebu' ? '#A88FBB' : ($slug === 'davao' ? '#E9C46A' : '#E76F51'));
+                        $boxLidFill = $slug === 'manila' ? '#F4A261' : ($slug === 'cebu' ? '#E9C46A' : ($slug === 'davao' ? '#FAF6F0' : '#8A9A86'));
+                        $ribbonStroke = $slug === 'manila' ? '#D94E34' : ($slug === 'cebu' ? '#8A9A86' : ($slug === 'davao' ? '#E76F51' : '#E9C46A'));
+                        $glowColor = $slug === 'manila' ? '#E9C46A' : ($slug === 'cebu' ? '#FFB6C1' : ($slug === 'davao' ? '#80CBC4' : '#E76F51'));
                     @endphp
                     <div class="col-md-6 col-lg-4 city-card-col">
                         <a href="{{ route('city.home', ['city_slug' => $city->slug]) }}" class="text-decoration-none city-portal-link">
@@ -111,6 +122,52 @@
                                         <div class="portal-icon text-muted">
                                             <i class="bi bi-mailbox2 fs-4"></i>
                                         </div>
+                                    </div>
+                                    
+                                    <!-- Interactive City Unwrapping Gift Box SVG Illustration -->
+                                    <div class="city-gift-wrapper my-3 text-center">
+                                        <svg viewBox="0 0 200 150" fill="none" class="city-gift-svg">
+                                            <!-- Glow under box (only visible on hover) -->
+                                            <circle cx="100" cy="85" r="45" fill="{{$glowColor}}" opacity="0.3" class="gift-reveal-glow" style="mix-blend-mode: multiply;" />
+                                            
+                                            <!-- Steaming particles/stars rising from inside box (revealed on hover) -->
+                                            <g class="gift-reveal-stars" opacity="0">
+                                                <path d="M100 35 L100 15" stroke="{{$glowColor}}" stroke-dasharray="2 2" stroke-width="1.5" />
+                                                <path d="M75 50 L65 30" stroke="var(--accent-coral)" stroke-dasharray="2 2" stroke-width="1.5" />
+                                                <path d="M125 50 L135 30" stroke="var(--accent-sage)" stroke-dasharray="2 2" stroke-width="1.5" />
+                                                <polygon points="100,5 102,12 109,12 103,16 105,23 100,19 95,23 97,16 91,12 98,12" fill="var(--accent-gold)" />
+                                                <circle cx="70" cy="20" r="3.5" fill="var(--accent-coral)" />
+                                                <circle cx="130" cy="18" r="4.5" fill="var(--accent-sage)" />
+                                            </g>
+
+                                            <!-- Main Box Body -->
+                                            <g class="gift-box-body">
+                                                <rect x="50" y="65" width="100" height="70" rx="6" fill="{{$boxBodyFill}}" stroke="{{$boxStrokeFill}}" stroke-width="2" />
+                                                <!-- Vertical Stripe -->
+                                                <rect x="94" y="65" width="12" height="70" fill="{{$boxStripeFill}}" />
+                                            </g>
+                                            
+                                            <!-- Box Lid and Bow (Tied together so they lift up on hover) -->
+                                            <g class="gift-box-lid-group" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                                                <!-- Bow Loops -->
+                                                <path d="M100 58 C90 40, 75 45, 97 58 Z" stroke="{{$ribbonStroke}}" stroke-width="3.5" fill="none" />
+                                                <path d="M100 58 C110 40, 125 45, 103 58 Z" stroke="{{$ribbonStroke}}" stroke-width="3.5" fill="none" />
+                                                <circle cx="100" cy="58" r="5.5" fill="{{$ribbonStroke}}" />
+                                                
+                                                <!-- Box Lid -->
+                                                <rect x="45" y="58" width="110" height="18" rx="3" fill="{{$boxLidFill}}" stroke="{{$boxStrokeFill}}" stroke-width="1.5" />
+                                                <!-- Lid Ribbon Segment -->
+                                                <rect x="94" y="58" width="12" height="18" fill="{{$boxStripeFill}}" />
+                                            </g>
+
+                                            <!-- Luggage City Tag (Rotates slightly on hover) -->
+                                            <g class="gift-box-tag" transform="translate(115, 78) rotate(15)" style="transition: transform 0.4s ease; transform-origin: 115px 78px;">
+                                                <rect x="0" y="0" width="45" height="20" rx="3" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+                                                <circle cx="6" cy="10" r="2.5" fill="var(--accent-coral)" />
+                                                <!-- City Name Text -->
+                                                <text x="14" y="14" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="8.5" fill="var(--text-dark-espresso)">{{$abbr}}</text>
+                                            </g>
+                                        </svg>
                                     </div>
                                     
                                     <div class="portal-middle my-4">
@@ -517,6 +574,41 @@
     }
     .city-portal-card:hover .arrow-circle i {
         color: #FFFFFF !important;
+    }
+
+    /* City Unwrapping animations */
+    .city-gift-svg {
+        overflow: visible;
+        width: 100%;
+        max-width: 220px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    .gift-reveal-glow {
+        transform: scale(0.6);
+        transform-origin: 100px 85px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 0;
+    }
+    .gift-reveal-stars {
+        transform: translateY(10px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .city-portal-card:hover .gift-reveal-glow {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+    .city-portal-card:hover .gift-reveal-stars {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    .city-portal-card:hover .gift-box-lid-group {
+        transform: translateY(-16px) rotate(-4deg);
+    }
+    .city-portal-card:hover .gift-box-tag {
+        transform: translate(110px, 75px) rotate(-8deg) scale(1.05) !important;
     }
 
 
