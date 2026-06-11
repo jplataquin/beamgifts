@@ -1163,26 +1163,36 @@ function initMobileScrollUnwrap() {
     const cards = document.querySelectorAll('.city-portal-card');
     if (!cards.length) return;
 
-    // Use IntersectionObserver with a rootMargin that defines a center ribbon of the screen
-    const options = {
-        root: null, // relative to document viewport
-        rootMargin: '-35% 0px -35% 0px', // trigger only when card is in the middle 30% vertical region of the viewport
-        threshold: 0
-    };
+    let scrollTimeout;
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                // Add active-scroll class to unwrap/open the gift box on mobile
-                entry.target.classList.add('active-scroll');
-            } else {
-                // Remove it when scrolled away
-                entry.target.classList.remove('active-scroll');
-            }
+    // Listen to scroll events on window
+    window.addEventListener('scroll', () => {
+        // Only execute scroll-stop animations on mobile/tablet viewports
+        if (window.innerWidth > 991.98) return;
+
+        // Clear active timeout and ensure boxes stay closed while scrolling
+        clearTimeout(scrollTimeout);
+        
+        cards.forEach((card) => {
+            card.classList.remove('active-scroll');
         });
-    }, options);
 
-    cards.forEach(card => observer.observe(card));
+        // Set timeout to detect when scrolling has fully stopped
+        scrollTimeout = setTimeout(() => {
+            const viewportCenter = window.innerHeight / 2;
+            const triggerMargin = window.innerHeight * 0.18; // Middle 36% of screen
+
+            cards.forEach((card) => {
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+
+                // If the card center lies within our middle viewport band, open it
+                if (Math.abs(cardCenter - viewportCenter) < triggerMargin) {
+                    card.classList.add('active-scroll');
+                }
+            });
+        }, 180); // 180ms of scroll stillness triggers the unwrap
+    });
 }
 </script>
 @endpush
