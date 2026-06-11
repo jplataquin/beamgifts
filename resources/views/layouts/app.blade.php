@@ -7,7 +7,240 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
-<body class="antialiased">
+@if(!(request()->is('admin*') || request()->is('partner*') || request()->is('manager*')))
+    <!-- Cozy Gifting Fonts & Theme Overrides -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Warm Gifting Theme Globals */
+        :root {
+            --bg-light-cozy: #FAF6F0;
+            --accent-coral: #E76F51;
+            --accent-peach: #F4A261;
+            --accent-sage: #8A9A86;
+            --accent-gold: #E9C46A;
+            --text-dark-espresso: #3D3430;
+        }
+
+        /* Scope everything under .cozy-theme-active to prevent touching Admin/Partner dashboards */
+        body.cozy-theme-active {
+            background-color: var(--bg-light-cozy) !important;
+            color: var(--text-dark-espresso) !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: radial-gradient(circle at 100% 0%, rgba(244, 162, 97, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 0% 100%, rgba(138, 154, 134, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Typography */
+        body.cozy-theme-active h1, 
+        body.cozy-theme-active h2, 
+        body.cozy-theme-active h3, 
+        body.cozy-theme-active h4, 
+        body.cozy-theme-active h5, 
+        body.cozy-theme-active h6,
+        body.cozy-theme-active .display-1,
+        body.cozy-theme-active .display-2,
+        body.cozy-theme-active .display-3,
+        body.cozy-theme-active .display-4 {
+            color: var(--text-dark-espresso) !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+        }
+
+        body.cozy-theme-active p, 
+        body.cozy-theme-active span,
+        body.cozy-theme-active li, 
+        body.cozy-theme-active div,
+        body.cozy-theme-active label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.cozy-theme-active .text-primary {
+            color: var(--accent-coral) !important;
+        }
+        body.cozy-theme-active .text-muted {
+            color: #7A6F69 !important; /* Soft warm grey */
+        }
+        body.cozy-theme-active .text-dark {
+            color: var(--text-dark-espresso) !important;
+        }
+
+        /* Frosted Cozy Navbar */
+        body.cozy-theme-active .navbar {
+            background: rgba(250, 246, 240, 0.8) !important;
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border-bottom: 1px solid rgba(61, 52, 48, 0.04) !important;
+            box-shadow: 0 4px 30px rgba(61, 52, 48, 0.01) !important;
+            padding: 1rem 0 !important;
+        }
+        body.cozy-theme-active .navbar .navbar-brand {
+            color: var(--accent-coral) !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-coral), var(--accent-sage));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body.cozy-theme-active .navbar .nav-link {
+            color: var(--text-dark-espresso) !important;
+            font-weight: 600;
+            opacity: 0.85;
+            transition: all 0.2s ease;
+        }
+        body.cozy-theme-active .navbar .nav-link:hover {
+            opacity: 1;
+            color: var(--accent-coral) !important;
+        }
+
+        /* Cozy Solid Buttons */
+        body.cozy-theme-active .btn-primary {
+            background-color: var(--accent-coral) !important;
+            border-color: var(--accent-coral) !important;
+            color: #FFFFFF !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            border-radius: 50px !important;
+            padding: 0.6rem 1.6rem !important;
+            box-shadow: 0 4px 15px rgba(231, 111, 81, 0.1) !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        body.cozy-theme-active .btn-primary:hover {
+            background-color: #d1563f !important;
+            border-color: #d1563f !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(231, 111, 81, 0.2) !important;
+        }
+        body.cozy-theme-active .btn-outline-primary {
+            background-color: #FFFFFF !important;
+            border: 2px solid var(--accent-sage) !important;
+            color: var(--accent-sage) !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            border-radius: 50px !important;
+            padding: 0.5rem 1.5rem !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        body.cozy-theme-active .btn-outline-primary:hover {
+            background-color: var(--accent-sage) !important;
+            color: #FFFFFF !important;
+            border-color: var(--accent-sage) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* Cozy Cards (Stores, Products, Reviews, Vouchers) */
+        body.cozy-theme-active .card {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
+            border-radius: 24px !important;
+            box-shadow: 0 4px 20px rgba(61, 52, 48, 0.01) !important;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            overflow: hidden !important;
+        }
+        body.cozy-theme-active .card:hover {
+            border-color: var(--accent-coral) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 16px 35px rgba(231, 111, 81, 0.05) !important;
+        }
+        body.cozy-theme-active .card-header {
+            background-color: #FAF6F0 !important;
+            border-bottom: 1.5px solid #E2E8F0 !important;
+            padding: 1.25rem 1.5rem !important;
+        }
+        body.cozy-theme-active .card-footer {
+            background-color: #FAF6F0 !important;
+            border-top: 1.5px solid #E2E8F0 !important;
+        }
+
+        /* Form Controls & Inputs */
+        body.cozy-theme-active .form-control,
+        body.cozy-theme-active .form-select {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
+            border-radius: 14px !important;
+            color: var(--text-dark-espresso) !important;
+            padding: 0.75rem 1.25rem !important;
+            transition: all 0.3s ease !important;
+        }
+        body.cozy-theme-active .form-control:focus,
+        body.cozy-theme-active .form-select:focus {
+            border-color: var(--accent-coral) !important;
+            box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.12) !important;
+        }
+
+        /* List Groups */
+        body.cozy-theme-active .list-group-item {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
+            color: var(--text-dark-espresso) !important;
+            padding: 1rem 1.25rem !important;
+            border-radius: 12px !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        /* Dropdowns */
+        body.cozy-theme-active .dropdown-menu {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 30px rgba(61, 52, 48, 0.04) !important;
+            padding: 0.5rem !important;
+        }
+        body.cozy-theme-active .dropdown-item {
+            color: var(--text-dark-espresso) !important;
+            font-weight: 500 !important;
+            padding: 0.6rem 1.25rem !important;
+            border-radius: 10px !important;
+            transition: all 0.2s ease !important;
+        }
+        body.cozy-theme-active .dropdown-item:hover {
+            background-color: #FFF0EE !important;
+            color: var(--accent-coral) !important;
+        }
+
+        /* Tables */
+        body.cozy-theme-active .table {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
+            color: var(--text-dark-espresso) !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+        }
+        body.cozy-theme-active .table th {
+            background-color: #FAF6F0 !important;
+            color: var(--text-dark-espresso) !important;
+            border-bottom: 1.5px solid #E2E8F0 !important;
+            font-weight: 700 !important;
+        }
+
+        /* Badges */
+        body.cozy-theme-active .badge.bg-primary {
+            background-color: var(--accent-coral) !important;
+            color: #FFFFFF !important;
+        }
+        body.cozy-theme-active .badge.bg-secondary {
+            background-color: var(--accent-sage) !important;
+            color: #FFFFFF !important;
+        }
+        body.cozy-theme-active .badge.bg-success {
+            background-color: #8A9A86 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Footers */
+        body.cozy-theme-active footer {
+            background-color: #FAF6F0 !important;
+            border-top: 1px solid rgba(61, 52, 48, 0.06) !important;
+            color: var(--text-dark-espresso) !important;
+        }
+    </style>
+@endif
+</head>
+<body class="antialiased {{ !(request()->is('admin*') || request()->is('partner*') || request()->is('manager*')) ? 'cozy-theme-active' : '' }}">
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="{{ app()->has('current_city') ? route('city.home', ['city_slug' => app('current_city')->slug]) : url('/') }}">Gift-XP</a>
