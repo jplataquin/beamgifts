@@ -87,6 +87,9 @@
                         'cebu' => 'rgba(244, 162, 97, 0.12)',
                         'davao' => 'rgba(138, 154, 134, 0.12)'
                     ];
+                    
+                    // Cozy randomized names
+                    $names = ['Mom', 'Sofia', 'David', 'Sarah', 'Alex', 'Love', 'Dad', 'Emma', 'Daniel', 'Chloe', 'James', 'Grace'];
                 @endphp
 
                 @foreach($cities as $index => $city)
@@ -96,8 +99,8 @@
                         $slogan = $citySlogans[$slug] ?? 'Curated local family boutiques';
                         $shadowCol = $shadowColors[$slug] ?? 'rgba(0,0,0,0.03)';
                         
-                        // Extract dynamic airport abbreviation
-                        $abbr = $slug === 'manila' ? 'MNL' : ($slug === 'cebu' ? 'CEB' : ($slug === 'davao' ? 'DVO' : substr(strtoupper($city->name), 0, 3)));
+                        // Pick a random name stably mapped to the card index
+                        $giftToName = $names[$index % count($names)];
                         
                         // Pick box specific terracotta, sage, peach, and ribbon colors
                         $boxBodyFill = $slug === 'manila' ? '#E76F51' : ($slug === 'cebu' ? '#F4A261' : ($slug === 'davao' ? '#8A9A86' : '#FAF6F0'));
@@ -162,10 +165,10 @@
 
                                             <!-- Luggage City Tag (Rotates slightly on hover) -->
                                             <g class="gift-box-tag" transform="translate(115, 78) rotate(15)" style="transition: transform 0.4s ease; transform-origin: 115px 78px;">
-                                                <rect x="0" y="0" width="45" height="20" rx="3" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+                                                <rect x="0" y="0" width="55" height="20" rx="3" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
                                                 <circle cx="6" cy="10" r="2.5" fill="var(--accent-coral)" />
-                                                <!-- City Name Text -->
-                                                <text x="14" y="14" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="8.5" fill="var(--text-dark-espresso)">{{$abbr}}</text>
+                                                <!-- Randomized Gift To Text -->
+                                                <text x="12" y="13.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="7.5" fill="var(--text-dark-espresso)">To:{{$giftToName}}</text>
                                             </g>
                                         </svg>
                                     </div>
@@ -596,19 +599,33 @@
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    .city-portal-card:hover .gift-reveal-glow {
+    .city-portal-card:hover .gift-reveal-glow,
+    .city-portal-card.active-scroll .gift-reveal-glow {
         transform: scale(1.2);
         opacity: 0.6;
     }
-    .city-portal-card:hover .gift-reveal-stars {
+    .city-portal-card:hover .gift-reveal-stars,
+    .city-portal-card.active-scroll .gift-reveal-stars {
         transform: translateY(0px);
         opacity: 1;
     }
-    .city-portal-card:hover .gift-box-lid-group {
+    .city-portal-card:hover .gift-box-lid-group,
+    .city-portal-card.active-scroll .gift-box-lid-group {
         transform: translateY(-16px) rotate(-4deg);
     }
-    .city-portal-card:hover .gift-box-tag {
+    .city-portal-card:hover .gift-box-tag,
+    .city-portal-card.active-scroll .gift-box-tag {
         transform: translate(110px, 75px) rotate(-8deg) scale(1.05) !important;
+    }
+    .city-portal-card:hover .arrow-circle,
+    .city-portal-card.active-scroll .arrow-circle {
+        background: var(--accent-coral);
+        border-color: transparent;
+        transform: scale(1.1);
+    }
+    .city-portal-card:hover .arrow-circle i,
+    .city-portal-card.active-scroll .arrow-circle i {
+        color: #FFFFFF !important;
     }
 
 
@@ -769,6 +786,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth > 991.98) {
         initTiltInteraction();
     }
+
+    // 5. Setup mobile scrolling unwrapping observer
+    initMobileScrollUnwrap();
 });
 
 /* ==========================================================================
@@ -1134,6 +1154,35 @@ function initTiltInteraction() {
             });
         });
     });
+}
+
+/* ==========================================================================
+   MOBILE INTERACTION: Scroll-into-Middle Unwrapping Observer
+   ========================================================================== */
+function initMobileScrollUnwrap() {
+    const cards = document.querySelectorAll('.city-portal-card');
+    if (!cards.length) return;
+
+    // Use IntersectionObserver with a rootMargin that defines a center ribbon of the screen
+    const options = {
+        root: null, // relative to document viewport
+        rootMargin: '-35% 0px -35% 0px', // trigger only when card is in the middle 30% vertical region of the viewport
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                // Add active-scroll class to unwrap/open the gift box on mobile
+                entry.target.classList.add('active-scroll');
+            } else {
+                // Remove it when scrolled away
+                entry.target.classList.remove('active-scroll');
+            }
+        });
+    }, options);
+
+    cards.forEach(card => observer.observe(card));
 }
 </script>
 @endpush
