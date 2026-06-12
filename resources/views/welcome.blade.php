@@ -591,37 +591,101 @@
     .gift-reveal-glow {
         transform: scale(0.6);
         transform-origin: 100px 85px;
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         opacity: 0;
     }
     .gift-reveal-stars {
         transform: translateY(10px);
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 0;
     }
     
+    /* Highly synchronized 0.9s Shake & Open timelines */
     .city-portal-card:hover .gift-reveal-glow,
     .city-portal-card.active-scroll .gift-reveal-glow {
-        transform: scale(1.2);
-        opacity: 0.6;
+        animation: glow-reveal-delay 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
     .city-portal-card:hover .gift-reveal-stars,
     .city-portal-card.active-scroll .gift-reveal-stars {
-        transform: translateY(0px);
-        opacity: 1;
+        animation: stars-reveal-delay 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
     .city-portal-card:hover .gift-box-lid-group,
     .city-portal-card.active-scroll .gift-box-lid-group {
-        transform: translateY(-16px) rotate(-4deg);
+        animation: lid-unwrap-shake-open 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        transform-origin: 100px 58px;
+    }
+    .city-portal-card:hover .gift-box-body,
+    .city-portal-card.active-scroll .gift-box-body {
+        animation: box-body-shake 0.9s ease-in-out;
+        transform-origin: 100px 100px;
     }
     .city-portal-card:hover .gift-box-tag,
     .city-portal-card.active-scroll .gift-box-tag {
-        transform: translate(110px, 75px) rotate(-8deg) scale(1.05) !important;
+        animation: tag-wiggle-open 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
+    
     .city-portal-card:hover .arrow-circle,
     .city-portal-card.active-scroll .arrow-circle {
         background: var(--accent-coral);
         border-color: transparent;
         transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    .city-portal-card:hover .arrow-circle i,
+    .city-portal-card.active-scroll .arrow-circle i {
+        color: #FFFFFF !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Keyframes for tactile shaking and pop-opening */
+    @keyframes lid-unwrap-shake-open {
+        /* Shake Phase (0% - 40%) */
+        0% { transform: translateY(0) rotate(0deg); }
+        8% { transform: translateY(0) rotate(-3deg) translateX(-1px); }
+        16% { transform: translateY(0) rotate(3deg) translateX(1px); }
+        24% { transform: translateY(0) rotate(-3deg) translateX(-1px); }
+        32% { transform: translateY(0) rotate(3deg) translateX(1px); }
+        40% { transform: translateY(0) rotate(0deg); }
+        
+        /* Elastic Open Phase (40% - 100%) */
+        55% { transform: translateY(-20px) rotate(-6deg); }
+        100% { transform: translateY(-16px) rotate(-4deg); }
+    }
+
+    @keyframes box-body-shake {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        8% { transform: translate(-1.5px, 0.5px) rotate(-0.5deg); }
+        16% { transform: translate(1.5px, -0.5px) rotate(0.5deg); }
+        24% { transform: translate(-1.5px, -0.5px) rotate(-0.5deg); }
+        32% { transform: translate(1.5px, 0.5px) rotate(0.5deg); }
+        40% { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    @keyframes tag-wiggle-open {
+        /* Shake Phase */
+        0% { transform: translate(115px, 78px) rotate(15deg) scale(1); }
+        8% { transform: translate(115px, 78px) rotate(5deg) scale(1.02); }
+        16% { transform: translate(115px, 78px) rotate(25deg) scale(1.02); }
+        24% { transform: translate(115px, 78px) rotate(5deg) scale(1.02); }
+        32% { transform: translate(115px, 78px) rotate(25deg) scale(1.02); }
+        40% { transform: translate(115px, 78px) rotate(15deg) scale(1); }
+        
+        /* Open Phase */
+        55% { transform: translate(110px, 75px) rotate(-12deg) scale(1.08); }
+        100% { transform: translate(110px, 75px) rotate(-8deg) scale(1.05); }
+    }
+
+    @keyframes stars-reveal-delay {
+        0% { opacity: 0; transform: translateY(10px); }
+        40% { opacity: 0; transform: translateY(10px); }
+        60% { opacity: 1; transform: translateY(-4px); }
+        100% { opacity: 1; transform: translateY(0px); }
+    }
+
+    @keyframes glow-reveal-delay {
+        0% { opacity: 0; transform: scale(0.6); }
+        40% { opacity: 0; transform: scale(0.6); }
+        65% { opacity: 0.6; transform: scale(1.25); }
+        100% { opacity: 0.6; transform: scale(1.2); }
     }
     .city-portal-card:hover .arrow-circle i,
     .city-portal-card.active-scroll .arrow-circle i {
