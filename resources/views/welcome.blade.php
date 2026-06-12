@@ -1188,33 +1188,43 @@ function initCity3DBoxes() {
         return;
     }
 
-    // Palette of vibrant, cozy pastel colors
-    const colorfulPalette = [
+    // Group 1: Rich, vibrant, or darker contrast tones (for Box Body and Lid)
+    const boxBodyColors = [
         0xE76F51, // Terracotta Coral
-        0xF4A261, // Soft Peach
-        0xE9C46A, // Cozy Gold
-        0x8A9A86, // Sage Green
-        0x457B9D, // Calm Blue
         0x9B5DE5, // Vibrant Purple
         0xF15BB5, // Hot Pink
-        0x00F5D4, // Bright Teal
-        0x00BBF9, // Sky Blue
-        0xFF9F1C, // Bright Orange
-        0x7209B7, // Royal Purple
-        0x4CC9F0  // Bright Sky
+        0x1D3557, // Deep Ocean Blue
+        0x457B9D, // Calm Steel Blue
+        0x606C38, // Rich Olive Green
+        0xD94E34, // Saturated Crimson
+        0xBC6C25  // Warm Caramel Wood
+    ];
+
+    // Group 2: Bright, light, neon, or golden highlight tones (for Ribbon and Particles)
+    const ribbonContrastColors = [
+        0xE9C46A, // Cozy Warm Gold
+        0x00F5D4, // Glowing Neon Teal
+        0x4CC9F0, // Bright Sky Blue
+        0xFAF6F0, // Soft Linen Cream
+        0xFFD1B3, // Pale Soft Peach
+        0xA8E6CF, // Fresh Mint Green
+        0xFFE066  // Sunlight Yellow
     ];
 
     containers.forEach((container) => {
         const width = container.clientWidth;
         const height = container.clientHeight;
 
-        // Choose completely random colors for body, lid, and ribbon/particles
-        // We slice and shuffle or simply pull randomly ensuring they are distinct
-        const shuffled = [...colorfulPalette].sort(() => 0.5 - Math.random());
-        const bodyColor = shuffled[0];
-        const lidColor = shuffled[1];
-        const ribbonColor = shuffled[2];
-        const particleColor = shuffled[3];
+        // Pick distinct high-contrast colors programmatically (Saves rendering conflict)
+        const bodyColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
+        
+        let lidColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
+        while (lidColor === bodyColor) {
+            lidColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
+        }
+
+        const ribbonColor = ribbonContrastColors[Math.floor(Math.random() * ribbonContrastColors.length)];
+        const particleColor = ribbonContrastColors[Math.floor(Math.random() * ribbonContrastColors.length)];
 
         // 3D Scene core
         const scene = new THREE.Scene();
@@ -1246,64 +1256,64 @@ function initCity3DBoxes() {
         const lidMat = new THREE.MeshPhongMaterial({ color: lidColor, shininess: 12, flatShading: true });
         const ribbonMat = new THREE.MeshPhongMaterial({ color: ribbonColor, shininess: 80, specular: 0xffffff });
 
-        // 1. Box Body (Cube primitive)
-        const boxGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        // 1. Box Body (Cube primitive - scaled 25% larger to fill view)
+        const boxGeo = new THREE.BoxGeometry(1.85, 1.85, 1.85);
         const boxMesh = new THREE.Mesh(boxGeo, bodyMat);
         giftBoxGroup.add(boxMesh);
 
-        // 2. Box Lid (Lid primitive)
-        const lidGeo = new THREE.BoxGeometry(1.6, 0.35, 1.6);
+        // 2. Box Lid (Lid primitive - scaled up)
+        const lidGeo = new THREE.BoxGeometry(1.98, 0.4, 1.98);
         const lidMesh = new THREE.Mesh(lidGeo, lidMat);
-        lidMesh.position.y = 0.85;
+        lidMesh.position.y = 1.0;
         giftBoxGroup.add(lidMesh);
 
-        // 3. Satin ribbons wrapping (Cross)
-        const ribbon1Geo = new THREE.BoxGeometry(0.24, 1.55, 1.55);
+        // 3. Satin ribbons wrapping (Cross - scaled up)
+        const ribbon1Geo = new THREE.BoxGeometry(0.28, 1.9, 1.9);
         const ribbon1 = new THREE.Mesh(ribbon1Geo, ribbonMat);
         giftBoxGroup.add(ribbon1);
 
-        const ribbon2Geo = new THREE.BoxGeometry(1.55, 1.55, 0.24);
+        const ribbon2Geo = new THREE.BoxGeometry(1.9, 1.9, 0.28);
         const ribbon2 = new THREE.Mesh(ribbon2Geo, ribbonMat);
         giftBoxGroup.add(ribbon2);
 
         // Lid ribbon wraps
-        const lidRibbon1Geo = new THREE.BoxGeometry(0.26, 0.4, 1.65);
+        const lidRibbon1Geo = new THREE.BoxGeometry(0.3, 0.48, 2.05);
         const lidRibbon1 = new THREE.Mesh(lidRibbon1Geo, ribbonMat);
-        lidRibbon1.position.y = 0.85;
+        lidRibbon1.position.y = 1.0;
         giftBoxGroup.add(lidRibbon1);
 
-        const lidRibbon2Geo = new THREE.BoxGeometry(1.65, 0.4, 0.26);
+        const lidRibbon2Geo = new THREE.BoxGeometry(2.05, 0.48, 0.3);
         const lidRibbon2 = new THREE.Mesh(lidRibbon2Geo, ribbonMat);
-        lidRibbon2.position.y = 0.85;
+        lidRibbon2.position.y = 1.0;
         giftBoxGroup.add(lidRibbon2);
 
-        // 4. Bow Loops on top (Torus primitives)
-        const bowLoopGeo = new THREE.TorusGeometry(0.26, 0.06, 8, 16, Math.PI * 1.55);
+        // 4. Bow Loops on top (Torus primitives - scaled up)
+        const bowLoopGeo = new THREE.TorusGeometry(0.32, 0.07, 8, 16, Math.PI * 1.55);
         
         const bowLoop1 = new THREE.Mesh(bowLoopGeo, ribbonMat);
-        bowLoop1.position.set(-0.14, 1.1, 0);
+        bowLoop1.position.set(-0.16, 1.3, 0);
         bowLoop1.rotation.set(0, 0, Math.PI * -0.25);
         giftBoxGroup.add(bowLoop1);
 
         const bowLoop2 = new THREE.Mesh(bowLoopGeo, ribbonMat);
-        bowLoop2.position.set(0.14, 1.1, 0);
+        bowLoop2.position.set(0.16, 1.3, 0);
         bowLoop2.rotation.set(0, 0, Math.PI * 1.25);
         giftBoxGroup.add(bowLoop2);
 
         // Bow knot sphere
-        const knotGeo = new THREE.SphereGeometry(0.12, 10, 10);
+        const knotGeo = new THREE.SphereGeometry(0.15, 10, 10);
         const knotMesh = new THREE.Mesh(knotGeo, ribbonMat);
-        knotMesh.position.set(0, 0.95, 0);
+        knotMesh.position.set(0, 1.15, 0);
         giftBoxGroup.add(knotMesh);
 
         scene.add(giftBoxGroup);
 
-        // 5. Interactive 3D Confetti Burst Meshes (Flying, spinning paper slips)
+        // 5. Interactive 3D Confetti Burst Meshes (Expanded count: 45 pieces)
         const confettiGroup = new THREE.Group();
-        const confettiCount = 15;
+        const confettiCount = 45;
         const confettiMeshes = [];
         const confettiColors = [0xE76F51, 0xF4A261, 0xE9C46A, 0x8A9A86, 0x9B5DE5, 0xF15BB5, 0x00F5D4, 0x00BBF9];
-        const confettiGeo = new THREE.PlaneGeometry(0.08, 0.06);
+        const confettiGeo = new THREE.PlaneGeometry(0.09, 0.07);
 
         for (let i = 0; i < confettiCount; i++) {
             const confettiMat = new THREE.MeshPhongMaterial({
@@ -1315,9 +1325,9 @@ function initCity3DBoxes() {
             
             // Placed tucked inside the box body initially
             confettiMesh.position.set(
-                (Math.random() - 0.5) * 0.3,
-                -0.2 + (Math.random() - 0.5) * 0.2,
-                (Math.random() - 0.5) * 0.3
+                (Math.random() - 0.5) * 0.4,
+                -0.3 + (Math.random() - 0.5) * 0.3,
+                (Math.random() - 0.5) * 0.4
             );
             
             confettiMesh.rotation.set(
@@ -1326,11 +1336,11 @@ function initCity3DBoxes() {
                 Math.random() * Math.PI
             );
 
-            // Store individual launch trajectories and spinning speeds
+            // Store individual launch trajectories and spinning speeds (Expanded scale)
             confettiMesh.userData = {
-                targetX: confettiMesh.position.x + (Math.random() - 0.5) * 1.6,
-                targetY: 1.1 + Math.random() * 0.9, // Float upward
-                targetZ: confettiMesh.position.z + (Math.random() - 0.5) * 1.6,
+                targetX: confettiMesh.position.x + (Math.random() - 0.5) * 2.2,
+                targetY: 1.3 + Math.random() * 1.2, // Float upward and outward
+                targetZ: confettiMesh.position.z + (Math.random() - 0.5) * 2.2,
                 targetRotX: confettiMesh.rotation.x + Math.random() * Math.PI * 4,
                 targetRotY: confettiMesh.rotation.y + Math.random() * Math.PI * 4,
                 targetRotZ: confettiMesh.rotation.z + Math.random() * Math.PI * 4,
@@ -1359,7 +1369,7 @@ function initCity3DBoxes() {
 
         for (let i = 0; i < pCount; i++) {
             pPositions[i * 3] = (Math.random() - 0.5) * 0.4;
-            pPositions[i * 3 + 1] = -0.4 + (Math.random() - 0.5) * 0.4;
+            pPositions[i * 3 + 1] = -0.5 + (Math.random() - 0.5) * 0.4;
             pPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
 
             pColors[i * 3] = pColor.r;
