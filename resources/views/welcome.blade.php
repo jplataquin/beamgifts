@@ -1188,43 +1188,27 @@ function initCity3DBoxes() {
         return;
     }
 
-    // Group 1: Rich, vibrant, or darker contrast tones (for Box Body and Lid)
-    const boxBodyColors = [
-        0xE76F51, // Terracotta Coral
-        0x9B5DE5, // Vibrant Purple
-        0xF15BB5, // Hot Pink
-        0x1D3557, // Deep Ocean Blue
-        0x457B9D, // Calm Steel Blue
-        0x606C38, // Rich Olive Green
-        0xD94E34, // Saturated Crimson
-        0xBC6C25  // Warm Caramel Wood
-    ];
-
-    // Group 2: Bright, light, neon, or golden highlight tones (for Ribbon and Particles)
-    const ribbonContrastColors = [
-        0xE9C46A, // Cozy Warm Gold
-        0x00F5D4, // Glowing Neon Teal
-        0x4CC9F0, // Bright Sky Blue
-        0xFAF6F0, // Soft Linen Cream
-        0xFFD1B3, // Pale Soft Peach
-        0xA8E6CF, // Fresh Mint Green
-        0xFFE066  // Sunlight Yellow
+    // Official brand colors of the project (Primary: Coral/Blue, Secondary: Gold/Purple)
+    // Completely excludes any white, cream, or background-matching washouts
+    const brandPalette = [
+        0xFF6F61, // Coral (Primary Brand Color)
+        0x6CA5D8, // Soft Blue (Secondary Brand Color)
+        0xFFD700, // Gold/Yellow (Warning Highlight)
+        0xA88FBB  // Soft Purple (Info Highlight)
     ];
 
     containers.forEach((container) => {
         const width = container.clientWidth;
         const height = container.clientHeight;
 
-        // Pick distinct high-contrast colors programmatically (Saves rendering conflict)
-        const bodyColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
-        
-        let lidColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
-        while (lidColor === bodyColor) {
-            lidColor = boxBodyColors[Math.floor(Math.random() * boxBodyColors.length)];
-        }
-
-        const ribbonColor = ribbonContrastColors[Math.floor(Math.random() * ribbonContrastColors.length)];
-        const particleColor = ribbonContrastColors[Math.floor(Math.random() * ribbonContrastColors.length)];
+        // Shuffle the brand palette to get completely different, high-contrast colors per box.
+        // This guarantees that the body, lid, ribbon, and particles are always different,
+        // always high contrast, and perfectly represent the official site colors!
+        const shuffled = [...brandPalette].sort(() => 0.5 - Math.random());
+        const bodyColor = shuffled[0];
+        const lidColor = shuffled[1];
+        const ribbonColor = shuffled[2];
+        const particleColor = shuffled[3];
 
         // 3D Scene core
         const scene = new THREE.Scene();
