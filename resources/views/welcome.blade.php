@@ -1229,10 +1229,10 @@ function initCity3DBoxes() {
         fillLight.position.set(-5, -5, 5);
         scene.add(fillLight);
 
-        // Soft, Translucent 3D Perspective Floor Grid to emphasize depth/tilt
-        const gridHelper = new THREE.GridHelper(8, 12, 0xCBD5E1, 0xE2E8F0);
+        // Soft, Translucent 3D Perspective Floor Grid to emphasize depth/tilt (High Contrast)
+        const gridHelper = new THREE.GridHelper(8, 12, 0xE76F51, 0x3D3430);
         gridHelper.position.y = -1.45; // Placed neatly below the box floor
-        gridHelper.material.opacity = 0.28;
+        gridHelper.material.opacity = 0.55;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
 
