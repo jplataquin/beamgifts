@@ -193,6 +193,28 @@
     .line-height-relaxed {
         line-height: 1.6;
     }
+
+    /* Solid High-Contrast Unwrap Button Styles */
+    .btn-premium {
+        background-color: #E76F51 !important;
+        border: 2px solid #E76F51 !important;
+        color: #FFFFFF !important;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(231, 111, 81, 0.15) !important;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer;
+    }
+    .btn-premium:hover {
+        background-color: #d1563f !important;
+        border-color: #d1563f !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(231, 111, 81, 0.25) !important;
+    }
 </style>
 @endsection
 
