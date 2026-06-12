@@ -127,50 +127,18 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Interactive City Unwrapping Gift Box SVG Illustration -->
-                                    <div class="city-gift-wrapper my-3 text-center">
-                                        <svg viewBox="0 0 200 150" fill="none" class="city-gift-svg">
-                                            <!-- Glow under box (only visible on hover) -->
-                                            <circle cx="100" cy="85" r="45" fill="{{$glowColor}}" opacity="0.3" class="gift-reveal-glow" style="mix-blend-mode: multiply;" />
-                                            
-                                            <!-- Steaming particles/stars rising from inside box (revealed on hover) -->
-                                            <g class="gift-reveal-stars" opacity="0">
-                                                <path d="M100 35 L100 15" stroke="{{$glowColor}}" stroke-dasharray="2 2" stroke-width="1.5" />
-                                                <path d="M75 50 L65 30" stroke="var(--accent-coral)" stroke-dasharray="2 2" stroke-width="1.5" />
-                                                <path d="M125 50 L135 30" stroke="var(--accent-sage)" stroke-dasharray="2 2" stroke-width="1.5" />
-                                                <polygon points="100,5 102,12 109,12 103,16 105,23 100,19 95,23 97,16 91,12 98,12" fill="var(--accent-gold)" />
-                                                <circle cx="70" cy="20" r="3.5" fill="var(--accent-coral)" />
-                                                <circle cx="130" cy="18" r="4.5" fill="var(--accent-sage)" />
-                                            </g>
-
-                                            <!-- Main Box Body -->
-                                            <g class="gift-box-body">
-                                                <rect x="50" y="65" width="100" height="70" rx="6" fill="{{$boxBodyFill}}" stroke="{{$boxStrokeFill}}" stroke-width="2" />
-                                                <!-- Vertical Stripe -->
-                                                <rect x="94" y="65" width="12" height="70" fill="{{$boxStripeFill}}" />
-                                            </g>
-                                            
-                                            <!-- Box Lid and Bow (Tied together so they lift up on hover) -->
-                                            <g class="gift-box-lid-group" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                                                <!-- Bow Loops -->
-                                                <path d="M100 58 C90 40, 75 45, 97 58 Z" stroke="{{$ribbonStroke}}" stroke-width="3.5" fill="none" />
-                                                <path d="M100 58 C110 40, 125 45, 103 58 Z" stroke="{{$ribbonStroke}}" stroke-width="3.5" fill="none" />
-                                                <circle cx="100" cy="58" r="5.5" fill="{{$ribbonStroke}}" />
-                                                
-                                                <!-- Box Lid -->
-                                                <rect x="45" y="58" width="110" height="18" rx="3" fill="{{$boxLidFill}}" stroke="{{$boxStrokeFill}}" stroke-width="1.5" />
-                                                <!-- Lid Ribbon Segment -->
-                                                <rect x="94" y="58" width="12" height="18" fill="{{$boxStripeFill}}" />
-                                            </g>
-
-                                            <!-- Luggage City Tag (Rotates slightly on hover) -->
-                                            <g class="gift-box-tag" transform="translate(115, 78) rotate(15)" style="transition: transform 0.4s ease; transform-origin: 115px 78px;">
-                                                <rect x="0" y="0" width="55" height="20" rx="3" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
-                                                <circle cx="6" cy="10" r="2.5" fill="var(--accent-coral)" />
-                                                <!-- Randomized Gift To Text -->
-                                                <text x="12" y="13.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="7.5" fill="var(--text-dark-espresso)">To:{{$giftToName}}</text>
-                                            </g>
-                                        </svg>
+                                    <!-- Interactive 3D Gift Box Canvas Container -->
+                                    <div class="city-3d-container mx-auto my-3" data-city-slug="{{ $slug }}" data-gift-to="To:{{ $giftToName }}" style="width: 100%; height: 160px; position: relative; z-index: 10;">
+                                        <!-- Custom Vector Floating Tag -->
+                                        <div class="gift-html-tag border border-light-subtle shadow-sm bg-white rounded px-2 py-1 position-absolute" style="top: 25px; right: 20%; z-index: 12; transform: rotate(15deg); transition: transform 0.4s ease; transform-origin: left center; pointer-events: none;">
+                                            <span class="d-flex align-items-center gap-1 small text-dark fw-bold" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; line-height: 1;">
+                                                <i class="bi bi-circle-fill text-danger" style="font-size: 0.35rem;"></i>
+                                                <span>To: {{ $giftToName }}</span>
+                                            </span>
+                                        </div>
+                                        <div class="canvas-fallback d-none flex-column align-items-center justify-content-center text-center p-4">
+                                            <i class="bi bi-gift-fill text-primary animate-pulse" style="font-size: 4rem;"></i>
+                                        </div>
                                     </div>
                                     
                                     <div class="portal-middle my-4">
@@ -579,49 +547,27 @@
         color: #FFFFFF !important;
     }
 
-    /* City Unwrapping animations */
-    .city-gift-svg {
-        overflow: visible;
-        width: 100%;
-        max-width: 220px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
+    /* City 3D Gifting Canvas & Hybrid Tag Styles */
+    .city-3d-container canvas {
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute;
+        top: 0; left: 0;
+        z-index: 5;
+        transition: opacity 0.4s ease;
     }
-    .gift-reveal-glow {
-        transform: scale(0.6);
-        transform-origin: 100px 85px;
-        opacity: 0;
+    .gift-html-tag {
+        box-shadow: 0 4px 15px rgba(61, 52, 48, 0.04) !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        transform-origin: left center !important;
     }
-    .gift-reveal-stars {
-        transform: translateY(10px);
-        opacity: 0;
+    .city-portal-card:hover .gift-html-tag,
+    .city-portal-card.active-scroll .gift-html-tag {
+        transform: translate(-6px, -4px) rotate(-10deg) scale(1.08) !important;
+        border-color: var(--accent-coral) !important;
+        box-shadow: 0 8px 20px rgba(231, 111, 81, 0.1) !important;
     }
-    
-    /* Highly synchronized 0.9s Shake & Open timelines */
-    .city-portal-card:hover .gift-reveal-glow,
-    .city-portal-card.active-scroll .gift-reveal-glow {
-        animation: glow-reveal-delay 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-    .city-portal-card:hover .gift-reveal-stars,
-    .city-portal-card.active-scroll .gift-reveal-stars {
-        animation: stars-reveal-delay 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-    .city-portal-card:hover .gift-box-lid-group,
-    .city-portal-card.active-scroll .gift-box-lid-group {
-        animation: lid-unwrap-shake-open 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        transform-origin: 100px 58px;
-    }
-    .city-portal-card:hover .gift-box-body,
-    .city-portal-card.active-scroll .gift-box-body {
-        animation: box-body-shake 0.9s ease-in-out;
-        transform-origin: 100px 100px;
-    }
-    .city-portal-card:hover .gift-box-tag,
-    .city-portal-card.active-scroll .gift-box-tag {
-        animation: tag-wiggle-open 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-    
+
     .city-portal-card:hover .arrow-circle,
     .city-portal-card.active-scroll .arrow-circle {
         background: var(--accent-coral);
@@ -633,63 +579,6 @@
     .city-portal-card.active-scroll .arrow-circle i {
         color: #FFFFFF !important;
         transition: all 0.3s ease;
-    }
-
-    /* Keyframes for tactile shaking and pop-opening */
-    @keyframes lid-unwrap-shake-open {
-        /* Shake Phase (0% - 40%) */
-        0% { transform: translateY(0) rotate(0deg); }
-        8% { transform: translateY(0) rotate(-3deg) translateX(-1px); }
-        16% { transform: translateY(0) rotate(3deg) translateX(1px); }
-        24% { transform: translateY(0) rotate(-3deg) translateX(-1px); }
-        32% { transform: translateY(0) rotate(3deg) translateX(1px); }
-        40% { transform: translateY(0) rotate(0deg); }
-        
-        /* Elastic Open Phase (40% - 100%) */
-        55% { transform: translateY(-20px) rotate(-6deg); }
-        100% { transform: translateY(-16px) rotate(-4deg); }
-    }
-
-    @keyframes box-body-shake {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        8% { transform: translate(-1.5px, 0.5px) rotate(-0.5deg); }
-        16% { transform: translate(1.5px, -0.5px) rotate(0.5deg); }
-        24% { transform: translate(-1.5px, -0.5px) rotate(-0.5deg); }
-        32% { transform: translate(1.5px, 0.5px) rotate(0.5deg); }
-        40% { transform: translate(0, 0) rotate(0deg); }
-        100% { transform: translate(0, 0) rotate(0deg); }
-    }
-
-    @keyframes tag-wiggle-open {
-        /* Shake Phase */
-        0% { transform: translate(115px, 78px) rotate(15deg) scale(1); }
-        8% { transform: translate(115px, 78px) rotate(5deg) scale(1.02); }
-        16% { transform: translate(115px, 78px) rotate(25deg) scale(1.02); }
-        24% { transform: translate(115px, 78px) rotate(5deg) scale(1.02); }
-        32% { transform: translate(115px, 78px) rotate(25deg) scale(1.02); }
-        40% { transform: translate(115px, 78px) rotate(15deg) scale(1); }
-        
-        /* Open Phase */
-        55% { transform: translate(110px, 75px) rotate(-12deg) scale(1.08); }
-        100% { transform: translate(110px, 75px) rotate(-8deg) scale(1.05); }
-    }
-
-    @keyframes stars-reveal-delay {
-        0% { opacity: 0; transform: translateY(10px); }
-        40% { opacity: 0; transform: translateY(10px); }
-        60% { opacity: 1; transform: translateY(-4px); }
-        100% { opacity: 1; transform: translateY(0px); }
-    }
-
-    @keyframes glow-reveal-delay {
-        0% { opacity: 0; transform: scale(0.6); }
-        40% { opacity: 0; transform: scale(0.6); }
-        65% { opacity: 0.6; transform: scale(1.25); }
-        100% { opacity: 0.6; transform: scale(1.2); }
-    }
-    .city-portal-card:hover .arrow-circle i,
-    .city-portal-card.active-scroll .arrow-circle i {
-        color: #FFFFFF !important;
     }
 
 
@@ -853,6 +742,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Setup mobile scrolling unwrapping observer
     initMobileScrollUnwrap();
+
+    // 6. Setup City 3D Gift Box Multi-Canvas rendering
+    initCity3DBoxes();
 });
 
 /* ==========================================================================
@@ -1239,6 +1131,12 @@ function initMobileScrollUnwrap() {
         
         cards.forEach((card) => {
             card.classList.remove('active-scroll');
+            
+            // Close 3D gift box on mobile scroll
+            const container3d = card.querySelector('.city-3d-container');
+            if (container3d && container3d.closeBox) {
+                container3d.closeBox();
+            }
         });
 
         // Set timeout to detect when scrolling has fully stopped
@@ -1253,9 +1151,262 @@ function initMobileScrollUnwrap() {
                 // If the card center lies within our middle viewport band, open it
                 if (Math.abs(cardCenter - viewportCenter) < triggerMargin) {
                     card.classList.add('active-scroll');
+                    
+                    // Open 3D gift box on mobile scroll stop
+                    const container3d = card.querySelector('.city-3d-container');
+                    if (container3d && container3d.openBox) {
+                        container3d.openBox();
+                    }
                 }
             });
         }, 180); // 180ms of scroll stillness triggers the unwrap
+    });
+}
+
+/* ==========================================================================
+   CITY 3D: Multi-Canvas Gift Box Renderer & GSAP Unwrap Orchestrator
+   ========================================================================== */
+function initCity3DBoxes() {
+    const containers = document.querySelectorAll('.city-3d-container');
+    if (!containers.length) return;
+
+    // WebGL support validation
+    let isWebGLSupported = (() => {
+        try {
+            const canvas = document.createElement('canvas');
+            return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+        } catch (e) {
+            return false;
+        }
+    })();
+
+    if (!isWebGLSupported) {
+        containers.forEach(container => {
+            const fallback = container.querySelector('.canvas-fallback');
+            if (fallback) fallback.classList.remove('d-none');
+        });
+        return;
+    }
+
+    // Dynamic city color themes mapping
+    const cityThemes = {
+        manila: { body: 0xE76F51, lid: 0xF4A261, ribbon: 0xE9C46A, particles: 0xE9C46A },
+        cebu: { body: 0xF4A261, lid: 0xA88FBB, ribbon: 0x8A9A86, particles: 0xFFB6C1 },
+        davao: { body: 0x8A9A86, lid: 0xFAF6F0, ribbon: 0xE9C46A, particles: 0x80CBC4 }
+    };
+
+    containers.forEach((container) => {
+        const slug = container.getAttribute('data-city-slug');
+        const theme = cityThemes[slug] || { body: 0xE76F51, lid: 0xF4A261, ribbon: 0xE9C46A, particles: 0xE9C46A };
+
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        // 3D Scene core
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+        camera.position.set(0, 0, 7.5);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Warm Gifting lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const warmLight = new THREE.PointLight(0xFFE4E1, 2.5, 15);
+        warmLight.position.set(5, 5, 5);
+        scene.add(warmLight);
+
+        const fillLight = new THREE.PointLight(0xFFFFFF, 1.5, 15);
+        fillLight.position.set(-5, -5, 5);
+        scene.add(fillLight);
+
+        // Core Gift Box assembly group
+        const giftBoxGroup = new THREE.Group();
+
+        // Materials
+        const bodyMat = new THREE.MeshPhongMaterial({ color: theme.body, shininess: 12, flatShading: true });
+        const lidMat = new THREE.MeshPhongMaterial({ color: theme.lid, shininess: 12, flatShading: true });
+        const ribbonMat = new THREE.MeshPhongMaterial({ color: theme.ribbon, shininess: 80, specular: 0xffffff });
+
+        // 1. Box Body (Cube primitive)
+        const boxGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        const boxMesh = new THREE.Mesh(boxGeo, bodyMat);
+        giftBoxGroup.add(boxMesh);
+
+        // 2. Box Lid (Lid primitive)
+        const lidGeo = new THREE.BoxGeometry(1.6, 0.35, 1.6);
+        const lidMesh = new THREE.Mesh(lidGeo, lidMat);
+        lidMesh.position.y = 0.85;
+        giftBoxGroup.add(lidMesh);
+
+        // 3. Satin ribbons wrapping (Cross)
+        const ribbon1Geo = new THREE.BoxGeometry(0.24, 1.55, 1.55);
+        const ribbon1 = new THREE.Mesh(ribbon1Geo, ribbonMat);
+        giftBoxGroup.add(ribbon1);
+
+        const ribbon2Geo = new THREE.BoxGeometry(1.55, 1.55, 0.24);
+        const ribbon2 = new THREE.Mesh(ribbon2Geo, ribbonMat);
+        giftBoxGroup.add(ribbon2);
+
+        // Lid ribbon wraps
+        const lidRibbon1Geo = new THREE.BoxGeometry(0.26, 0.4, 1.65);
+        const lidRibbon1 = new THREE.Mesh(lidRibbon1Geo, ribbonMat);
+        lidRibbon1.position.y = 0.85;
+        giftBoxGroup.add(lidRibbon1);
+
+        const lidRibbon2Geo = new THREE.BoxGeometry(1.65, 0.4, 0.26);
+        const lidRibbon2 = new THREE.Mesh(lidRibbon2Geo, ribbonMat);
+        lidRibbon2.position.y = 0.85;
+        giftBoxGroup.add(lidRibbon2);
+
+        // 4. Bow Loops on top (Torus primitives)
+        const bowLoopGeo = new THREE.TorusGeometry(0.26, 0.06, 8, 16, Math.PI * 1.55);
+        
+        const bowLoop1 = new THREE.Mesh(bowLoopGeo, ribbonMat);
+        bowLoop1.position.set(-0.14, 1.1, 0);
+        bowLoop1.rotation.set(0, 0, Math.PI * -0.25);
+        giftBoxGroup.add(bowLoop1);
+
+        const bowLoop2 = new THREE.Mesh(bowLoopGeo, ribbonMat);
+        bowLoop2.position.set(0.14, 1.1, 0);
+        bowLoop2.rotation.set(0, 0, Math.PI * 1.25);
+        giftBoxGroup.add(bowLoop2);
+
+        // Bow knot sphere
+        const knotGeo = new THREE.SphereGeometry(0.12, 10, 10);
+        const knotMesh = new THREE.Mesh(knotGeo, ribbonMat);
+        knotMesh.position.set(0, 0.95, 0);
+        giftBoxGroup.add(knotMesh);
+
+        scene.add(giftBoxGroup);
+
+        // 5. Rising 3D Particles/Stars (Floating fairy lights, hidden inside initially)
+        const pCount = 20;
+        const pGeometry = new THREE.BufferGeometry();
+        const pPositions = new Float32Array(pCount * 3);
+        const pColors = new Float32Array(pCount * 3);
+        const pColor = new THREE.Color(theme.particles);
+
+        for (let i = 0; i < pCount; i++) {
+            // Packed coordinate clusters inside the box body
+            pPositions[i * 3] = (Math.random() - 0.5) * 0.4;
+            pPositions[i * 3 + 1] = -0.4 + (Math.random() - 0.5) * 0.4;
+            pPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
+
+            pColors[i * 3] = pColor.r;
+            pColors[i * 3 + 1] = pColor.g;
+            pColors[i * 3 + 2] = pColor.b;
+        }
+
+        pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+        pGeometry.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+
+        const pMaterial = new THREE.PointsMaterial({
+            size: 0.18,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            blending: THREE.NormalBlending
+        });
+
+        const starParticles = new THREE.Points(pGeometry, pMaterial);
+        scene.add(starParticles);
+
+        // Gentle background rotation / floating bobbing timer
+        const clock = new THREE.Clock();
+        let mouseX = 0;
+        
+        container.closest('.city-portal-card').addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsed = clock.getElapsedTime();
+            
+            // Passive floating
+            if (!container.isOpening) {
+                giftBoxGroup.rotation.y = elapsed * 0.4 + mouseX * 0.25;
+                giftBoxGroup.position.y = Math.sin(elapsed * 1.5) * 0.08;
+            } else {
+                // If opening, slowly rotate
+                giftBoxGroup.rotation.y += 0.005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Sizing resize sync
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+        // Save open/close triggers as methods on the container element itself!
+        container.isOpening = false;
+        let lidTimeline = null;
+
+        container.openBox = () => {
+            if (container.isOpening) return;
+            container.isOpening = true;
+
+            // Trigger Shaking & Open Sequence programmatically in 3D using GSAP
+            lidTimeline = gsap.timeline();
+
+            // 1. Shake Gift Box group
+            lidTimeline.to(giftBoxGroup.position, { x: 0.08, duration: 0.04, yoyo: true, repeat: 7 })
+                       .to(giftBoxGroup.position, { x: 0, duration: 0.04 })
+                       
+                       // 2. Open Lid and bow loops
+                       .to(lidMesh.position, { y: 2.1, duration: 0.45, ease: "back.out(1.5)" }, "+=0.05")
+                       .to(lidMesh.rotation, { x: -0.35, z: -0.25, duration: 0.45, ease: "power2.out" }, "-=0.45")
+                       .to([bowLoop1.position, bowLoop2.position, knotMesh.position], { y: "+=1.25", duration: 0.45, ease: "back.out(1.5)" }, "-=0.45")
+                       .to([bowLoop1.rotation, bowLoop2.rotation], { z: "+=0.15", duration: 0.45, ease: "power2.out" }, "-=0.45")
+                       
+                       // 3. Float inner particles up and fade in
+                       .to(starParticles.position, { y: 0.8, duration: 0.5, ease: "power2.out" }, "-=0.4")
+                       .to(pMaterial, { opacity: 0.8, size: 0.22, duration: 0.4, ease: "power2.out" }, "-=0.5");
+        };
+
+        container.closeBox = () => {
+            if (!container.isOpening) return;
+            container.isOpening = false;
+
+            if (lidTimeline) lidTimeline.kill();
+
+            // Reverse animations smoothly
+            gsap.to(lidMesh.position, { y: 0.85, duration: 0.4, ease: "power2.out" });
+            gsap.to(lidMesh.rotation, { x: 0, z: 0, duration: 0.4, ease: "power2.out" });
+            gsap.to([bowLoop1.position, bowLoop2.position, knotMesh.position], { y: (i) => i === 2 ? 0.95 : 1.1, duration: 0.4, ease: "power2.out" });
+            gsap.to([bowLoop1.rotation, bowLoop2.rotation], { z: (i) => i === 0 ? Math.PI * -0.25 : Math.PI * 1.25, duration: 0.4, ease: "power2.out" });
+            gsap.to(starParticles.position, { y: 0, duration: 0.4, ease: "power2.out" });
+            gsap.to(pMaterial, { opacity: 0, size: 0.18, duration: 0.3, ease: "power2.out" });
+            gsap.to(giftBoxGroup.position, { x: 0, duration: 0.3 });
+        };
+
+        // Hook up event listeners for desktop
+        const card = container.closest('.city-portal-card');
+        if (card) {
+            card.addEventListener('mouseenter', () => {
+                if (window.innerWidth <= 991.98) return; // Skip on mobile/tablets to use scroll triggers
+                container.openBox();
+            });
+            card.addEventListener('mouseleave', () => {
+                if (window.innerWidth <= 991.98) return; // Skip on mobile/tablets to use scroll triggers
+                container.closeBox();
+            });
+        }
     });
 }
 </script>
