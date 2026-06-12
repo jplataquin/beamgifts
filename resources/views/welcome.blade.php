@@ -1188,19 +1188,33 @@ function initCity3DBoxes() {
         return;
     }
 
-    // Dynamic city color themes mapping
-    const cityThemes = {
-        manila: { body: 0xE76F51, lid: 0xF4A261, ribbon: 0xE9C46A, particles: 0xE9C46A },
-        cebu: { body: 0xF4A261, lid: 0xA88FBB, ribbon: 0x8A9A86, particles: 0xFFB6C1 },
-        davao: { body: 0x8A9A86, lid: 0xFAF6F0, ribbon: 0xE9C46A, particles: 0x80CBC4 }
-    };
+    // Palette of vibrant, cozy pastel colors
+    const colorfulPalette = [
+        0xE76F51, // Terracotta Coral
+        0xF4A261, // Soft Peach
+        0xE9C46A, // Cozy Gold
+        0x8A9A86, // Sage Green
+        0x457B9D, // Calm Blue
+        0x9B5DE5, // Vibrant Purple
+        0xF15BB5, // Hot Pink
+        0x00F5D4, // Bright Teal
+        0x00BBF9, // Sky Blue
+        0xFF9F1C, // Bright Orange
+        0x7209B7, // Royal Purple
+        0x4CC9F0  // Bright Sky
+    ];
 
     containers.forEach((container) => {
-        const slug = container.getAttribute('data-city-slug');
-        const theme = cityThemes[slug] || { body: 0xE76F51, lid: 0xF4A261, ribbon: 0xE9C46A, particles: 0xE9C46A };
-
         const width = container.clientWidth;
         const height = container.clientHeight;
+
+        // Choose completely random colors for body, lid, and ribbon/particles
+        // We slice and shuffle or simply pull randomly ensuring they are distinct
+        const shuffled = [...colorfulPalette].sort(() => 0.5 - Math.random());
+        const bodyColor = shuffled[0];
+        const lidColor = shuffled[1];
+        const ribbonColor = shuffled[2];
+        const particleColor = shuffled[3];
 
         // 3D Scene core
         const scene = new THREE.Scene();
@@ -1213,7 +1227,7 @@ function initCity3DBoxes() {
         container.appendChild(renderer.domElement);
 
         // Warm Gifting lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
         scene.add(ambientLight);
 
         const warmLight = new THREE.PointLight(0xFFE4E1, 2.5, 15);
@@ -1228,9 +1242,9 @@ function initCity3DBoxes() {
         const giftBoxGroup = new THREE.Group();
 
         // Materials
-        const bodyMat = new THREE.MeshPhongMaterial({ color: theme.body, shininess: 12, flatShading: true });
-        const lidMat = new THREE.MeshPhongMaterial({ color: theme.lid, shininess: 12, flatShading: true });
-        const ribbonMat = new THREE.MeshPhongMaterial({ color: theme.ribbon, shininess: 80, specular: 0xffffff });
+        const bodyMat = new THREE.MeshPhongMaterial({ color: bodyColor, shininess: 12, flatShading: true });
+        const lidMat = new THREE.MeshPhongMaterial({ color: lidColor, shininess: 12, flatShading: true });
+        const ribbonMat = new THREE.MeshPhongMaterial({ color: ribbonColor, shininess: 80, specular: 0xffffff });
 
         // 1. Box Body (Cube primitive)
         const boxGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
@@ -1284,15 +1298,66 @@ function initCity3DBoxes() {
 
         scene.add(giftBoxGroup);
 
-        // 5. Rising 3D Particles/Stars (Floating fairy lights, hidden inside initially)
-        const pCount = 20;
+        // 5. Interactive 3D Confetti Burst Meshes (Flying, spinning paper slips)
+        const confettiGroup = new THREE.Group();
+        const confettiCount = 15;
+        const confettiMeshes = [];
+        const confettiColors = [0xE76F51, 0xF4A261, 0xE9C46A, 0x8A9A86, 0x9B5DE5, 0xF15BB5, 0x00F5D4, 0x00BBF9];
+        const confettiGeo = new THREE.PlaneGeometry(0.08, 0.06);
+
+        for (let i = 0; i < confettiCount; i++) {
+            const confettiMat = new THREE.MeshPhongMaterial({
+                color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                side: THREE.DoubleSide,
+                shininess: 40
+            });
+            const confettiMesh = new THREE.Mesh(confettiGeo, confettiMat);
+            
+            // Placed tucked inside the box body initially
+            confettiMesh.position.set(
+                (Math.random() - 0.5) * 0.3,
+                -0.2 + (Math.random() - 0.5) * 0.2,
+                (Math.random() - 0.5) * 0.3
+            );
+            
+            confettiMesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+
+            // Store individual launch trajectories and spinning speeds
+            confettiMesh.userData = {
+                targetX: confettiMesh.position.x + (Math.random() - 0.5) * 1.6,
+                targetY: 1.1 + Math.random() * 0.9, // Float upward
+                targetZ: confettiMesh.position.z + (Math.random() - 0.5) * 1.6,
+                targetRotX: confettiMesh.rotation.x + Math.random() * Math.PI * 4,
+                targetRotY: confettiMesh.rotation.y + Math.random() * Math.PI * 4,
+                targetRotZ: confettiMesh.rotation.z + Math.random() * Math.PI * 4,
+                initialX: confettiMesh.position.x,
+                initialY: confettiMesh.position.y,
+                initialZ: confettiMesh.position.z,
+                initialRotX: confettiMesh.rotation.x,
+                initialRotY: confettiMesh.rotation.y,
+                initialRotZ: confettiMesh.rotation.z
+            };
+
+            // Starts scale 0 (invisible)
+            confettiMesh.scale.set(0, 0, 0);
+
+            confettiGroup.add(confettiMesh);
+            confettiMeshes.push(confettiMesh);
+        }
+        scene.add(confettiGroup);
+
+        // 6. Rising 3D Particles/Stars (Fairy lights rising slowly behind the confetti)
+        const pCount = 15;
         const pGeometry = new THREE.BufferGeometry();
         const pPositions = new Float32Array(pCount * 3);
         const pColors = new Float32Array(pCount * 3);
-        const pColor = new THREE.Color(theme.particles);
+        const pColor = new THREE.Color(particleColor);
 
         for (let i = 0; i < pCount; i++) {
-            // Packed coordinate clusters inside the box body
             pPositions[i * 3] = (Math.random() - 0.5) * 0.4;
             pPositions[i * 3 + 1] = -0.4 + (Math.random() - 0.5) * 0.4;
             pPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
@@ -1306,11 +1371,11 @@ function initCity3DBoxes() {
         pGeometry.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
 
         const pMaterial = new THREE.PointsMaterial({
-            size: 0.18,
+            size: 0.16,
             transparent: true,
             opacity: 0,
             depthWrite: false,
-            blending: THREE.NormalBlending
+            blending: THREE.AdditiveBlending
         });
 
         const starParticles = new THREE.Points(pGeometry, pMaterial);
@@ -1335,7 +1400,6 @@ function initCity3DBoxes() {
                 giftBoxGroup.rotation.y = elapsed * 0.4 + mouseX * 0.25;
                 giftBoxGroup.position.y = Math.sin(elapsed * 1.5) * 0.08;
             } else {
-                // If opening, slowly rotate
                 giftBoxGroup.rotation.y += 0.005;
             }
 
@@ -1353,7 +1417,7 @@ function initCity3DBoxes() {
             renderer.setSize(w, h);
         });
 
-        // Save open/close triggers as methods on the container element itself!
+        // Save open/close triggers as methods on the container element itself
         container.isOpening = false;
         let lidTimeline = null;
 
@@ -1361,22 +1425,40 @@ function initCity3DBoxes() {
             if (container.isOpening) return;
             container.isOpening = true;
 
-            // Trigger Shaking & Open Sequence programmatically in 3D using GSAP
             lidTimeline = gsap.timeline();
 
-            // 1. Shake Gift Box group
-            lidTimeline.to(giftBoxGroup.position, { x: 0.08, duration: 0.04, yoyo: true, repeat: 7 })
+            // 1. Softer Shaking sequence (shorter duration and lower amplitude as requested)
+            lidTimeline.to(giftBoxGroup.position, { x: 0.03, duration: 0.05, yoyo: true, repeat: 3 })
                        .to(giftBoxGroup.position, { x: 0, duration: 0.04 })
                        
                        // 2. Open Lid and bow loops
-                       .to(lidMesh.position, { y: 2.1, duration: 0.45, ease: "back.out(1.5)" }, "+=0.05")
+                       .to(lidMesh.position, { y: 2.1, duration: 0.45, ease: "back.out(1.5)" }, "+=0.03")
                        .to(lidMesh.rotation, { x: -0.35, z: -0.25, duration: 0.45, ease: "power2.out" }, "-=0.45")
                        .to([bowLoop1.position, bowLoop2.position, knotMesh.position], { y: "+=1.25", duration: 0.45, ease: "back.out(1.5)" }, "-=0.45")
                        .to([bowLoop1.rotation, bowLoop2.rotation], { z: "+=0.15", duration: 0.45, ease: "power2.out" }, "-=0.45")
                        
                        // 3. Float inner particles up and fade in
                        .to(starParticles.position, { y: 0.8, duration: 0.5, ease: "power2.out" }, "-=0.4")
-                       .to(pMaterial, { opacity: 0.8, size: 0.22, duration: 0.4, ease: "power2.out" }, "-=0.5");
+                       .to(pMaterial, { opacity: 0.8, size: 0.2, duration: 0.4, ease: "power2.out" }, "-=0.5");
+
+            // 4. Pop out the colorful 3D confetti shapes shooting out of the box!
+            confettiMeshes.forEach((confetti) => {
+                lidTimeline.to(confetti.scale, { x: 1, y: 1, z: 1, duration: 0.2, ease: "power2.out" }, "-=0.6");
+                lidTimeline.to(confetti.position, {
+                    x: confetti.userData.targetX,
+                    y: confetti.userData.targetY,
+                    z: confetti.userData.targetZ,
+                    duration: 0.65,
+                    ease: "power2.out"
+                }, "-=0.55");
+                lidTimeline.to(confetti.rotation, {
+                    x: confetti.userData.targetRotX,
+                    y: confetti.userData.targetRotY,
+                    z: confetti.userData.targetRotZ,
+                    duration: 0.65,
+                    ease: "power2.out"
+                }, "-=0.65");
+            });
         };
 
         container.closeBox = () => {
@@ -1385,14 +1467,33 @@ function initCity3DBoxes() {
 
             if (lidTimeline) lidTimeline.kill();
 
-            // Reverse animations smoothly
+            // Reverse unboxing smoothly, tucking elements back inside the box
             gsap.to(lidMesh.position, { y: 0.85, duration: 0.4, ease: "power2.out" });
             gsap.to(lidMesh.rotation, { x: 0, z: 0, duration: 0.4, ease: "power2.out" });
             gsap.to([bowLoop1.position, bowLoop2.position, knotMesh.position], { y: (i) => i === 2 ? 0.95 : 1.1, duration: 0.4, ease: "power2.out" });
             gsap.to([bowLoop1.rotation, bowLoop2.rotation], { z: (i) => i === 0 ? Math.PI * -0.25 : Math.PI * 1.25, duration: 0.4, ease: "power2.out" });
             gsap.to(starParticles.position, { y: 0, duration: 0.4, ease: "power2.out" });
-            gsap.to(pMaterial, { opacity: 0, size: 0.18, duration: 0.3, ease: "power2.out" });
+            gsap.to(pMaterial, { opacity: 0, size: 0.16, duration: 0.3, ease: "power2.out" });
             gsap.to(giftBoxGroup.position, { x: 0, duration: 0.3 });
+
+            // Pull confetti back in
+            confettiMeshes.forEach((confetti) => {
+                gsap.to(confetti.scale, { x: 0, y: 0, z: 0, duration: 0.35, ease: "power2.in" });
+                gsap.to(confetti.position, {
+                    x: confetti.userData.initialX,
+                    y: confetti.userData.initialY,
+                    z: confetti.userData.initialZ,
+                    duration: 0.35,
+                    ease: "power2.in"
+                });
+                gsap.to(confetti.rotation, {
+                    x: confetti.userData.initialRotX,
+                    y: confetti.userData.initialRotY,
+                    z: confetti.userData.initialRotZ,
+                    duration: 0.35,
+                    ease: "power2.in"
+                });
+            });
         };
 
         // Hook up event listeners for desktop
