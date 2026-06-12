@@ -82,9 +82,6 @@
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--accent-coral), var(--accent-sage));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         body.cozy-theme-active .navbar .nav-link {
             color: var(--text-dark-espresso) !important;

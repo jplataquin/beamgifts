@@ -265,9 +265,6 @@
         font-family: 'Space Grotesk', sans-serif;
         font-weight: 700;
         letter-spacing: -0.02em;
-        background: linear-gradient(135deg, var(--accent-coral), var(--accent-sage));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
     body.welcome-active .navbar .nav-link {
         color: var(--text-dark-espresso) !important;
@@ -1231,6 +1228,13 @@ function initCity3DBoxes() {
         const fillLight = new THREE.PointLight(0xFFFFFF, 1.5, 15);
         fillLight.position.set(-5, -5, 5);
         scene.add(fillLight);
+
+        // Soft, Translucent 3D Perspective Floor Grid to emphasize depth/tilt
+        const gridHelper = new THREE.GridHelper(8, 12, 0xCBD5E1, 0xE2E8F0);
+        gridHelper.position.y = -1.45; // Placed neatly below the box floor
+        gridHelper.material.opacity = 0.28;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
 
         // Core Gift Box assembly group
         const giftBoxGroup = new THREE.Group();
