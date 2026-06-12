@@ -128,9 +128,9 @@
                                     </div>
                                     
                                     <!-- Interactive 3D Gift Box Canvas Container -->
-                                    <div class="city-3d-container mx-auto my-3" data-city-slug="{{ $slug }}" data-gift-to="To:{{ $giftToName }}" style="width: 100%; height: 160px; position: relative; z-index: 10;">
+                                    <div class="city-3d-container mx-auto my-3" data-city-slug="{{ $slug }}" data-gift-to="To:{{ $giftToName }}" style="width: 100%; height: 220px; position: relative; z-index: 10;">
                                         <!-- Custom Vector Floating Tag -->
-                                        <div class="gift-html-tag border border-light-subtle shadow-sm bg-white rounded px-2 py-1 position-absolute" style="top: 25px; right: 20%; z-index: 12; transform: rotate(15deg); transition: transform 0.4s ease; transform-origin: left center; pointer-events: none;">
+                                        <div class="gift-html-tag border border-light-subtle shadow-sm bg-white rounded px-2 py-1 position-absolute" style="top: 35px; right: 20%; z-index: 12; transform: rotate(15deg); transition: transform 0.4s ease; transform-origin: left center; pointer-events: none;">
                                             <span class="d-flex align-items-center gap-1 small text-dark fw-bold" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; line-height: 1;">
                                                 <i class="bi bi-circle-fill text-danger" style="font-size: 0.35rem;"></i>
                                                 <span>To: {{ $giftToName }}</span>
@@ -1213,7 +1213,7 @@ function initCity3DBoxes() {
         // 3D Scene core
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-        camera.position.set(0, 0, 7.5);
+        camera.position.set(0, 0, 8.2);
 
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(width, height);
